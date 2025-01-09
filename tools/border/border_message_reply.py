@@ -1,6 +1,6 @@
 import json
 
-class BrightnessMessageReply:
+class BorderMessageReply:
 
     def __init__(self, image: str) -> None:
         self.image = image
@@ -17,8 +17,8 @@ class BrightnessMessageReply:
 
 
     @staticmethod
-    def from_json(data: str) -> 'BrightnessMessageReply':
+    def from_json(data: str) -> 'BorderMessageReply':
         data = json.loads(data)
-        return BrightnessMessageReply(
+        return BorderMessageReply(
             image=data['image'],
         )

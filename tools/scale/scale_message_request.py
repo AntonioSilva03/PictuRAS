@@ -24,7 +24,7 @@ class ScaleMessageRequest:
         return json.dumps({
             'image': self.image,
             'height': self.height,
-            'width': self.width
+            'width': self.width,
         })
 
 
@@ -34,5 +34,5 @@ class ScaleMessageRequest:
         return ScaleMessageRequest(
             image=data['image'],
             height=data['height'],
-            width=data['width']
+            width=data['width'],
         )

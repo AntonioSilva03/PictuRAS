@@ -1,7 +1,7 @@
 import base64
 import subprocess
-from brightness_message_request import BrightnessMessageRequest
 from brightness_message_reply import BrightnessMessageReply
+from brightness_message_request import BrightnessMessageRequest
 
 class BrightnessTool:
 

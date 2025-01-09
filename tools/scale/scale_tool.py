@@ -1,7 +1,7 @@
 import base64
 import subprocess
-from scale_message_request import ScaleMessageRequest
 from scale_message_reply import ScaleMessageReply
+from scale_message_request import ScaleMessageRequest
 
 class ScaleTool:
 

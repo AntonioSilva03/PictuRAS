@@ -27,5 +27,5 @@ class BrightnessMessageRequest:
         data = json.loads(data)
         return BrightnessMessageRequest(
             image=data['image'],
-            brightness=data['brightness']
+            brightness=data['brightness'],
         )
