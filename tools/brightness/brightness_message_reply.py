@@ -1,11 +1,11 @@
 import json
 
-class ScaleMessageReply:
+class BrightnessMessageReply:
 
     def __init__(self, image: str) -> None:
         self.image = image
 
-    
+
     def getImage(self) -> str:
         return self.image
 
@@ -17,8 +17,8 @@ class ScaleMessageReply:
 
 
     @staticmethod
-    def from_json(data: str) -> 'ScaleMessageReply':
+    def from_json(data: str) -> 'BrightnessMessageReply':
         data = json.loads(data)
-        return ScaleMessageReply(
+        return BrightnessMessageReply(
             image=data['image']
         )

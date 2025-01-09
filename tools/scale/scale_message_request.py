@@ -1,3 +1,5 @@
+import json
+
 class ScaleMessageRequest:
 
     def __init__(self, image: str, height : int, width : int) -> None:
@@ -18,16 +20,17 @@ class ScaleMessageRequest:
         return self.width
 
 
-    def to_dict(self) -> dict:
-        return {
+    def to_json(self) -> str:
+        return json.dumps({
             'image': self.image,
             'height': self.height,
             'width': self.width
-        }
+        })
 
 
     @staticmethod
-    def from_dict(data: dict) -> 'ScaleMessageRequest':
+    def from_json(data: str) -> 'ScaleMessageRequest':
+        data = json.loads(data)
         return ScaleMessageRequest(
             image=data['image'],
             height=data['height'],

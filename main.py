@@ -16,11 +16,10 @@ def on_response(ch, method, props, body, correlation_id):
     if props.correlation_id == correlation_id:
         
         print("Received response image")
-        body = json.loads(body)
-        scale_reply = ScaleMessageReply.from_dict(body)
+        reply = ScaleMessageReply.from_json(body)
 
         with open("received_image.png", 'wb') as output_file:
-            output_file.write(base64.b64decode(scale_reply.getImage()))
+            output_file.write(base64.b64decode(reply.getImage()))
 
         ch.stop_consuming()
 
@@ -38,13 +37,12 @@ def send_image(image_path):
     with open(image_path, 'rb') as image_file:
         image_data = base64.b64encode(image_file.read()).decode('utf-8')
 
-    scale_request = ScaleMessageRequest(image_data,100,1000)
-    body = json.dumps(scale_request.to_dict())
+    request = ScaleMessageRequest(image_data,100,100)
 
     channel.basic_publish(
         exchange='',
         routing_key=SCALE_INPUT_QUEUE,
-        body=body,
+        body=request.to_json(),
         properties=pika.BasicProperties(
             reply_to=SCALE_OUTPUT_QUEUE,
             correlation_id=correlation_id

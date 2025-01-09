@@ -1,24 +1,24 @@
 import pika # type: ignore
 import os
-from scale_tool import ScaleTool
-from scale_message_request import ScaleMessageRequest
+from brightness_tool import BrightnessTool
+from brightness_message_request import BrightnessMessageRequest
 
 RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'localhost')
-SCALE_INPUT_QUEUE = os.getenv('SCALE_INPUT_QUEUE', 'scale_input_queue')
+BRIGTHNESS_INPUT_QUEUE = os.getenv('BRIGTHNESS_INPUT_QUEUE', 'brightness_input_queue')
 
 
 def on_message(channel, method, properties, body):
 
     try:
         print('Received image for processing')
-        scale_request = ScaleMessageRequest.from_json(body)
-        scale_tool = ScaleTool(scale_request)
-        scale_reply = scale_tool.apply()
+        brightness_request = BrightnessMessageRequest.from_json(body)
+        brightness_tool = BrightnessTool(brightness_request)
+        brightness_reply = brightness_tool.apply()
 
         channel.basic_publish(
             exchange='',
             routing_key=properties.reply_to,
-            body=scale_reply.to_json(),
+            body=brightness_reply.to_json(),
             properties=pika.BasicProperties(
                 correlation_id=properties.correlation_id
             )
@@ -38,11 +38,11 @@ def main():
         connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST))
         channel = connection.channel()
 
-        channel.queue_declare(queue=SCALE_INPUT_QUEUE)
+        channel.queue_declare(queue=BRIGTHNESS_INPUT_QUEUE)
         channel.basic_qos(prefetch_count=1)
-        channel.basic_consume(queue=SCALE_INPUT_QUEUE, on_message_callback=on_message)
+        channel.basic_consume(queue=BRIGTHNESS_INPUT_QUEUE, on_message_callback=on_message)
 
-        print(f'Waiting for images on {SCALE_INPUT_QUEUE}...')
+        print(f'Waiting for images on {BRIGTHNESS_INPUT_QUEUE}...')
         channel.start_consuming()
 
     except pika.exceptions.AMQPConnectionError as e:
