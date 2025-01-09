@@ -1,0 +1,6 @@
+services:
+  mongodb:
+    container_name: picturasdb
+    image: mongo:latest
+    ports:
+      - "27017:27017"
