@@ -15,7 +15,7 @@
   </template>
   
   <script>
-  import { useEditingToolStore } from '../stores/editingTool'
+  import { useEditingToolStore } from '../stores/EditingTool.js'
   import { storeToRefs } from 'pinia'
   
   export default {
