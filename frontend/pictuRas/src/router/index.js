@@ -1,14 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Home from '../views/Home.vue';
 import NotFound from '../views/NotFound.vue';
+import Landing from '../views/Landing.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: Home,
+      name: 'landing',
+      component: Landing,
       props: true
     },
     {
