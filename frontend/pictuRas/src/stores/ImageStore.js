@@ -29,7 +29,7 @@ export const useImageStore = defineStore('imageStore', {
   
         try {
           const response = await axios.get(`https://api.example.com/projects/${projectId}/images`);
-          this.images = response.data; // Assume the API returns an array of images for the project
+          this.images = response.data;
         } catch (err) {
           this.error = `Failed to fetch images for project ID: ${projectId}`;
           console.error(err);

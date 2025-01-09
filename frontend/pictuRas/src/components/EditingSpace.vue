@@ -6,11 +6,13 @@
       <div v-else class="placeholder" id="prev">
         <p>No image selected</p>
       </div>
+      <ToolsList id="tools"></ToolsList>
     </div>
   </template>
   
   <script setup>
   import { useImageStore } from '../stores/ImageStore';
+  import ToolsList from './ToolsList.vue';
   
   const imageStore = useImageStore();
   </script>
@@ -20,7 +22,7 @@
     background-color: #fff;
     border: 1px solid #ccc;
     display: grid;
-    grid-template-rows: 20% 60% 20%;
+    grid-template-rows: 10% 60% 30%;
     grid-template-columns: 30% 60% 10%;
     grid-template-areas:
       ". . ."   
@@ -52,5 +54,10 @@
   #prev{
     grid-area: prev;
   }
+
+  #tools{
+    grid-area: tools;
+  }
+
   </style>
   
