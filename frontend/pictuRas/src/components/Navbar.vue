@@ -40,12 +40,13 @@
   .navbar {
     background-color: #333;
     color: #fff;
-    padding: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
     display: flex;
     align-items: center;
-    height: 36px;
+    height: 50%;
     width: 100%;
-    justify-content: flex-start; /* Align everything to the left */
+    justify-content: center; /* Align everything to the left */
   }
   
   .navbar-container {
