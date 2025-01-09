@@ -6,11 +6,15 @@ from routes.tools import tools_blueprint
 app = Flask(__name__)
 
 connect(
-    db=os.getenv('TOOLS_DB','picturas-tools'),
-    host=os.getenv('DB_HOST','localhost'),
-    port=os.getenv('DB_PORT', 27017))
+    db=os.getenv('PICTURAS_TOOLS_DB','picturas-tools'),
+    host=os.getenv('MONGO_HOST','localhost'),
+    port=int(os.getenv('MONGO_PORT', 27017)))
 
 app.register_blueprint(tools_blueprint, url_prefix='/tools')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(
+        host=os.getenv('FLASK_HOST', '0.0.0.0'),
+        port=int(os.getenv('FLASK_PORT', 5000)),
+        debug=True
+    )
