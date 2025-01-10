@@ -10,7 +10,6 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 
 export default async (req, res) => {
   try {
-    console.log(req.body)
     const { email, password } = req.body;
 
     // Check if the user already exists
@@ -20,7 +19,6 @@ export default async (req, res) => {
     }
 
     // Hash the password
-    console.log("Password:" + password + "\n")
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create a new user in the database
