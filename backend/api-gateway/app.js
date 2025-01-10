@@ -1,6 +1,11 @@
-const express = require('express');
+import express from 'express';
+import 'dotenv/config';
+
+
+import apiRouter from './router/router.js';
+
+
 const app = express();
-const apiRouter = require('./router/router');
 
 // Middleware for parsing JSON
 app.use(express.json());
