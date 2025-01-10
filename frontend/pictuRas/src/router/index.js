@@ -3,7 +3,8 @@ import NotFound from '../views/NotFound.vue';
 import Landing from '../views/Landing.vue';
 import Login from '../views/Login.vue';
 import Project from '../views/Project.vue';
-import Register from '../views/Register.vue'
+import Register from '../views/Register.vue';
+import Plan from '../views/Plan.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -28,6 +29,11 @@ const router = createRouter({
         path: '/project',
         name: 'project',
         component: Project,
+       },
+    {
+        path: '/plan',
+        name: 'plan',
+        component: Plan,
        },
     {
       path: '/:pathMatch(.*)*', // Catch-all route for 404
