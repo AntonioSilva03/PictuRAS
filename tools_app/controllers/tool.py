@@ -1,6 +1,5 @@
 from typing import Optional, List, Dict, Any
 from models.tool import Tool
-import traceback
 
 
 def list_tools() -> List[Tool]:
@@ -13,7 +12,6 @@ def find_by_id(tool_name: str) -> Optional[Tool]:
         return Tool.objects.get(name=tool_name)
 
     except Exception:
-        traceback.print_exc()
         return None
 
 
@@ -30,7 +28,6 @@ def insert_tool(tool_data: Dict[str, Any]) -> Optional[Tool]:
         return new_tool
 
     except Exception:
-        traceback.print_exc()
         return None
 
 

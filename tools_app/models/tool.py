@@ -4,7 +4,7 @@ from mongoengine import Document, StringField, ListField, EmbeddedDocument, Embe
 class Parameter(EmbeddedDocument):
 
     name = StringField(required=True)
-    type = StringField(required=True, choices=['int', 'float', 'string'])
+    type = StringField(required=True, choices=['int', 'float', 'string', 'hex'])
     value = DynamicField(required=True)
     min_value = DynamicField()
     max_value = DynamicField()
