@@ -14,12 +14,14 @@ from tools.ocr.ocr_message_request import OCRMessageRequest
 from tools.ocr.ocr_message_reply import OCRMessageReply
 from tools.crop.crop_message_reply import CropMessageReply
 from tools.crop.crop_message_request import CropMessageRequest
+from tools.contrast.contrast_message_reply import ContrastMessageReply
+from tools.contrast.contrast_message_request import ContrastMessageRequest
 
-IN = 'crop_input_queue'
-OUT = 'crop_output_queue'
-REPLY = CropMessageReply
-REQUEST = CropMessageRequest
-IMAGE_INPUT = './images/image-1.jpg'
+IN = 'contrast_input_queue'
+OUT = 'contrast_output_queue'
+REPLY = ContrastMessageReply
+REQUEST = ContrastMessageRequest
+IMAGE_INPUT = './images/image-5.jpg'
 IMAGE_OUTPUT = 'out.png'
 
 
@@ -54,7 +56,7 @@ def send_image(image_path):
     with open(image_path, 'rb') as image_file:
         image_data = base64.b64encode(image_file.read()).decode('utf-8')
 
-    request = REQUEST(image_data,200,200,160,30)
+    request = REQUEST(image_data,0.9)
 
     channel.basic_publish(
         exchange='',
