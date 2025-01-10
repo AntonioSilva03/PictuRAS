@@ -24,7 +24,7 @@
     background-color: #fff;
     border: 1px solid #ccc;
     display: grid;
-    grid-template-rows: 10% 60% 30%;
+    grid-template-rows: 5% 60% 35%;
     grid-template-columns: 30% 60% 10%;
     grid-template-areas:
       ". . ."   

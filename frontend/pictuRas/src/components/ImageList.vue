@@ -1,4 +1,5 @@
 <template>
+  <div class="wrapper">
     <div class="image-list">
       <div
         v-for="(image, index) in images"
@@ -9,6 +10,15 @@
         <img :src="image" alt="Thumbnail" />
       </div>
     </div>
+    <div class="btn-flex">
+      <button>
+      Upload
+      </button>
+      <button>
+      Download
+      </button>
+    </div>
+  </div>
   </template>
   
   
@@ -26,13 +36,22 @@
   </script>
   
   <style scoped>
+
+  .wrapper{
+
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f0f0f0;
+    height: 100%;
+  }
   .image-list {
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
     gap: 5px;
-    background-color: #f0f0f0;
-    height: 100%;
+    height: 85%;
     overflow-y: scroll;
   }
   
@@ -53,6 +72,13 @@
   
   .image-thumbnail:hover {
     border-color: #1e90ff;
+  }
+
+  .btn-flex{
+    display: flex;
+    flex-direction: row;
+    gap:10px;
+
   }
   </style>
   

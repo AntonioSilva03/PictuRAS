@@ -3,27 +3,42 @@ import { defineStore } from 'pinia'
 export const useEditingToolStore = defineStore('editingTool', {
   state: () => ({
     tools: [
-      {name:"Brightness",active:false,position:0,parameters:[{
+      {position:0,name:"Brightness",active:false,parameters:[{
         name:'Brightness',
         value:0.5,
         type:'float',
-        min:0,
-        max:1
+        min_value:0,
+        max_value:1
       }]},
-      {name:"Saturation",active:false,position:1,parameters:[{
+      {position:1,name:"Saturation",active:false,parameters:[{
         name:'Saturation',
         value:0.5,
         type:'float',
-        min:0,
-        max:1
+        min_value:0,
+        max_value:1
       }]},
-      {name:"NoReal",active:false,position:1,parameters:[{
-        name:'NoReal',
-        value:10,
+      {position:2,name:"Border",active:false,parameters:[
+        {
+          name:'border_width',
+          value:0,
+          type:'int',
+          min_value:0,
+          max_value:2000
+      },
+      {
+        name:'border_height',
+        value:0,
         type:'int',
-        min:0,
-        max:20
-      }]}
+        min_value:0,
+        max_value:2000
+    },
+    {
+      name:'border_color',
+      value:"#000000",
+      type:'hex',
+    },
+    
+    ]}
 ],
     activeTool: null
   }),
@@ -35,9 +50,9 @@ export const useEditingToolStore = defineStore('editingTool', {
   actions: {
     addTool(name) {
       this.tools.push({
+        position,
         name,
         active, // diz se é para ser aplicada, gateway resolve
-        position,
         parameters: []
       })
     },

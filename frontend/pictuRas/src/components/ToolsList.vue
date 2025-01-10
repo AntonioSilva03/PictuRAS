@@ -1,25 +1,40 @@
 <template>
     <div class="tools-list">
       <h1>Tools</h1>
-      <ul>
+      <draggable
+      v-model="tools"
+      tag="ul"
+      :active="true"
+      @change="updateList"
+      >
+      <template #item="{ element: tool }">
+        
         <li
-          v-for="tool in tools"
-          :key="tool.name"
-          :class="{ active: activeTool?.name === tool.name }"
+          :class="{ active: tool.active === true }"
           @click="selectTool(tool.name)"
-        >
-          {{ tool.name }}
+        >{{ tool.name }}
         </li>
-      </ul>
+
+      </template>
+      </draggable>
     </div>
   </template>
   
   <script>
   import { useEditingToolStore } from '../stores/editingTool'
   import { storeToRefs } from 'pinia'
+  import draggable from 'vuedraggable';
   
   export default {
     name: 'ToolsList',
+    components:{
+      draggable
+    },
+    methods: {
+      updateList() {
+        this.tools.forEach((item, index) => (item.position = index))
+      },
+    },
     setup() {
       const store = useEditingToolStore()
       const { tools, activeTool } = storeToRefs(store)
@@ -61,7 +76,6 @@
   }
   
   li.active {
-    background-color: #e0e0e0;
     font-weight: bold;
   }
   </style>
