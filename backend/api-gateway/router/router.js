@@ -1,9 +1,7 @@
-const express = require('express');
-const router = express.Router();
+import express from 'express';
+import register from '../authentication/register.js'; // Use import for ES Module
 
-// Import middleware and other utilities
-const authMiddleware = require('../authentication/authMiddleware');
-const authzMiddleware = require('../authorization/authzMiddleware');
+const router = express.Router();
 
 // Define routes
 router.get('/', (req, res) => {
@@ -11,17 +9,6 @@ router.get('/', (req, res) => {
 });
 
 // Authentication routes
-router.post('/login', require('../authentication/login'));
-router.post('/register', require('../authentication/register'));
+router.post('/register', register); // Use imported function directly
 
-// Protected route (authentication + authorization example)
-router.get(
-  '/protected',
-  authMiddleware, // Authentication middleware
-  authzMiddleware(['admin']), // Authorization middleware for 'admin' role
-  (req, res) => {
-    res.send('This is a protected route for admins only.');
-  }
-);
-
-module.exports = router;
+export default router; // Export router as ES Module
