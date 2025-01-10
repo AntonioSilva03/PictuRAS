@@ -1,4 +1,4 @@
-from mongoengine import Document, StringField, ListField, EmbeddedDocument, EmbeddedDocumentField, DynamicField, ObjectIdField # type: ignore
+from mongoengine import Document, StringField, ListField, EmbeddedDocument, EmbeddedDocumentField, DynamicField # type: ignore
 
 
 class Parameter(EmbeddedDocument):
