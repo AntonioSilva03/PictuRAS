@@ -1,38 +1,5 @@
 [
     {
-        "name": "scale",
-        "input_type": "image",
-        "output_type": "image",
-        "parameters": [
-            {
-                "name": "width",
-                "type": "int",
-                "value": 0,
-                "min_value": 0
-            },
-            {
-                "name": "height",
-                "type": "int",
-                "value": 0,
-                "min_value": 0
-            }
-        ]
-    },
-    {
-        "name": "brightness",
-        "input_type": "image",
-        "output_type": "image",
-        "parameters": [
-            {
-                "name": "brightness",
-                "type": "float",
-                "value": 0,
-                "min_value": -1,
-                "max_value": 1
-            }
-        ]
-    },
-    {
         "name": "border",
         "input_type": "image",
         "output_type": "image",
@@ -51,10 +18,61 @@
             },
             {
                 "name": "border_color",
-                "type": "string",
+                "type": "hex",
                 "value": "#000000"
             }
         ]
+    },
+    {
+        "name": "brightness",
+        "input_type": "image",
+        "output_type": "image",
+        "parameters": [
+            {
+                "name": "brightness",
+                "type": "float",
+                "value": 0,
+                "min_value": -1,
+                "max_value": 1
+            }
+        ]
+    },
+    {
+        "name": "crop",
+        "input_type": "image",
+        "output_type": "image",
+        "parameters": [
+            {
+                "name": "width",
+                "type": "int",
+                "value": 0,
+                "min_value": 0
+            },
+            {
+                "name": "height",
+                "type": "int",
+                "value": 0,
+                "min_value": 0
+            },
+            {
+                "name": "x_top_left",
+                "type": "int",
+                "value": 0,
+                "min_value": 0
+            },
+            {
+                "name": "y_top_left",
+                "type": "int",
+                "value": 0,
+                "min_value": 0
+            }
+        ]
+    },
+    {
+        "name": "ocr",
+        "input_type": "image",
+        "output_type": "text",
+        "parameters": []
     },
     {
         "name": "rotate",
@@ -71,22 +89,10 @@
         ]
     },
     {
-        "name": "crop",
+        "name": "scale",
         "input_type": "image",
         "output_type": "image",
         "parameters": [
-            {
-                "name": "x_center",
-                "type": "int",
-                "value": 0,
-                "min_value": 0
-            },
-            {
-                "name": "y_center",
-                "type": "int",
-                "value": 0,
-                "min_value": 0
-            },
             {
                 "name": "width",
                 "type": "int",
