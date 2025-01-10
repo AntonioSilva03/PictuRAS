@@ -2,7 +2,29 @@ import { defineStore } from 'pinia'
 
 export const useEditingToolStore = defineStore('editingTool', {
   state: () => ({
-    tools: [{name:"Brightness",active:false,position:0,parameter:[(0.5,'Numeric','')]},{name:"Watermark",parameter:[]}],
+    tools: [
+      {name:"Brightness",active:false,position:0,parameters:[{
+        name:'Brightness',
+        value:0.5,
+        type:'float',
+        min:0,
+        max:1
+      }]},
+      {name:"Saturation",active:false,position:1,parameters:[{
+        name:'Saturation',
+        value:0.5,
+        type:'float',
+        min:0,
+        max:1
+      }]},
+      {name:"NoReal",active:false,position:1,parameters:[{
+        name:'NoReal',
+        value:10,
+        type:'int',
+        min:0,
+        max:20
+      }]}
+],
     activeTool: null
   }),
   // procedimento, posição , ativa?, parametros[]:

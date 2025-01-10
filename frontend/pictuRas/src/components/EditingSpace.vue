@@ -7,11 +7,13 @@
         <p>No image selected</p>
       </div>
       <ToolsList id="tools"></ToolsList>
+      <ParamsSelector v-if="imageStore.selectedImage" id="params"></ParamsSelector>
     </div>
   </template>
   
   <script setup>
   import { useImageStore } from '../stores/ImageStore';
+  import ParamsSelector from './ParamsSelector.vue';
   import ToolsList from './ToolsList.vue';
   
   const imageStore = useImageStore();
@@ -27,7 +29,7 @@
     grid-template-areas:
       ". . ."   
       "tools prev ."
-      ". . .";
+      ". params .";
     height: 100%;
     width: 100%;
   }
@@ -57,6 +59,10 @@
 
   #tools{
     grid-area: tools;
+  }
+
+  #params{
+    grid-area: params;
   }
 
   </style>
