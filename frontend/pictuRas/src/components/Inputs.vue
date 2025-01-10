@@ -8,6 +8,8 @@
       @input="$emit('update:modelValue', $event.target.value)"
       :placeholder="placeholder"
       :required="required"
+      @focus="$emit('focus', $event)" 
+      @blur="$emit('blur', $event)"
       class="base-input"
     />
     </div>

@@ -23,7 +23,7 @@
             v-model="password"
             required
           />
-          <Button1 type="submit" label="Login" />
+          <Button1 type="submit" @click="handleLogin" label="Login" />
         </form>
 
         <!-- Links para Forget Password e Sign Up -->
@@ -32,7 +32,7 @@
           <a href="/sign-up" class="link">Sign Up</a>
         </div>
 
-        <GoogleButton />
+        <GoogleButton label="Continue with Google" />
       </div>
     </div>
   </div>
@@ -47,6 +47,8 @@
   import Inputs from "../components/Inputs.vue";
   import Button1 from "../components/Button-style1.vue";
   import GoogleButton from "../components/GoogleButton.vue"; 
+  import Toastify from "toastify-js";
+  import "toastify-js/src/toastify.css";
 
   export default {
     name: 'Login',
@@ -64,6 +66,24 @@
   },
   methods: {
     handleLogin() {
+
+      if (!this.email || !this.password) {
+                Toastify({
+                    text: '⚠️ Please fill in all required fields!',
+                    duration: 3000, 
+                    close: true,
+                    gravity: "bottom",
+                    position: "right", 
+                    backgroundColor: "White", 
+                    stopOnFocus: true, 
+                    style:{
+                        fontWeight: "bold",
+                        boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.3)",
+                        color: "black",
+                    }
+                }).showToast();
+                return;
+            }
       console.log("Email:", this.email);
       console.log("Password:", this.password);
       
