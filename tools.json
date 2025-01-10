@@ -55,5 +55,50 @@
                 "value": "#000000"
             }
         ]
+    },
+    {
+        "name": "rotate",
+        "input_type": "image",
+        "output_type": "image",
+        "parameters": [
+            {
+                "name": "angle",
+                "type": "int",
+                "value": 0,
+                "min_value": 0,
+                "max_value": 360
+            }
+        ]
+    },
+    {
+        "name": "crop",
+        "input_type": "image",
+        "output_type": "image",
+        "parameters": [
+            {
+                "name": "x_center",
+                "type": "int",
+                "value": 0,
+                "min_value": 0
+            },
+            {
+                "name": "y_center",
+                "type": "int",
+                "value": 0,
+                "min_value": 0
+            },
+            {
+                "name": "width",
+                "type": "int",
+                "value": 0,
+                "min_value": 0
+            },
+            {
+                "name": "height",
+                "type": "int",
+                "value": 0,
+                "min_value": 0
+            }
+        ]
     }
 ]
