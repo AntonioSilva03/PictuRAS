@@ -8,11 +8,13 @@ from tools.brightness.brightness_message_request import BrightnessMessageRequest
 from tools.brightness.brightness_message_reply import BrightnessMessageReply
 from tools.border.border_message_request import BorderMessageRequest
 from tools.border.border_message_reply import BorderMessageReply
+from tools.rotate.rotate_message_request import RotateMessageRequest
+from tools.rotate.rotate_message_reply import RotateMessageReply
 
-IN = 'border_input_queue'
-OUT = 'border_output_queue'
-REPLY = BorderMessageReply
-REQUEST = BorderMessageRequest
+IN = 'rotate_input_queue'
+OUT = 'rotate_output_queue'
+REPLY = RotateMessageReply
+REQUEST = RotateMessageRequest
 IMAGE_INPUT = './images/image-2.jpg'
 IMAGE_OUTPUT = 'out.png'
 
@@ -48,7 +50,7 @@ def send_image(image_path):
     with open(image_path, 'rb') as image_file:
         image_data = base64.b64encode(image_file.read()).decode('utf-8')
 
-    request = REQUEST(image_data,5,5,'#0BB7BE')
+    request = REQUEST(image_data,90)
 
     channel.basic_publish(
         exchange='',
