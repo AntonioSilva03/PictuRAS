@@ -25,6 +25,13 @@
           />
           <Button1 type="submit" label="Login" />
         </form>
+
+        <!-- Links para Forget Password e Sign Up -->
+        <div class="login-links">
+          <a href="/forgot-password" class="link">Forgot Password?</a>
+          <a href="/sign-up" class="link">Sign Up</a>
+        </div>
+
         <GoogleButton />
       </div>
     </div>
@@ -100,7 +107,45 @@
 }
 
 .login-form-group {
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
+}
+
+.login-links {
+  margin-top: 1rem;
+  align-self: center;
+  justify-self: center;
+  display: flex;
+  width: 80%;
+  margin-bottom: 2em;
+  justify-content: space-between;
+  margin-left: auto;
+  margin-right: auto;
+  padding-right: 2em;
+}
+
+
+.link {
+  position: relative;
+  text-decoration: none;
+  color: black; /* Remove a cor azul dos links */
+  font-size: 0.9rem;
+  font-weight: 500;
+  overflow: hidden;
+}
+
+.link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background-color: black;
+  transition: width 0.5s ease;
+}
+
+.link:hover::after {
+  width: 100%; /* Aumenta a largura do sublinhado ao passar o mouse */
 }
 
 
