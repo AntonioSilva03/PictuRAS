@@ -17,7 +17,7 @@ class Tool(Document):
     output_type = StringField(required=True, choices=['image', 'text'])
     parameters = ListField(EmbeddedDocumentField(Parameter), required=True)
 
-    def to_json(self):
+    def to_json(self) -> dict:
         return {
             'name': self.name,
             'input_type': self.input_type,

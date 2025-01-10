@@ -1,5 +1,17 @@
 [
     {
+        "name": "contrast",
+        "input_type": "image",
+        "output_type": "image",
+        "parameters": [
+            {
+                "name": "contrast",
+                "type": "float",
+                "value": 1
+            }
+        ]
+    },
+    {
         "name": "border",
         "input_type": "image",
         "output_type": "image",
