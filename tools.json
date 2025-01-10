@@ -1,0 +1,59 @@
+[
+    {
+        "name": "scale",
+        "input_type": "image",
+        "output_type": "image",
+        "parameters": [
+            {
+                "name": "width",
+                "type": "int",
+                "value": 0,
+                "min_value": 0
+            },
+            {
+                "name": "height",
+                "type": "int",
+                "value": 0,
+                "min_value": 0
+            }
+        ]
+    },
+    {
+        "name": "brightness",
+        "input_type": "image",
+        "output_type": "image",
+        "parameters": [
+            {
+                "name": "brightness",
+                "type": "float",
+                "value": 0,
+                "min_value": -1,
+                "max_value": 1
+            }
+        ]
+    },
+    {
+        "name": "border",
+        "input_type": "image",
+        "output_type": "image",
+        "parameters": [
+            {
+                "name": "border_width",
+                "type": "int",
+                "value": 0,
+                "min_value": 0
+            },
+            {
+                "name": "border_height",
+                "type": "int",
+                "value": 0,
+                "min_value": 0
+            },
+            {
+                "name": "border_color",
+                "type": "string",
+                "value": "#000000"
+            }
+        ]
+    }
+]

@@ -6,7 +6,7 @@ from routes.tools import tools_blueprint
 app = Flask(__name__)
 
 connect(
-    db=os.getenv('PICTURAS_TOOLS_DB','picturas-tools'),
+    db=os.getenv('PICTURAS_DB','picturas'),
     host=os.getenv('MONGO_HOST','localhost'),
     port=int(os.getenv('MONGO_PORT', 27017)))
 
