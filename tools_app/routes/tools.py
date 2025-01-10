@@ -30,7 +30,7 @@ def rout_insert_tool():
     tool = insert_tool(tool_data)
     if tool:
         return jsonify(tool.to_json()), 200
-    return jsonify({"error": "Invalid data"}), 400
+    return jsonify({"error": "Invalid data"}), 500
 
 
 @tools_blueprint.route('/<string:tool_name>', methods=['PUT'])
@@ -39,7 +39,7 @@ def rout_update_tool(tool_name: str):
     tool = update_tool(tool_name, tool_data)
     if tool:
         return jsonify(tool.to_json()), 200
-    return jsonify({"error": "Tool not found"}), 404
+    return jsonify({"error": "Tool not found"}), 500
 
 
 @tools_blueprint.route('/<string:tool_name>', methods=['DELETE'])
@@ -47,4 +47,4 @@ def rout_delete_tool(tool_name: str):
     tool = delete_tool(tool_name)
     if tool:
         return jsonify(tool.to_json()), 200
-    return jsonify({"error": "Tool not found"}), 404
+    return jsonify({"error": "Tool not found"}), 500
