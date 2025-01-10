@@ -1,10 +1,10 @@
 FROM python:3.12.3-slim
 
-COPY . /var/www/tools_app
+COPY . /var/www/images_app
 
-WORKDIR /var/www/tools_app
+WORKDIR /var/www/images_app
 
-EXPOSE 5000
+EXPOSE 5001
 
 RUN pip install -r requirements.txt
 

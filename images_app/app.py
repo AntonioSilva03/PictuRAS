@@ -15,6 +15,6 @@ app.register_blueprint(images_blueprint, url_prefix='/images')
 if __name__ == '__main__':
     app.run(
         host=os.getenv('IMAGES_FLASK_HOST', '0.0.0.0'),
-        port=int(os.getenv('IMAGES_FLASK_PORT', 6000)),
+        port=int(os.getenv('IMAGES_FLASK_PORT', 5001)),
         debug=True
     )
