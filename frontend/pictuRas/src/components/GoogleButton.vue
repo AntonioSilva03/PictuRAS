@@ -1,13 +1,20 @@
 <template>
     <button type="button" class="login-with-google-btn" >
-        Sign in with Google
+        {{ label }}
     </button>
 </template>
   
 <script>
   export default {
     name: "GoogleButton",
+    props:{
+        label: {
+            type: String,
+            default: "", 
+        },
+      },
   };
+  
 </script>
   
 <style scoped>
