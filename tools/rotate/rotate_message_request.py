@@ -18,7 +18,7 @@ class RotateMessageRequest:
     def to_json(self) -> str:
         return json.dumps({
             'image': self.image,
-            'angle': self.angle
+            'angle': self.angle,
         })
 
 

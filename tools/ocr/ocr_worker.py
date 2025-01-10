@@ -1,24 +1,24 @@
 import pika # type: ignore
 import os
-from rotate_tool import RotateTool
-from rotate_message_request import RotateMessageRequest
+from ocr_tool import OCRTool
+from ocr_message_request import OCRMessageRequest
 
 RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'localhost')
-ROTATE_INPUT_QUEUE = os.getenv('ROTATE_INPUT_QUEUE', 'rotate_input_queue')
+OCR_INPUT_QUEUE = os.getenv('OCR_INPUT_QUEUE', 'ocr_input_queue')
 
 
 def on_message(channel, method, properties, body):
 
     try:
         print('Received image for processing')
-        rotate_request = RotateMessageRequest.from_json(body)
-        rotate_tool = RotateTool(rotate_request)
-        rotate_reply = rotate_tool.apply()
+        ocr_request = OCRMessageRequest.from_json(body)
+        ocr_tool = OCRTool(ocr_request)
+        ocr_reply = ocr_tool.apply()
 
         channel.basic_publish(
             exchange='',
             routing_key=properties.reply_to,
-            body=rotate_reply.to_json(),
+            body=ocr_reply.to_json(),
             properties=pika.BasicProperties(
                 correlation_id=properties.correlation_id
             )
@@ -38,11 +38,11 @@ def main():
         connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST))
         channel = connection.channel()
 
-        channel.queue_declare(queue=ROTATE_INPUT_QUEUE)
+        channel.queue_declare(queue=OCR_INPUT_QUEUE)
         channel.basic_qos(prefetch_count=1)
-        channel.basic_consume(queue=ROTATE_INPUT_QUEUE, on_message_callback=on_message)
+        channel.basic_consume(queue=OCR_INPUT_QUEUE, on_message_callback=on_message)
 
-        print(f'Waiting for images on {ROTATE_INPUT_QUEUE}...')
+        print(f'Waiting for images on {OCR_INPUT_QUEUE}...')
         channel.start_consuming()
 
     except pika.exceptions.AMQPConnectionError as e:

@@ -10,13 +10,15 @@ from tools.border.border_message_request import BorderMessageRequest
 from tools.border.border_message_reply import BorderMessageReply
 from tools.rotate.rotate_message_request import RotateMessageRequest
 from tools.rotate.rotate_message_reply import RotateMessageReply
+from tools.ocr.ocr_message_request import OCRMessageRequest
+from tools.ocr.ocr_message_reply import OCRMessageReply
 
-IN = 'rotate_input_queue'
-OUT = 'rotate_output_queue'
-REPLY = RotateMessageReply
-REQUEST = RotateMessageRequest
-IMAGE_INPUT = './images/image-2.jpg'
-IMAGE_OUTPUT = 'out.png'
+IN = 'ocr_input_queue'
+OUT = 'ocr_output_queue'
+REPLY = OCRMessageReply
+REQUEST = OCRMessageRequest
+IMAGE_INPUT = './images/image-11.jpg'
+IMAGE_OUTPUT = 'out.txt'
 
 
 RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'localhost')
@@ -31,8 +33,8 @@ def on_response(ch, method, props, body, correlation_id):
         print('Received response image')
         reply = REPLY.from_json(body)
 
-        with open(IMAGE_OUTPUT, 'wb') as output_file:
-            output_file.write(base64.b64decode(reply.getImage()))
+        with open(IMAGE_OUTPUT, 'w') as output_file:
+            output_file.write(reply.getText())
 
         ch.stop_consuming()
 
@@ -50,7 +52,7 @@ def send_image(image_path):
     with open(image_path, 'rb') as image_file:
         image_data = base64.b64encode(image_file.read()).decode('utf-8')
 
-    request = REQUEST(image_data,90)
+    request = REQUEST(image_data)
 
     channel.basic_publish(
         exchange='',
