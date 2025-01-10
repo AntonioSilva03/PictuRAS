@@ -35,7 +35,7 @@
         position: relative;
         overflow: hidden;
         height: 3rem;
-        padding: 0 4rem;
+        padding: 0 3rem;
         border-radius: 1.5rem;
         background: #3d3a4e;
         background-size: 400%;
