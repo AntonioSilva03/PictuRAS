@@ -10,13 +10,13 @@
 
         <div v-else class="profile-Container">
             <div class="left-side">
-                <h1>Utilizador: {{ profileStore.profile.username }}</h1>
+                <h1>Username: {{ profileStore.profile.username }}</h1>
                 <p>Email: {{ profileStore.profile.email }}</p>
-                <p>Plano: <b>{{ profileStore.profile.status }}</b></p>
-                <button><RouterLink to="/plans">Mudar plano</RouterLink></button>
+                <p>Satus: <b>{{ profileStore.profile.status }}</b></p>
+                <button><RouterLink to="/plans">Change plan</RouterLink></button>
             </div>
             <div class="right-side">
-                <button><RouterLink to="/projects">Meus projetos</RouterLink></button>
+                <button><RouterLink to="/projects">My projects</RouterLink></button>
                 <div v-if="profileStore.profile.projects && profileStore.profile.projects.length > 0" class="projects-list">
                     <ul>
                         <li v-for="(project, index) in profileStore.profile.projects.slice(0, 4)" :key="index">
