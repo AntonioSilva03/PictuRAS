@@ -18,13 +18,15 @@ from tools.contrast.contrast_message_reply import ContrastMessageReply
 from tools.contrast.contrast_message_request import ContrastMessageRequest
 from tools.rembg.rembg_message_request import RembgMessageRequest
 from tools.rembg.rembg_message_reply import RembgMessageReply
+from tools.peoplecounter.pc_message_request import PeopleCountingMessageRequest
+from tools.peoplecounter.pc_message_reply import PeopleCountingMessageReply
 
-IN = 'rembg_input_queue'
-OUT = 'rembg_output_queue'
-REPLY = RembgMessageReply
-REQUEST = RembgMessageRequest
-IMAGE_INPUT = './images/image-10.jpg'
-IMAGE_OUTPUT = 'out.png'
+IN = 'pc_input_queue'
+OUT = 'pc_output_queue'
+REPLY = PeopleCountingMessageReply
+REQUEST = PeopleCountingMessageRequest
+IMAGE_INPUT = './images/image-12.jpg'
+IMAGE_OUTPUT = 'out'
 
 
 RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'localhost')
@@ -33,17 +35,50 @@ OUTPUT_QUEUE = os.getenv('INPUT_QUEUE', OUT)
 
 
 def on_response(ch, method, props, body, correlation_id):
-
     if props.correlation_id == correlation_id:
-        
-        print('Received response image')
-        reply = REPLY.from_json(body)
+        print('Received response')
 
-        with open(IMAGE_OUTPUT, 'wb') as output_file:
-            output_file.write(base64.b64decode(reply.getImage()))
+        try:
+            # Deserialize the response
+            reply = REPLY.from_json(body)
+
+            # Check the type of the reply
+            if hasattr(reply, 'getPeopleCount'):  # It's a text/count response
+                people_count = reply.getPeopleCount()
+
+                # Add '.txt' extension to IMAGE_OUTPUT for text responses
+                output_file_path = f"{IMAGE_OUTPUT}.txt"
+
+                # Write the count to a text file
+                with open(output_file_path, 'w') as output_file:
+                    output_file.write(f'{people_count}')
+            
+            elif hasattr(reply, 'getText'):  # It's a text response
+                text = reply.getText()
+
+                # Add '.txt' extension to IMAGE_OUTPUT for text responses
+                output_file_path = f"{IMAGE_OUTPUT}.txt"
+
+                # Write the text to a text file
+                with open(output_file_path, 'w') as output_file:
+                    output_file.write(text)
+
+            elif hasattr(reply, 'getImage'):  # It's an image response
+                image_data = reply.getImage()
+
+                # Add '.png' extension to IMAGE_OUTPUT for image responses
+                output_file_path = f"{IMAGE_OUTPUT}.png"
+
+                # Write the image to an output file
+                with open(output_file_path, 'wb') as output_file:
+                    output_file.write(base64.b64decode(image_data))
+            else:
+                print("Unrecognized response format.")
+        
+        except Exception as e:
+            print(f"Error processing response: {e}")
 
         ch.stop_consuming()
-
 
 def send_image(image_path):
 
