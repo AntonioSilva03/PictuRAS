@@ -5,10 +5,16 @@ from mongoengine import connect # type: ignore
 from flask_cors import CORS # type: ignore
 from routes.tools import tools_blueprint
 
-app = Flask(__name__)
-CORS(app)
-
 load_dotenv()
+
+app = Flask(__name__)
+CORS(app, resources={
+    r"/*": {
+        "origins": [
+            os.getenv('API_GATEWAY','http://localhost:*')
+        ]
+    }
+})
 
 connect(
     db=os.getenv('TOOLS_DB','picturas-tools'),
