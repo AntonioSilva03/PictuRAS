@@ -15,19 +15,19 @@ const router = createRouter({
       props: true
     },
     {
-     path: '/login',
-     name: 'login',
-     component: Login,
+      path: '/login',
+      name: 'login',
+      component: Login,
     },
     {
-        path: '/project',
-        name: 'project',
-        component: Project,
-       },
+      path: '/project',
+      name: 'project',
+      component: Project,
+    },
     {
       path: '/profile',
       name: 'profile',
-      component: Profile,    
+      component: Profile,
     },
     {
       path: '/:pathMatch(.*)*', // Catch-all route for 404

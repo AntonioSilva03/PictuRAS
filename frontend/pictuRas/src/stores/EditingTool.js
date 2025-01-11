@@ -3,43 +3,49 @@ import { defineStore } from 'pinia'
 export const useEditingToolStore = defineStore('editingTool', {
   state: () => ({
     tools: [
-      {position:0,name:"Brightness",active:false,parameters:[{
-        name:'Brightness',
-        value:0.5,
-        type:'float',
-        min_value:0,
-        max_value:1
-      }]},
-      {position:1,name:"Saturation",active:false,parameters:[{
-        name:'Saturation',
-        value:0.5,
-        type:'float',
-        min_value:0,
-        max_value:1
-      }]},
-      {position:2,name:"Border",active:false,parameters:[
-        {
-          name:'border_width',
-          value:0,
-          type:'int',
-          min_value:0,
-          max_value:2000
+      {
+        position: 0, name: "Brightness", active: false, parameters: [{
+          name: 'Brightness',
+          value: 0.5,
+          type: 'float',
+          min_value: 0,
+          max_value: 1
+        }]
       },
       {
-        name:'border_height',
-        value:0,
-        type:'int',
-        min_value:0,
-        max_value:2000
-    },
-    {
-      name:'border_color',
-      value:"#000000",
-      type:'hex',
-    },
-    
-    ]}
-],
+        position: 1, name: "Saturation", active: false, parameters: [{
+          name: 'Saturation',
+          value: 0.5,
+          type: 'float',
+          min_value: 0,
+          max_value: 1
+        }]
+      },
+      {
+        position: 2, name: "Border", active: false, parameters: [
+          {
+            name: 'border_width',
+            value: 0,
+            type: 'int',
+            min_value: 0,
+            max_value: 2000
+          },
+          {
+            name: 'border_height',
+            value: 0,
+            type: 'int',
+            min_value: 0,
+            max_value: 2000
+          },
+          {
+            name: 'border_color',
+            value: "#000000",
+            type: 'hex',
+          },
+
+        ]
+      }
+    ],
     activeTool: null
   }),
   // procedimento, posição , ativa?, parametros[]:
@@ -88,7 +94,7 @@ export const useEditingToolStore = defineStore('editingTool', {
     getTool: (state) => {
       return (name) => state.tools.find(tool => tool.name === name)
     },
-    
+
     getParameterValue: (state) => {
       return (toolName, paramName) => {
         const tool = state.tools.find(t => t.name === toolName)

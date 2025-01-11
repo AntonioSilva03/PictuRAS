@@ -21,7 +21,7 @@
   </template>
   
   <script>
-  import { useEditingToolStore } from '../stores/editingTool'
+  import { useEditingToolStore } from '../stores/EditingTool'
   import { storeToRefs } from 'pinia'
   import draggable from 'vuedraggable';
   
