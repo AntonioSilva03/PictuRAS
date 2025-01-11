@@ -13,7 +13,10 @@
                 <h1>Username: {{ profileStore.profile.username }}</h1>
                 <p>Email: {{ profileStore.profile.email }}</p>
                 <p>Satus: <b>{{ profileStore.profile.status }}</b></p>
-                <button><RouterLink to="/plans">Change plan</RouterLink></button>
+                <div class="profile-buttons">
+                    <button><RouterLink to="/profile">Edit profile</RouterLink></button>
+                    <button><RouterLink to="/plans">Change plan</RouterLink></button>
+                </div>
             </div>
             <div class="right-side">
                 <button><RouterLink to="/projects">My projects</RouterLink></button>
@@ -73,6 +76,13 @@ onMounted(async () => {
 .left-side b{
     font-weight: normal;
     color: #ffd500;
+}
+
+.profile-buttons{
+    width: 100%;
+    margin-top: 10%;
+    display: flex;
+    justify-content: space-around;
 }
 
 .left-side button {
