@@ -131,8 +131,9 @@
   }
 
   .content1-wrapper {
-    margin-right: 20%;
-    max-width: 50%; 
+    margin-right: 18%;
+    max-width: 55%; 
+    text-align: justify;
 }
 
 
@@ -165,12 +166,21 @@
     margin-bottom: 1rem;
     color: #333;
     font-family:Verdana, Geneva, Tahoma, sans-serif;
+    background: linear-gradient(
+        82.3deg,
+        #000000 0%, /* Começa com preto */
+        rgba(150, 93, 233, 1) 24.8%,
+        rgba(99, 88, 238, 1) 70.3%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; 
+    background-clip: text; 
+    
 }
 
   
 
-  .right1-column {
-    padding-top: 0.5em;
+.right1-column {
     background-color: #fff; 
     display: flex;
     align-items: center;
