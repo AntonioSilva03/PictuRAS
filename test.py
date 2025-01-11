@@ -16,12 +16,14 @@ from tools.crop.crop_message_reply import CropMessageReply
 from tools.crop.crop_message_request import CropMessageRequest
 from tools.contrast.contrast_message_reply import ContrastMessageReply
 from tools.contrast.contrast_message_request import ContrastMessageRequest
+from tools.rembg.rembg_message_request import RembgMessageRequest
+from tools.rembg.rembg_message_reply import RembgMessageReply
 
-IN = 'contrast_input_queue'
-OUT = 'contrast_output_queue'
-REPLY = ContrastMessageReply
-REQUEST = ContrastMessageRequest
-IMAGE_INPUT = './images/image-5.jpg'
+IN = 'rembg_input_queue'
+OUT = 'rembg_output_queue'
+REPLY = RembgMessageReply
+REQUEST = RembgMessageRequest
+IMAGE_INPUT = './images/image-10.jpg'
 IMAGE_OUTPUT = 'out.png'
 
 
@@ -56,7 +58,7 @@ def send_image(image_path):
     with open(image_path, 'rb') as image_file:
         image_data = base64.b64encode(image_file.read()).decode('utf-8')
 
-    request = REQUEST(image_data,-1)
+    request = REQUEST(image_data)
 
     channel.basic_publish(
         exchange='',
