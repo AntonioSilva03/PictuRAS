@@ -1,33 +1,45 @@
 services:
 
-#  tools-managment:
-#    container_name: tools-managment
-#    build:
-#      context: ./tools_management
-#      dockerfile: Dockerfile 
-#    environment:
-#      - TOOLS_FLASK_HOST=0.0.0.0
-#      - TOOLS_FLASK_PORT=5000
-#      - MONGO_HOST=mongodb
-#      - MONGO_PORT=27017
-#      - PICTURAS_DB=picturas
-#    ports:
-#      - "5000:5000"
-#    depends_on:
-#      - mongodb
-#    links:
-#      - mongodb
-
-  mongodb:
-    container_name: picturasdb
-    image: mongo:latest
+  images-app:
+    container_name: images-app
+    build:
+      context: ./images_app
+      dockerfile: Dockerfile 
     ports:
-     - "27017:27017"
+      - "3002:3002"
     depends_on:
-      - mongo-seed
+      - images-mongodb
+    links:
+      - images-mongodb
+  
+  images-mongodb:
+    container_name: images-db
+    image: mongo:latest
+#    ports:
+#     - "27002:27017"
 
-  mongo-seed:
+  tools-app:
+    container_name: tools-app
+    build:
+      context: ./tools_app
+      dockerfile: Dockerfile 
+    ports:
+      - "3001:3001"
+    depends_on:
+      - tools-mongodb
+    links:
+      - tools-mongodb
+
+  tools-mongodb:
+    container_name: tools-db
+    image: mongo:latest
+#    ports:
+#     - "27001:27017"
+    depends_on:
+      - tools-mongo-seed
+
+  tools-mongo-seed:
     image: mongo:latest
     volumes:
       - ./tools.json:/tools.json
-    command: mongoimport --host mongodb -d picturas -c tool --type json --file /tools.json --jsonArray
+    command: mongoimport --host tools-db --port 27017 -d picturas-tools -c tool --type json --file /tools.json --jsonArray
