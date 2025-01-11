@@ -7,10 +7,9 @@ from controllers.image import (
     find_info_by_id,
     find_chunks_by_id,
     insert_image,
+    update_image,
     delete_image,
 )
-
-import traceback
 
 images_blueprint = Blueprint('image', __name__)
 
@@ -59,14 +58,27 @@ def rout_delete_image(image_id: str):
 def rout_insert_image():
 
     try:
-        new_image = Image(
+        image = Image(
             project=request.form.get('project'),
-            image=BytesIO(request.files['image'].read())
-        )
+            image=BytesIO(request.files['image'].read()))
 
-        image = insert_image(new_image)
+        image = insert_image(image)
         return jsonify(image.to_json()), 200
 
     except Exception as e:
-        traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
+
+
+@images_blueprint.route('/<string:image_id>', methods=['PUT'])
+def rout_update_image(image_id: str):
+
+    try:
+        image = Image(
+            project=request.form.get('project'),
+            image=BytesIO(request.files['image'].read()))
+
+        image = update_image(image_id,image)
+        return jsonify(image.to_json()), 200
+
+    except Exception as e:
         return jsonify({'error': str(e)}), 500
