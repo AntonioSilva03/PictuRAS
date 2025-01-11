@@ -11,7 +11,7 @@ class ContrastMessageRequest:
         return self.image
 
 
-    def getContrast(self) -> int:
+    def getContrast(self) -> float:
         return self.contrast
 
 
