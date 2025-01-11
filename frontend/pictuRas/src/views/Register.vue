@@ -18,11 +18,11 @@
               required
             />
             <Inputs
-              id="Username"
+              id="Name"
               label=""
-              type="username"
-              placeholder="Username"
-              v-model="username"
+              type="Name"
+              placeholder="Name"
+              v-model="name"
               required
             />
 
@@ -81,7 +81,7 @@
       data() {
       return {
         email: "",
-        username:"",
+        name:"",
         password: "",
         showPasswordModal: false,
       };

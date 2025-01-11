@@ -4,7 +4,7 @@
         <div class="landing-container">
 
            <!-- Content 1 -->
-          <div class="content1-layout">
+          <div class="content1-layout" ref="content1">
 
               <!-- Coluna da Esquerda -->
               <div class="left1-column">
@@ -78,14 +78,44 @@
 
                     <!-- Conteúdo da coluna direita -->
                     <div class="right2-column">
-                        
-                        <p>Recortar imagens</p>
-                        <h3>Faca edicoes instantaneas</h3>
+                        <p class="p2">Recortar imagens</p>
+                        <h2 class="title2">Faça edições instantâneas</h2>
+                        <p class="p21">
+                            Descubra ferramentas avançadas para recortar, ajustar e transformar imagens com precisão. Experimente edições rápidas e eficientes, deixando suas fotos exatamente como você imaginou. Tudo isso em um ambiente fácil de usar e com resultados profissionais.
+                        </p>
                     </div>
                 </div>
           </div>
 
+          <!-- Content 3 -->
+          <div class="content3-layout">
+                <div class="content3-wrapper">
+                    <img src="../assets/logo.png" alt="Logo" class="content3-logo" />
+                    <h2 class="content3-title">Precisa de uma edição rápida?</h2>
+                    <h3 class="content3-subtitle">Disponibilizamos ferramentas avançadas para facilitar a sua vida.</h3>
+                    <p class="content3-description">
+                        Explore as ferramentas mais modernas para recortar, redimensionar e personalizar imagens. 
+                        Crie designs únicos e impressionantes com facilidade e rapidez.
+                    </p>
+                    <Button2 :onClick="myFunction">
+                        Veja todos os recursos
+                    </Button2>
+
+                </div>
+          </div>
+
+          <!-- Content 4 -->
+          <div class="content4-layout">
+
+          </div>
+
+           <!-- Content 5 -->
+           <div class="margin-bot">
+
+            </div>
+
       </div>
+      <Footer :showFooter="showFooter" />
     </div>
 </template>
   
@@ -94,7 +124,8 @@
     import Navbar from '../components/Navbar.vue';
     import Button1 from '../components/Button-style1.vue';
     import VideoControlButton from '../components/VideoControlButton.vue';
-   
+    import Button2 from '../components/Button-style2.vue';
+    import Footer from "../components/FooterLanding.vue";
 
     export default {
     name: 'Landing',
@@ -102,11 +133,20 @@
         Navbar,
         Button1,
         VideoControlButton,
+        Button2,
+        Footer
     },
     data() {
         return {
             isPlaying: true, 
+            showFooter: false,
         };
+    },
+    mounted() {
+    window.addEventListener("scroll", this.handleScroll);
+    },
+    beforeDestroy() {
+        window.removeEventListener("scroll", this.handleScroll);
     },
     methods: {
         toggleVideo() {
@@ -117,6 +157,13 @@
                 video.play();
             }
             this.isPlaying = !this.isPlaying;
+        },
+        handleScroll() {
+        const content1 = this.$refs.content1;
+        const rect = content1.getBoundingClientRect();
+
+        // Mostra o footer quando content1 desaparece
+        this.showFooter = rect.bottom < 0;
         },
     },
     };
@@ -198,7 +245,7 @@
     font-family:Verdana, Geneva, Tahoma, sans-serif;
     background: linear-gradient(
         82.3deg,
-        #000000 0%, /* Começa com preto */
+        #000000 0%, 
         rgba(150, 93, 233, 1) 24.8%,
         rgba(99, 88, 238, 1) 70.3%
     );
@@ -257,7 +304,7 @@
 .left2-column {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: end;
     position: relative; 
     
 }
@@ -276,6 +323,108 @@
     height: auto; 
 }
 
+.right2-column{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: start;
+    height: 30%;
+    margin: auto;
+    text-align: start;
+    width: 70%;
+}
+
+.p2{
+    font-weight: 700;
+    text-transform: uppercase;
+    font-family: 'Adobe Clean', adobe-clean, 'Trebuchet MS', sans-serif;
+    font-size: 12px;
+}
+
+.title2{
+    font-size: 33px;
+    font-family: 'Adobe Clean', adobe-clean, 'Trebuchet MS', sans-serif;
+    line-height: 35px;
+    margin-bottom: 1em;
+
+}
+
+.p21{
+    word-wrap: break-word;
+    text-align: justify;
+    font-size: 16px;
+    font-weight: 70;
+}
+    
+
+/* Content 3 */
+
+.content3-layout {
+    background-color: rgba(255, 174, 0, 0.534);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+    font-family: 'Adobe Clean', adobe-clean, 'Trebuchet MS', sans-serif;
+    background: linear-gradient(90deg, #ff00ffcc, #ff6600c2, #ffcc00); 
+  }
+
+.content3-wrapper {
+  text-align: center;
+  width: 70%;
+  height: 70%;
+  margin: auto;
+}
+
+.content3-logo {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 1rem;
+}
+
+.content3-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.content3-subtitle {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  font-weight: bold;
+  font-weight: 400;
+}
+
+.content3-description {
+  font-size: 1rem;
+  margin-bottom: 4rem;
+  line-height: 1.5;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+
+
+/* Content 4 */
+
+.content4-layout {
+    background-color: rgba(255, 255, 255, 0.534);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    grid-template-columns: 50% 50%;
+    min-height: 80vh;
+}
+
+
+
+.margin-bot{
+    height: 15vh;
+    width: 100%;
+
+}
 
 
   </style>
