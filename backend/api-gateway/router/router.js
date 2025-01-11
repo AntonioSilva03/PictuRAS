@@ -1,5 +1,6 @@
 import express from 'express';
-import register from '../authentication/register.js'; // Use import for ES Module
+import register from '../authentication/register.js';
+import tools from '../tools/tools.js';
 
 const router = express.Router();
 
@@ -10,5 +11,8 @@ router.get('/', (req, res) => {
 
 // Authentication routes
 router.post('/register', register); // Use imported function directly
+
+// Tools routes
+router.use('/tools', tools);
 
 export default router; // Export router as ES Module
