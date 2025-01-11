@@ -51,7 +51,38 @@
 
           <!-- Content 2 -->
           <div class="content2-layout">
+                <div class="content2-wrapper">
 
+                    <!-- Conteúdo da coluna esquerda -->
+                    <div class="left2-column">
+                        <div class="video2-container">
+                            <video
+                                ref="videoElement"
+                                class="video-bg2"
+                                autoplay
+                                muted
+                                loop
+                                playsinline
+                            >
+                                <source src="../assets/RecorteImagem.mp4" type="video/mp4" />
+                                Your browser does not support the video element.
+                            </video>
+                            <VideoControlButton
+                                :isPlaying="isPlaying"
+                                :bottom="'15px'"
+                                :right="'85%'"
+                                @toggle="toggleVideo"
+                            />
+                        </div>
+                    </div>
+
+                    <!-- Conteúdo da coluna direita -->
+                    <div class="right2-column">
+                        
+                        <p>Recortar imagens</p>
+                        <h3>Faca edicoes instantaneas</h3>
+                    </div>
+                </div>
           </div>
 
       </div>
@@ -94,6 +125,8 @@
   
   <style scoped>
   
+
+  /* Content 1 */
   
   .main-layout {
       display: flex;
@@ -111,13 +144,6 @@
     
   }
 
-  .login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f7f7f7;
-  }
 
 
   .content1-layout {
@@ -200,13 +226,57 @@
     left: 0;
 }
 
+/* Content 2 */
+
 .content2-layout {
-    grid-area: content;
     background-color: rgba(170, 170, 170, 0.534);
-    display: grid;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     grid-template-columns: 50% 50%;
     height: 80vh;
   }
+
+  .content2-wrapper {
+  display: grid;
+  grid-template-columns: 40% 60%; 
+  width: 70%; 
+  height: 100%; 
+ 
+}
+
+.left2-column,
+.right2-column {
+  display: flex;
+  align-items: center; 
+  justify-content: center; 
+  padding: 1rem; 
+}
+
+
+.left2-column {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative; 
+    
+}
+
+.video-bg2 {
+    top: 0;
+    left: 0; 
+}
+
+.video2-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto; 
+    height: auto; 
+}
+
+
 
   </style>
   
