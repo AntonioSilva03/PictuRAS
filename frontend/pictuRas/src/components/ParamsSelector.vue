@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { useEditingToolStore } from '../stores/editingTool';
+import { useEditingToolStore } from '../stores/EditingTool';
 import { storeToRefs } from 'pinia';
 import ToolSlider from './ToolSlider.vue';
 import { Sketch } from '@ckpack/vue-color';

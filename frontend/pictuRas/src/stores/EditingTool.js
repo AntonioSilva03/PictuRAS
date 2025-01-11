@@ -1,58 +1,35 @@
 import { defineStore } from 'pinia'
+import axios from 'axios'
 
 export const useEditingToolStore = defineStore('editingTool', {
   state: () => ({
-    tools: [
-      {position:0,name:"Brightness",active:false,parameters:[{
-        name:'Brightness',
-        value:0.5,
-        type:'float',
-        min_value:0,
-        max_value:1
-      }]},
-      {position:1,name:"Saturation",active:false,parameters:[{
-        name:'Saturation',
-        value:0.5,
-        type:'float',
-        min_value:0,
-        max_value:1
-      }]},
-      {position:2,name:"Border",active:false,parameters:[
-        {
-          name:'border_width',
-          value:0,
-          type:'int',
-          min_value:0,
-          max_value:2000
-      },
-      {
-        name:'border_height',
-        value:0,
-        type:'int',
-        min_value:0,
-        max_value:2000
-    },
-    {
-      name:'border_color',
-      value:"#000000",
-      type:'hex',
-    },
-    
-    ]}
-],
+    tools: [],
     activeTool: null
   }),
-  // procedimento, posição , ativa?, parametros[]:
-  // (nome, valor, tipo, tipo de interface, range)
-  // degrees, -90, numerico, slide, [-360,360]
-
 
   actions: {
+    async fetchTools() {
+      try {
+
+        const response = await axios.get(`${import.meta.env.VITE_API_GATEWAY}/api/tools`)
+        const fetchedTools = response.data.map((tool, index) => ({
+          ...tool,
+          active: false, // Add "active" field
+          position: index // Add "position" field
+        }))
+        this.tools = fetchedTools
+      } catch (error) {
+        console.error('Failed to fetch tools:', error)
+      }
+    },
+
     addTool(name) {
       this.tools.push({
-        position,
+        position: this.tools.length,
         name,
-        active, // diz se é para ser aplicada, gateway resolve
+        input_type,
+        output_type,
+        active: false, // Set active to false by default
         parameters: []
       })
     },
@@ -88,7 +65,7 @@ export const useEditingToolStore = defineStore('editingTool', {
     getTool: (state) => {
       return (name) => state.tools.find(tool => tool.name === name)
     },
-    
+
     getParameterValue: (state) => {
       return (toolName, paramName) => {
         const tool = state.tools.find(t => t.name === toolName)

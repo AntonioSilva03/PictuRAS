@@ -8,12 +8,14 @@
       </div>
       <ToolsList id="tools"></ToolsList>
       <ParamsSelector v-if="imageStore.selectedImage" id="params"></ParamsSelector>
+      <ProcessButtons id="submit-area"/>
     </div>
   </template>
   
   <script setup>
   import { useImageStore } from '../stores/ImageStore';
   import ParamsSelector from './ParamsSelector.vue';
+  import ProcessButtons from './ProcessButtons.vue'
   import ToolsList from './ToolsList.vue';
   
   const imageStore = useImageStore();
@@ -29,7 +31,7 @@
     grid-template-areas:
       ". . ."   
       "tools prev ."
-      ". params .";
+      "submit-area params .";
     height: 100%;
     width: 100%;
   }
@@ -63,6 +65,13 @@
 
   #params{
     grid-area: params;
+  }
+  #submit-area{
+    grid-area: submit-area;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
   }
 
   </style>
