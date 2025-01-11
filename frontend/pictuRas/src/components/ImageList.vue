@@ -77,19 +77,24 @@ function handleFileUpload(event) {
 <style scoped>
 .wrapper {
   display: flex;
-  flex-wrap: wrap;
   flex-direction: column;
   align-items: center;
   background-color: #f0f0f0;
   height: 100%;
+  overflow-y: scroll;
 }
 .image-list {
   display: flex;
   flex-wrap: wrap;
-  flex-direction: column;
-  gap: 5px;
-  height: 85%;
-  overflow-y: scroll;
+  gap: 10px;
+  padding-left: 10px;
+  padding-top: 10px;
+  overflow: inherit;
+  height: 90%;
+}
+
+.image-list>div {
+  width: 45%;
 }
 
 .image-thumbnail {

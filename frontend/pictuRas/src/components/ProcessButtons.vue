@@ -27,8 +27,6 @@ export default {
 
 .btn-wrapper button{
 
-
-
 }
     
 </style>
