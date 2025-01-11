@@ -39,10 +39,12 @@
                       <source src="../assets/VideoLanding.mp4" type="video/mp4" />
                       Your browser does not support the video element.      
                   </video>
-                  <button @click="toggleVideo" class="video-control">
-                    <span v-if="isPlaying"><font-awesome-icon icon="fa-solid fa-pause" /></span>
-                    <span v-else><font-awesome-icon icon="play" /></span>
-                </button>
+                  <VideoControlButton
+                        :isPlaying="isPlaying"
+                        :bottom="'20px'"
+                        :right="'20px'"
+                        @toggle="toggleVideo"
+                    />
               </div>
 
           </div>
@@ -60,6 +62,7 @@
 
     import Navbar from '../components/Navbar.vue';
     import Button1 from '../components/Button-style1.vue';
+    import VideoControlButton from '../components/VideoControlButton.vue';
    
 
     export default {
@@ -67,6 +70,7 @@
     components: {
         Navbar,
         Button1,
+        VideoControlButton,
     },
     data() {
         return {
@@ -195,29 +199,6 @@
     top: 0;
     left: 0;
 }
-
-.video-control {
-    position: absolute;
-    bottom: 15px;
-    right: 15px;
-    z-index: 10; 
-    background-color: rgba(0, 0, 0, 0.5); 
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    width: 40px; 
-    height: 40px; 
-    border-radius: 50%; 
-    cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.3s;
-}
-
-.video-control:hover {
-    background-color: rgba(0, 0, 0, 0.8); 
-}
-
-
 
 .content2-layout {
     grid-area: content;
