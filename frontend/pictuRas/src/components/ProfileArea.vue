@@ -72,7 +72,7 @@ onMounted(async () => {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 25%;
+    width: 30%;
 }
 
 .logo1{
@@ -85,7 +85,7 @@ onMounted(async () => {
     font-size: 20px;
 }
 
-.profile-buttons{
+.profile-buttons {
     width: 100%;
     margin-top: 10%;
     display: flex;
@@ -93,49 +93,86 @@ onMounted(async () => {
 }
 
 .profile-buttons button {
-    background-color: #000000;
-    border: none;
-    border-radius: 20px;
-    padding: 10px 20px;
-    cursor: pointer;
     position: absolute;
+    padding: 10px 30px;
+    border-radius: 20px;
+    background: #000000;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    border: 1px solid #000000;
 }
 
 .profile-buttons button:nth-child(2) {
     right: 0;
 }
 
-.profile-buttons button:hover {
-    background-color: #c5c5c5;
-    border: 1px solid #000000;
+.profile-buttons button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #c5c5c5, #ffffff, #c5c5c5);
+    transition: all 0.5s;
 }
 
+.profile-buttons button:hover::before {
+    transform: scaleX(1);
+}
 
-.profile-buttons button>a {
+.profile-buttons button > a {
+    position: relative;
+    z-index: 1;
     text-decoration: none;
     color: #ffffff;
-    font-size: 14px;
+    font-size: 15px;
 }
 
-.profile-buttons button:hover>a {
+.profile-buttons button:hover > a {
     color: #000000;
 }
 
-.right-side button {
-    background-color: #000000;
-    border: none;
-    border-radius: 20px;
-    padding: 10px 20px;
-    cursor: pointer;
-    position: absolute;
-}
 
-.right-side button:hover {
-    background-color: #c5c5c5;
+.right-side button {
+    position: absolute;
+    padding: 10px 30px;
+    border-radius: 20px;
+    background: #000000;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    position: absolute;
     border: 1px solid #000000;
 }
 
+.right-side button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #c5c5c5, #ffffff, #c5c5c5);
+    transition: all 0.475s;
+}
+
+.right-side button:hover::before {
+    transform: scaleX(1);
+}
+
 .right-side button a {
+    position: relative;
+    z-index: 1;
     text-decoration: none;
     color: #ffffff;
     font-size: 14px;
@@ -144,6 +181,5 @@ onMounted(async () => {
 .right-side button:hover a {
     color: #000000;
 }
-
 
 </style>
