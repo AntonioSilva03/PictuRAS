@@ -1,12 +1,7 @@
 import mongoose from 'mongoose';
 import 'dotenv/config';
-
-
 import Auth from './model/Auth.js';
 import bcrypt from 'bcrypt';
-
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 export default async (req, res) => {
   try {

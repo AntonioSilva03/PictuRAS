@@ -1,6 +1,6 @@
-import jwt from 'jsonwebtoken';
+var jwt = require('jsonwebtoken');
 
-const SECRET = process.env.JWT_SECRET || "RAS2025"; 
+const SECRET = process.env.JWT_SECRET || "PictuRAS2025"; //Remove || and test w env after implementation 
 
 function verifyToken(token, res, callback) {
   jwt.verify(token, SECRET, function (err, payload) {
@@ -24,3 +24,4 @@ module.exports.verificaAcesso = function (req, res, next) {
     res.status(401).jsonp({ error: "Token inexistente!" });
   }
 };
+
