@@ -22,12 +22,14 @@ from tools.peoplecounter.pc_message_request import PeopleCountingMessageRequest
 from tools.peoplecounter.pc_message_reply import PeopleCountingMessageReply
 from tools.objectcounter.oc_message_request import ObjectCountingMessageRequest
 from tools.objectcounter.oc_message_reply import ObjectCountingMessageReply
+from tools.watermark.watermark_message_request import WatermarkMessageRequest
+from tools.watermark.watermark_message_reply import WatermarkMessageReply
 
-IN = 'oc_input_queue'
-OUT = 'oc_output_queue'
-REPLY = ObjectCountingMessageReply
-REQUEST = ObjectCountingMessageRequest
-IMAGE_INPUT = './images/image-3.jpg'
+IN = 'watermark_input_queue'
+OUT = 'watermark_output_queue'
+REPLY = WatermarkMessageReply
+REQUEST = WatermarkMessageRequest
+IMAGE_INPUT = './images/image-12.jpg'
 IMAGE_OUTPUT = 'out'
 
 
