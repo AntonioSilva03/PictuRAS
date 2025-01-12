@@ -1,0 +1,52 @@
+services:
+  
+  border-worker:
+    container_name: border-worker
+    build:
+      context: ./tools/border
+      dockerfile: Dockerfile
+    links:
+      - rabbitmq
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  brightness-worker:
+    container_name: brightness-worker
+    build:
+      context: ./tools/brightness
+      dockerfile: Dockerfile
+    links:
+      - rabbitmq
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  contrast-worker:
+    container_name: contrast-worker
+    build:
+      context: ./tools/contrast
+      dockerfile: Dockerfile
+    links:
+      - rabbitmq
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  rabbitmq:
+    container_name: picturas-rabbitmq
+    image: rabbitmq:management
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq/
+      - rabbitmq-logs:/var/log/rabbitmq/
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 5s
+      timeout: 30s
+
+volumes:
+  rabbitmq-data: 
+  rabbitmq-logs:
