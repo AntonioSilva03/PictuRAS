@@ -63,6 +63,14 @@ router.get('/mixed', passport.authenticate(['local', 'anonymous'], { session: fa
   res.json({ message: 'Hello anonymous user!', sessionId:req.sessionID});
 });
 
+router.get('/user/status', passport.authenticate(['local', 'anonymous'], { session: false }), (req, res) => {
+  if (req.isAuthenticated()) {
+    res.json({ status: 'loggedIn' });
+  } else {
+    res.json({ status: 'anonymous' });
+  }
+});
+
 router.get('/tools', passport.authenticate(['local', 'anonymous'], { session: false }), (req, res) => {
   try {
     return res.status(200).json([
@@ -206,6 +214,50 @@ router.get('/tools', passport.authenticate(['local', 'anonymous'], { session: fa
       error: 'Failed to fetch tools',
       details: error.response?.data || error.message,
     });
+  }
+});
+
+router.get('/projects', passport.authenticate(['local', 'anonymous'], { session: false }), (req, res) => {
+  try {
+    // logica de enviar const = axios.get wtv
+    return res.status(200).json([]);
+  
+  } catch (error) {
+    // Handle errors and send an appropriate response
+    console.error('Error fetching projects:', error.message);
+
+    res.status(error.response?.status || 500).json({
+      error: 'Failed to fetch projects',
+      details: error.response?.data || error.message,
+    });
+  }
+});
+
+
+router.post('/projects', passport.authenticate(['local', 'anonymous'], { session: false }), (req, res) => {
+  if (req.isAuthenticated()) {
+    // todo
+  } else {
+    try{
+      const { name, owner } = req.body;
+      // Create a new project
+      const newProjectWrapper = {
+        name: name || 'Untitled', // Default to 'Untitled' if no name is provided
+        owner: `anonymous-${req.sessionID}`, // Use user ID if authenticated, otherwise use session ID
+      };
+
+      // send to backend
+      // retrieve from backend
+      const newProject = {
+        id: "umId",
+        name: name || 'Untitled', // Default to 'Untitled' if no name is provided
+        owner: `anonymous-${req.sessionID}`, // Use user ID if authenticated, otherwise use session ID
+      };
+      // Return the newly created project
+      res.json(newProject);
+    }catch(e){
+      console.log(e)
+    }
   }
 });
 

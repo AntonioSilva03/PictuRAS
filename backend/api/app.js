@@ -6,6 +6,7 @@ var session = require('express-session');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var AnonymousStrategy = require('passport-anonymous').Strategy;
+var cors = require('cors')
 require ('dotenv/config');
 
 var apiRouter = require('./routes/index');
@@ -22,7 +23,7 @@ app.use(session({
   saveUninitialized: true,
   cookie: { 
     secure: false,
-    maxAge: 60 * 60 * 1000
+    maxAge: 24 * 60 * 60 * 1000
   } //Test true after implementation //Session expiring after 1 hour
 }));
 
@@ -35,6 +36,14 @@ passport.use(new AnonymousStrategy(User.authenticate()));
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow all origins
+    callback(null, origin || '*');  // Respond with the request's origin or * for no-origin requests
+  },
+  credentials: true,  // Allow credentials (cookies, headers, etc.)
+}));
 
 var mongoose = require("mongoose");
 var mongoDB = process.env.MONGO_URI;
