@@ -10,18 +10,25 @@
 
         <div v-else class="profile-Container">
             <div class="left-side">
-                <img src="/logo-no-text.png" alt="Logo" class="logo1"/>
+                <img src="/logo-no-text.png" alt="Logo" class="logo1" />
                 <h1>Username: {{ profileStore.profile.username }}</h1>
                 <p>Email: {{ profileStore.profile.email }}</p>
                 <p>Satus: <b>{{ profileStore.profile.status }}</b></p>
                 <div class="profile-buttons">
-                    <button><RouterLink to="/profile">Edit profile</RouterLink></button>
-                    <button><RouterLink to="/plans">Change plan</RouterLink></button>
+                    <button>
+                        <RouterLink to="/profile">Edit profile</RouterLink>
+                    </button>
+                    <button>
+                        <RouterLink to="/plans">Change plan</RouterLink>
+                    </button>
                 </div>
             </div>
             <div class="right-side">
-                <button><RouterLink to="/projects">My projects</RouterLink></button>
-                <div v-if="profileStore.profile.projects && profileStore.profile.projects.length > 0" class="projects-list">
+                <button>
+                    <RouterLink to="/projects">My projects</RouterLink>
+                </button>
+                <div v-if="profileStore.profile.projects && profileStore.profile.projects.length > 0"
+                    class="projects-list">
                     <ul>
                         <li v-for="(project, index) in profileStore.profile.projects.slice(0, 4)" :key="index">
                             {{ project.name }}
@@ -48,7 +55,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-
 .profile-area {
     width: 100%;
     display: flex;
@@ -56,7 +62,7 @@ onMounted(async () => {
 }
 
 .profile-Container {
-    background-color: #c5c5c5;
+    background-color: #f7f7f7;
     width: 60%;
     height: auto;
     display: flex;
@@ -65,7 +71,12 @@ onMounted(async () => {
     padding: 70px;
     border-radius: 40px;
     cursor: default;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, 
+                 rgba(0, 0, 0, 0.12) 0px -12px 30px, 
+                 rgba(0, 0, 0, 0.12) 0px 4px 6px, 
+                 rgba(0, 0, 0, 0.17) 0px 12px 13px, 
+                 rgba(0, 0, 0, 0.09) 0px -3px 5px;
+
 }
 
 .left-side {
@@ -75,13 +86,13 @@ onMounted(async () => {
     width: 30%;
 }
 
-.logo1{
+.logo1 {
     width: 100px;
     height: 100px;
     margin-bottom: 16px;
 }
 
-.left-side p{
+.left-side p {
     font-size: 20px;
 }
 
@@ -102,31 +113,19 @@ onMounted(async () => {
     cursor: pointer;
     overflow: hidden;
     border: 1px solid #000000;
+    transition: 0.25s;
 }
 
 .profile-buttons button:nth-child(2) {
     right: 0;
 }
 
-.profile-buttons button::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    transform: scaleX(0);
-    transform-origin: 0 50%;
-    width: 100%;
-    height: 100%;
-    border-radius: inherit;
-    background: linear-gradient(90deg, #c5c5c5, #ffffff, #c5c5c5);
-    transition: all 0.5s;
+.profile-buttons button:hover {
+    background-color: #ffffff;
+    box-shadow: 0 0 6px #000000;
 }
 
-.profile-buttons button:hover::before {
-    transform: scaleX(1);
-}
-
-.profile-buttons button > a {
+.profile-buttons button>a {
     position: relative;
     z-index: 1;
     text-decoration: none;
@@ -134,10 +133,9 @@ onMounted(async () => {
     font-size: 15px;
 }
 
-.profile-buttons button:hover > a {
+.profile-buttons button:hover>a {
     color: #000000;
 }
-
 
 .right-side button {
     position: absolute;
@@ -150,24 +148,12 @@ onMounted(async () => {
     overflow: hidden;
     position: absolute;
     border: 1px solid #000000;
+    transition: 0.25s;
 }
 
-.right-side button::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    transform: scaleX(0);
-    transform-origin: 0 50%;
-    width: 100%;
-    height: 100%;
-    border-radius: inherit;
-    background: linear-gradient(90deg, #c5c5c5, #ffffff, #c5c5c5);
-    transition: all 0.475s;
-}
-
-.right-side button:hover::before {
-    transform: scaleX(1);
+.right-side button:hover {
+    background-color: #ffffff;
+    box-shadow: 0 0 6px #000000;
 }
 
 .right-side button a {
