@@ -15,7 +15,7 @@
   };
   </script>
 
-<style>
+<style scoped>
 /* Content 4 */
 
 .content4-layout {
