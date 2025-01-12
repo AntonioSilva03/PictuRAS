@@ -19,17 +19,20 @@ app.use(session({
   secret: 'PictuRAS2025',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false } //Test true after implementation
+  cookie: { 
+    secure: false,
+    maxAge: 60 * 60 * 1000
+  } //Test true after implementation //Session expiring after 1 hour
 }));
-
-app.use(passport.initialize());
-app.use(passport.session());
 
 // Passport configuration
 var User = require('./models/user');
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 var mongoose = require("mongoose");
 var mongoDB = process.env.MONGO_URI;
