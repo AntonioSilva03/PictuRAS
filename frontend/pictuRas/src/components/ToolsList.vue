@@ -59,10 +59,12 @@ export default {
 </script>
 
 <style scoped>
+
 .tools-list {
   padding: 1rem;
   background-color: #f7f7f7;
-  width: 80%;
+  /*width: 100%;*/
+  height: fit-content;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -75,6 +77,9 @@ export default {
 ul {
   list-style: none;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 li {
