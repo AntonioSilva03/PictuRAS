@@ -60,6 +60,13 @@ export default {
       required: true,
     },
   },
+  emits: ['toggleVideo', 'content1Visible'],
+  mounted() {
+    window.addEventListener('scroll', this.checkVisibility);
+  },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.checkVisibility);
+  },
   methods: {
     emitToggleVideo() {
       const video = this.$refs.videoElement;
@@ -73,6 +80,12 @@ export default {
 
       // Emit event to notify parent
       this.$emit('toggleVideo');
+    },
+
+    checkVisibility() {
+      const rect = this.$refs.content1.getBoundingClientRect();
+      const isVisible = rect.bottom > 0;
+      this.$emit('content1Visible', isVisible);
     },
   },
 };
