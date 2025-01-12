@@ -10,6 +10,7 @@
 
         <div v-else class="profile-Container">
             <div class="left-side">
+                <img src="/logo-no-text.png" alt="Logo" class="logo1"/>
                 <h1>Username: {{ profileStore.profile.username }}</h1>
                 <p>Email: {{ profileStore.profile.email }}</p>
                 <p>Satus: <b>{{ profileStore.profile.status }}</b></p>
@@ -71,46 +72,77 @@ onMounted(async () => {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 25%;
 }
 
-.left-side b{
-    font-weight: normal;
-    color: #ffd500;
+.logo1{
+    width: 100px;
+    height: 100px;
+    margin-bottom: 16px;
+}
+
+.left-side p{
+    font-size: 20px;
 }
 
 .profile-buttons{
     width: 100%;
     margin-top: 10%;
     display: flex;
-    justify-content: space-around;
+    position: relative;
 }
 
-.left-side button {
-    background-color: #ffd500;
-    color: #000000;
+.profile-buttons button {
+    background-color: #000000;
     border: none;
-    border-radius: 10px;
-    padding: 10px;
+    border-radius: 20px;
+    padding: 10px 20px;
     cursor: pointer;
+    position: absolute;
 }
 
-.left-side button a {
+.profile-buttons button:nth-child(2) {
+    right: 0;
+}
+
+.profile-buttons button:hover {
+    background-color: #c5c5c5;
+    border: 1px solid #000000;
+}
+
+
+.profile-buttons button>a {
     text-decoration: none;
+    color: #ffffff;
+    font-size: 14px;
+}
+
+.profile-buttons button:hover>a {
     color: #000000;
 }
 
 .right-side button {
     background-color: #000000;
-    color: #000000;
     border: none;
-    border-radius: 10px;
-    padding: 10px;
+    border-radius: 20px;
+    padding: 10px 20px;
     cursor: pointer;
+    position: absolute;
+}
+
+.right-side button:hover {
+    background-color: #c5c5c5;
+    border: 1px solid #000000;
 }
 
 .right-side button a {
     text-decoration: none;
     color: #ffffff;
+    font-size: 14px;
+}
+
+.right-side button:hover a {
+    color: #000000;
 }
 
 
