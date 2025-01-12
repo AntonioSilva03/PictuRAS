@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify # type: ignore
 from controllers.tool import *
+import traceback
 
 tools_blueprint = Blueprint('tool', __name__)
 
@@ -12,33 +13,39 @@ def route_get_tools():
 
 @tools_blueprint.route('/<string:tool_name>', methods=['GET'])
 def route_get_tool(tool_name: str):
-    tool = find_by_id(tool_name)
-    if tool:
+    try:
+        tool = find_by_id(tool_name)
         return jsonify(tool.to_json()), 200
-    return jsonify({"error": "Tool not found"}), 404
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({'error': f'{e}'}), 404
 
 
 @tools_blueprint.route('/', methods=['POST'])
 def route_insert_tool():
-    tool_data = request.json
-    tool = insert_tool(tool_data)
-    if tool:
+    try:
+        tool = insert_tool(Tool(**request.json))
         return jsonify(tool.to_json()), 200
-    return jsonify({"error": "Invalid data"}), 500
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({'error': f'{e}'}), 500
 
 
 @tools_blueprint.route('/<string:tool_name>', methods=['PUT'])
 def route_update_tool(tool_name: str):
-    tool_data = request.json
-    tool = update_tool(tool_name, tool_data)
-    if tool:
+    try:
+        tool = update_tool(tool_name, request.json)
         return jsonify(tool.to_json()), 200
-    return jsonify({"error": "Tool not found"}), 500
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({'error': f'{e}'}), 500
 
 
 @tools_blueprint.route('/<string:tool_name>', methods=['DELETE'])
 def route_delete_tool(tool_name: str):
-    tool = delete_tool(tool_name)
-    if tool:
+    try:
+        tool = delete_tool(tool_name)
         return jsonify(tool.to_json()), 200
-    return jsonify({"error": "Tool not found"}), 500
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({'error': f'{e}'}), 500

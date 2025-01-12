@@ -7,10 +7,7 @@ def list_projects() -> List[Project]:
 
 
 def find_by_id(project_id: str) -> Optional[Project]:
-    try:
-        return Project.objects.get(id=project_id)
-    except Exception:
-        return None
+    return Project.objects.get(id=project_id)
 
 
 def find_user_projects(user_id: str) -> List[Project]:
@@ -18,26 +15,17 @@ def find_user_projects(user_id: str) -> List[Project]:
 
 
 def insert_project(project: Project) -> Optional[Project]:
-    try:
-        project.save()
-        return project
-    except Exception:
-        return None
+    project.save()
+    return project
 
 
 def update_project(project_id: str, project: dict) -> Optional[Project]:
-    try:
-        old_project = Project.objects.get(id=project_id)
-        old_project.update(**project)
-        return Project.objects.get(id=project_id)
-    except Exception:
-        return None
+    old_project = Project.objects.get(id=project_id)
+    old_project.update(**project)
+    return Project.objects.get(id=project_id)
 
 
 def delete_project(project_id: str) -> Optional[Project]:
-    try:
-        project = Project.objects.get(id=project_id)
-        project.delete()
-        return project
-    except Exception:
-        return None
+    project = Project.objects.get(id=project_id)
+    project.delete()
+    return project

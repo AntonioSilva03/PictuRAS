@@ -2,6 +2,7 @@ from io import BytesIO
 from flask import Blueprint, request, jsonify, send_file # type: ignore
 from models.image import Image
 from controllers.image import *
+import traceback
 
 images_blueprint = Blueprint('image', __name__)
 
@@ -14,63 +15,67 @@ def route_get_images():
 
 @images_blueprint.route('/<string:image_id>', methods=['GET'])
 def route_get_image(image_id: str):
-    image = find_by_id(image_id)
-    if image:
+    try:
+        image = find_by_id(image_id)
         return jsonify(image.to_json()), 200
-    return jsonify({'error': 'Image not found'}), 404
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({'error': f'{e}'}), 404
 
 
 @images_blueprint.route('/info/<string:image_id>', methods=['GET'])
 def route_get_image_info(image_id: str):
-    image_info = find_info_by_id(image_id)
-    if image_info:
+    try:
+        image_info = find_info_by_id(image_id)
         return jsonify(image_info.to_json()), 200
-    return jsonify({'error': 'Image not found'}), 404
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({'error': f'{e}'}), 404
 
 
 @images_blueprint.route('/data/<string:image_id>', methods=['GET'])
 def route_get_image_data(image_id: str):
-    chunks = find_chunks_by_id(image_id)
-    image_info = find_info_by_id(image_id)
-    if chunks and image_info:
+    try:
+        chunks = find_chunks_by_id(image_id)
+        image_info = find_info_by_id(image_id)
         data = b''.join(chunk.data for chunk in chunks)
         return send_file(BytesIO(data), mimetype=f'image/{image_info.format.lower()}'), 200
-    return jsonify({'error': 'Image not found'}), 404
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({'error': f'{e}'}), 404
 
 
 @images_blueprint.route('/<string:image_id>', methods=['DELETE'])
 def route_delete_image(image_id: str):
-    image = delete_image(image_id)
-    if image:
+    try:
+        image = delete_image(image_id)
         return jsonify({'id': str(image.id)}), 200
-    return jsonify({'error': 'Image not found'}), 500
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({'error': f'{e}'}), 500
 
 
 @images_blueprint.route('/', methods=['POST'])
 def route_insert_image():
-
     try:
         image = Image(
             project=request.form.get('project'),
             image=BytesIO(request.files['image'].read()))
-
         image = insert_image(image)
         return jsonify(image.to_json()), 200
-
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        traceback.print_exc()
+        return jsonify({'error': f'{e}'}), 500
 
 
 @images_blueprint.route('/<string:image_id>', methods=['PUT'])
 def route_update_image(image_id: str):
-
     try:
         image = Image(
             project=request.form.get('project'),
             image=BytesIO(request.files['image'].read()))
-
         image = update_image(image_id,image)
         return jsonify(image.to_json()), 200
-
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        traceback.print_exc()
+        return jsonify({'error': f'{e}'}), 500
