@@ -59,7 +59,7 @@
   };
   </script>
 
-<style>
+<style scoped>
 
 .content2-layout {
     background-color: rgba(170, 170, 170, 0.534);

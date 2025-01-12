@@ -28,7 +28,7 @@
   </script>
   
 
-  <style>
+  <style scoped>
 
   /* Content 3 */
 

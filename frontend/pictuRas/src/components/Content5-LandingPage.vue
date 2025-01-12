@@ -24,7 +24,7 @@
   library.add(faPlus, faMinus);
   
   export default {
-    name: 'FaqAccordion',
+    name: 'Content5',
     components: {
       FontAwesomeIcon,
     },

@@ -17,11 +17,9 @@
             <!-- Content5 -->
              <Content5></Content5>
 
+            <!-- Content6 -->
+            <Content6 @content6Visible="handleContent6Visibility"></Content6>
 
-           <!-- Content 6 -->
-           <div class="margin-bot">
-
-            </div>
 
       </div>
       <Footer :showFooter="showFooter" />
@@ -36,6 +34,7 @@
     import Content3 from '../components/Content3-LandingPage.vue';
     import Content4 from '../components/Content4-LandingPage.vue';
     import Content5 from '../components/Content5-LandingPage.vue';
+    import Content6 from '../components/Content6-LandingPage.vue';
     import Button1 from '../components/Button-style1.vue';
     import Button2 from '../components/Button-style2.vue';
     import Footer from "../components/FooterLanding.vue";
@@ -49,6 +48,7 @@
         Content3,
         Content4,
         Content5,
+        Content6,
         Button1,
         Button2,
         Footer
@@ -57,6 +57,8 @@
         return {
             isPlaying: true, 
             showFooter: false,
+            content1Visible: true,
+            content6Visible: false,
         };
     },
     methods: {
@@ -65,7 +67,15 @@
         },
 
         handleContent1Visibility(isVisible) {
-        this.showFooter = !isVisible;
+            this.content1Visible = isVisible;
+            this.updateFooterVisibility();
+        },
+        handleContent6Visibility(isVisible) {
+            this.content6Visible = isVisible;
+            this.updateFooterVisibility();
+        },
+        updateFooterVisibility() {
+            this.showFooter = !this.content1Visible || !this.content6Visible;
         },
     },
     };

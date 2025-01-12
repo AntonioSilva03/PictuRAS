@@ -92,7 +92,7 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
 
 .content1-layout {
     grid-area: content;
