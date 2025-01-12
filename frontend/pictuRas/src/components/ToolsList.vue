@@ -61,8 +61,15 @@ export default {
 <style scoped>
 .tools-list {
   padding: 1rem;
-  background-color: #e0e0e0;
+  background-color: #f7f7f7;
   width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-self: center;
+  border-radius: 20px;
+  border: 1px solid #000000;
+  box-shadow: 0 0 6px #000000;
 }
 
 ul {

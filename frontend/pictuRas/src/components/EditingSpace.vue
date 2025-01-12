@@ -22,18 +22,16 @@
   </script>
   
   <style scoped>
+
   .editing-space {
     background-color: #fff;
-    border: 1px solid #ccc;
     display: grid;
-    grid-template-rows: 5% 60% 35%;
-    grid-template-columns: 30% 60% 10%;
     grid-template-areas:
-      ". . ."   
-      "tools prev ."
-      "submit-area params .";
-    height: 100%;
+      "prev tools"
+      "params submit-area";
+    grid-template-columns: 75% 25%;
     width: 100%;
+    margin-top: 10%;
   }
 
   .image-preview {
@@ -68,10 +66,6 @@
   }
   #submit-area{
     grid-area: submit-area;
-    height: 100%;
-    width: 100%;
-    display: flex;
-    align-items: center;
   }
 
   </style>

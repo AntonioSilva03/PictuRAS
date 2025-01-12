@@ -44,7 +44,6 @@
     padding-bottom: 1rem;
     display: flex;
     align-items: center;
-    height: 50%;
     width: 100%;
     justify-content: center; /* Align everything to the left */
   }
