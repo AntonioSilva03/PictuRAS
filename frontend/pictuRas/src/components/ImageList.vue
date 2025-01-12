@@ -75,26 +75,32 @@ function handleFileUpload(event) {
 
 
 <style scoped>
+
 .wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
   background-color: #f0f0f0;
   height: 100%;
-  overflow-y: scroll;
+  overflow-y: hidden;
 }
+
 .image-list {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  padding-left: 10px;
   padding-top: 10px;
-  overflow: inherit;
+  overflow-y: scroll;
   height: 90%;
+  width: 100%;
+  justify-content: center;
 }
 
 .image-list>div {
   width: 45%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .image-thumbnail {
@@ -113,12 +119,41 @@ function handleFileUpload(event) {
 }
 
 .image-thumbnail:hover {
-  border-color: #1e90ff;
+  border-color: #000000;
 }
 
 .btn-flex {
   display: flex;
   flex-direction: row;
-  gap: 10px;
+  width: 100%;
+  position: relative;
+  padding-top: 5%;
+  justify-content: space-around;
+  border-top: 1px solid #000000;
 }
+
+.btn-flex button {
+    padding: 10px 30px;
+    border-radius: 20px;
+    background: #000000;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    border: 1px solid #000000;
+    transition: 0.25s;
+}
+
+.btn-flex:nth-child(2) {
+    right: 0;
+}
+
+.btn-flex button:hover {
+    background-color: #ffffff;
+    box-shadow: 0 0 6px #000000;
+    color: #000000;
+}
+
+
+
 </style>

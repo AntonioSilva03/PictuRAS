@@ -30,11 +30,10 @@
   
   
   .main-layout {
-      background-color: aqua;
+      background-color: rgb(255, 255, 255);
       display: grid;
       height: 100%;
       width: 100%;
-      grid-template-rows: 8% 92%;
       grid-template-columns: 25% 75%;
       grid-template-areas:
         "nav nav"
