@@ -5,6 +5,7 @@ var logger = require('morgan');
 var session = require('express-session');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var AnonymousStrategy = require('passport-anonymous').Strategy;
 require ('dotenv/config');
 
 var apiRouter = require('./routes/index');
@@ -30,6 +31,7 @@ var User = require('./models/user');
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+passport.use(new AnonymousStrategy(User.authenticate()));
 
 app.use(passport.initialize());
 app.use(passport.session());
