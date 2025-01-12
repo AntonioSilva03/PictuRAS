@@ -7,22 +7,61 @@
 </template>
   
 <script>
+import { useProjectStore } from '../stores/projectStore';
+import { useRouter } from 'vue-router';
+import Navbar from '../components/Navbar.vue';
+import ImageList from '../components/ImageList.vue';
+import EditingSpace from '../components/EditingSpace.vue';
+import axios from 'axios';
 
-    import Navbar from '../components/Navbar.vue';
-    import ImageList from '../components/ImageList.vue';
-    import EditingSpace from '../components/EditingSpace.vue';
+const api = import.meta.env.VITE_API_GATEWAY;
 
-    // Example: Hardcode or get project ID dynamically
-    const projectId = 1; // Assume this comes from route params or user selection
+export default {
+  name: 'Project',
+  components: {
+    Navbar,
+    ImageList,
+    EditingSpace
+  },
+  setup() {
+    const projectStore = useProjectStore();
+    const router = useRouter();
 
-    export default {
-    name: 'Project',
-    components: {
-        Navbar,
-        ImageList,
-        EditingSpace
-    },
+    // Check for selected project and user status
+    const checkProjectAndUserStatus = async () => {
+
+      if (!projectStore.selectedProject) {
+
+        const userStatus = await getUserStatus(); // Example: Replace with real API or authentication logic
+
+        if (userStatus === 'loggedIn') {
+
+          router.push('/projects'); // Redirect to projects page
+        } else if (userStatus === 'anonymous') {
+          
+          // generate session project
+          alert('You are currently Anonymous. Reduced features ');
+          projectStore.generateSessionProject();
+          console.log(projectStore.selectProject.name)
+        }
+      }
     };
+
+    // Call the check function when the component mounts
+    checkProjectAndUserStatus();
+  }
+};
+
+
+const getUserStatus = async () => {
+  try {
+    const response = await axios.get('http://localhost:3000/api/user/status', { withCredentials: true });
+    return response.data.status;
+  } catch (error) {
+    console.error('Error fetching user status:', error);
+  }
+};
+
 
 </script>
   
