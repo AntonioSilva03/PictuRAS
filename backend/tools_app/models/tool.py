@@ -12,6 +12,8 @@ class Parameter(EmbeddedDocument):
 
 class Tool(Document):
 
+    meta = {'collection': 'tools'}
+
     name = StringField(required=True, unique=True) 
     input_type = StringField(required=True, choices=['image', 'text'])
     output_type = StringField(required=True, choices=['image', 'text'])

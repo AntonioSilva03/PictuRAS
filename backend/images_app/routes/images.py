@@ -1,27 +1,19 @@
 from io import BytesIO
 from flask import Blueprint, request, jsonify, send_file # type: ignore
 from models.image import Image
-from controllers.image import (
-    list_images,
-    find_by_id,
-    find_info_by_id,
-    find_chunks_by_id,
-    insert_image,
-    update_image,
-    delete_image,
-)
+from controllers.image import *
 
 images_blueprint = Blueprint('image', __name__)
 
 
 @images_blueprint.route('/', methods=['GET'])
-def rout_get_images():
+def route_get_images():
     images = list_images()
     return jsonify([image.to_json() for image in images]), 200
 
 
 @images_blueprint.route('/<string:image_id>', methods=['GET'])
-def rout_get_image(image_id: str):
+def route_get_image(image_id: str):
     image = find_by_id(image_id)
     if image:
         return jsonify(image.to_json()), 200
@@ -29,7 +21,7 @@ def rout_get_image(image_id: str):
 
 
 @images_blueprint.route('/info/<string:image_id>', methods=['GET'])
-def rout_get_image_info(image_id: str):
+def route_get_image_info(image_id: str):
     image_info = find_info_by_id(image_id)
     if image_info:
         return jsonify(image_info.to_json()), 200
@@ -37,7 +29,7 @@ def rout_get_image_info(image_id: str):
 
 
 @images_blueprint.route('/data/<string:image_id>', methods=['GET'])
-def rout_get_image_data(image_id: str):
+def route_get_image_data(image_id: str):
     chunks = find_chunks_by_id(image_id)
     image_info = find_info_by_id(image_id)
     if chunks and image_info:
@@ -47,7 +39,7 @@ def rout_get_image_data(image_id: str):
 
 
 @images_blueprint.route('/<string:image_id>', methods=['DELETE'])
-def rout_delete_image(image_id: str):
+def route_delete_image(image_id: str):
     image = delete_image(image_id)
     if image:
         return jsonify({'id': str(image.id)}), 200
@@ -55,7 +47,7 @@ def rout_delete_image(image_id: str):
 
 
 @images_blueprint.route('/', methods=['POST'])
-def rout_insert_image():
+def route_insert_image():
 
     try:
         image = Image(
@@ -70,7 +62,7 @@ def rout_insert_image():
 
 
 @images_blueprint.route('/<string:image_id>', methods=['PUT'])
-def rout_update_image(image_id: str):
+def route_update_image(image_id: str):
 
     try:
         image = Image(

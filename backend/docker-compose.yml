@@ -1,5 +1,17 @@
 services:
 
+  projects-app:
+    container_name: projects-app
+    build:
+      context: ./projects_app
+      dockerfile: Dockerfile 
+    ports:
+      - "3003:3003"
+    depends_on:
+      - projects-mongodb
+    links:
+      - projects-mongodb
+
   images-app:
     container_name: images-app
     build:
@@ -11,12 +23,6 @@ services:
       - images-mongodb
     links:
       - images-mongodb
-  
-  images-mongodb:
-    container_name: images-db
-    image: mongo:latest
-#    ports:
-#     - "27002:27017"
 
   tools-app:
     container_name: tools-app
@@ -29,6 +35,18 @@ services:
       - tools-mongodb
     links:
       - tools-mongodb
+
+  projects-mongodb:
+    container_name: projects-db
+    image: mongo:latest
+#    ports:
+#     - "27003:27017"
+
+  images-mongodb:
+    container_name: images-db
+    image: mongo:latest
+#    ports:
+#     - "27002:27017"
 
   tools-mongodb:
     container_name: tools-db

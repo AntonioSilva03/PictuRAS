@@ -44,7 +44,7 @@ class ImageFile(Document):
 
 class Image(Document):
 
-    meta = {'collection': 'image'}
+    meta = {'collection': 'images'}
 
     project = StringField(required=True)
     image = ImageField(size=(1920, 1080, True),required=True)
