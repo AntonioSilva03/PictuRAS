@@ -1,4 +1,15 @@
 services:
+
+  autocrop-worker:
+    container_name: autocrop-worker
+    build:
+      context: ./tools/autocrop
+      dockerfile: Dockerfile
+    links:
+      - rabbitmq
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
   
   border-worker:
     container_name: border-worker
@@ -26,6 +37,61 @@ services:
     container_name: contrast-worker
     build:
       context: ./tools/contrast
+      dockerfile: Dockerfile
+    links:
+      - rabbitmq
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  crop-worker:
+    container_name: crop-worker
+    build:
+      context: ./tools/crop
+      dockerfile: Dockerfile
+    links:
+      - rabbitmq
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  ocr-worker:
+    container_name: ocr-worker
+    build:
+      context: ./tools/ocr
+      dockerfile: Dockerfile
+    links:
+      - rabbitmq
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  rotate-worker:
+    container_name: rotate-worker
+    build:
+      context: ./tools/rotate
+      dockerfile: Dockerfile
+    links:
+      - rabbitmq
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  scale-worker:
+    container_name: scale-worker
+    build:
+      context: ./tools/scale
+      dockerfile: Dockerfile
+    links:
+      - rabbitmq
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  watermark-worker:
+    container_name: watermark-worker
+    build:
+      context: ./tools/watermark
       dockerfile: Dockerfile
     links:
       - rabbitmq

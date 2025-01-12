@@ -4,18 +4,18 @@ import functools
 import pika # type: ignore
 from threading import Thread
 from pika.exchange_type import ExchangeType # type: ignore
-from crop_tool import CropTool
-from crop_message_request import CropMessageRequest
+from autocrop_tool import AutoCropTool
+from autocrop_message_request import AutoCropMessageRequest
 
 RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'localhost')
 RABBITMQ_PORT = os.getenv('RABBITMQ_PORT', '5672')
 
 EXCHANGE=os.getenv('EXCHANGE', 'tools-exchange')
-REQUEST_QUEUE = os.getenv('REQUEST_QUEUE', 'crop-queue')
+REQUEST_QUEUE = os.getenv('REQUEST_QUEUE', 'autocrop-queue')
 RESULTS_QUEUE = os.getenv('RESULTS_QUEUE', 'results-queue')
 
 
-class CropWorker:
+class AutoCropWorker:
 
     def __init__(self):
         self.parameters = pika.ConnectionParameters(host=RABBITMQ_HOST,port=RABBITMQ_PORT)
@@ -56,9 +56,9 @@ class CropWorker:
 
     def worker_handle_request(self, ch, method, properties, body):
 
-        print(f'CropWorker received image: {properties.correlation_id}')
-        request = CropMessageRequest.from_json(body.decode())
-        tool = CropTool(request)
+        print(f'AutoCropWorker received image: {properties.correlation_id}')
+        request = AutoCropMessageRequest.from_json(body.decode())
+        tool = AutoCropTool(request)
         response = tool.apply().to_json()
 
         self.channel.connection.add_callback_threadsafe(
@@ -75,7 +75,7 @@ class CropWorker:
             body=json.dumps(response),
             properties=pika.BasicProperties(
                 correlation_id=properties.correlation_id))
-        print(f'CropWorker sent image: {properties.correlation_id}')
+        print(f'AutoCropWorker sent image: {properties.correlation_id}')
 
 
     def ack_message(self, ch, delivery_tag):
@@ -89,5 +89,5 @@ class CropWorker:
              worker.join()
 
 
-server = CropWorker()
+server = AutoCropWorker()
 server.start()

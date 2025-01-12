@@ -1,6 +1,6 @@
 import json
 
-class RembgMessageReply:
+class AutoCropMessageReply:
 
     def __init__(self, image: str) -> None:
         self.image = image
@@ -17,8 +17,8 @@ class RembgMessageReply:
 
 
     @staticmethod
-    def from_json(data: str) -> 'RembgMessageReply':
+    def from_json(data: str) -> 'AutoCropMessageReply':
         data = json.loads(data)
-        return RembgMessageReply(
+        return AutoCropMessageReply(
             image=data['image'],
         )

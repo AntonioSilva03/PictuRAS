@@ -1,10 +1,10 @@
 import base64
-import numpy as np
-import cv2
-from detectron2.engine import DefaultPredictor
-from detectron2.config import get_cfg
-from detectron2.model_zoo import get_config_file, get_checkpoint_url
-from detectron2.data import MetadataCatalog
+import numpy as np # type: ignore
+import cv2 # type: ignore
+from detectron2.engine import DefaultPredictor  # type: ignore
+from detectron2.config import get_cfg # type: ignore
+from detectron2.model_zoo import get_config_file, get_checkpoint_url # type: ignore
+from detectron2.data import MetadataCatalog # type: ignore
 from collections import Counter
 from oc_message_reply import ObjectCountingMessageReply
 from oc_message_request import ObjectCountingMessageRequest
