@@ -23,8 +23,9 @@ router.post('/register', function (req, res) {
           dateAccessed: d
         }), req.body.password, function (err, user) {
           if (err) {
-            res.jsonp({ error: err, message: "Register error: " + err });
+            res.status(401).jsonp({ error: err, message: "Register error: " + err });
           } else {
+            // MANDAR AO BACK
             res.jsonp('Utilizador registado com sucesso!')
           }
         });
@@ -35,10 +36,35 @@ router.post('/register', function (req, res) {
     });
 });
 
-router.post('/login', passport.authenticate('local'), function (req, res) {
-    var date = new Date().toISOString().substring(0, 19);
-    User.updateUser(req.user.username, {dateAccessed: date})
-    res.status(200).jsonp({ message: "Login successful", user: req.user,sessionId:req.sessionID});
+router.post('/login', (req, res, next) => {
+  passport.authenticate('local', async (err, user, info) => {
+    if (err) {
+      console.error('Authentication error:', err);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+
+    if (!user) {
+      // If authentication failed, return the error message provided by Passport
+      return res.status(401).json({ message: info?.message || 'Invalid credentials' });
+    }
+
+    // Log the user in and update their dateAccessed
+    req.logIn(user, async (loginErr) => {
+      if (loginErr) {
+        console.error('Login error:', loginErr);
+        return res.status(500).json({ error:"Failed to log in server error",message: 'Failed to log in' });
+      }
+
+      try {
+        const date = new Date().toISOString().substring(0, 19); // Current timestamp
+        await User.updateUser(user.username, { dateAccessed: date }); // Update user's last accessed date
+        res.status(200).json({ message: 'Login successful' });
+      } catch (updateErr) {
+        console.error('Error updating user access date:', updateErr);
+        res.status(500).json({ message: 'Error updating user access date' });
+      }
+    });
+  })(req, res, next);
 });
 
 router.post('/logout', function (req, res) {
@@ -232,7 +258,6 @@ router.get('/projects', passport.authenticate(['local', 'anonymous'], { session:
     });
   }
 });
-
 
 router.post('/projects', passport.authenticate(['local', 'anonymous'], { session: false }), (req, res) => {
   if (req.isAuthenticated()) {
