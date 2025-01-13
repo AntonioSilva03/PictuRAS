@@ -1,8 +1,10 @@
 <template>
     <div class="main-layout">
-        <Navbar id="nav"></Navbar>
         <SidebarProjects />
-        <ProjectList/>
+        <div class="content-layout">
+            <Navbar id="nav"></Navbar>
+            <ProjectList/>
+        </div>
     </div>
 </template>
 
@@ -19,7 +21,6 @@ export default {
         Navbar,
         SidebarProjects,
         ProjectList,
-
     },
 }
 
@@ -37,4 +38,16 @@ export default {
         gap:0px;
         overflow-x: hidden;
     }
+
+    .content-layout {
+    grid-row: 1 / 2; 
+    grid-column: 2 / 3; 
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 </style>

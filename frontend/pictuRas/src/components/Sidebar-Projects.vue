@@ -89,9 +89,12 @@ export default {
     position: fixed;
     width: 13%;
     display: flex;
+    grid-row: 1 / 3;
+    grid-column: 1 / 2; 
     align-items: center;
     flex-direction: column;
-    min-width: 150px
+    min-width: 150px;
+    z-index: 100;
 }
 
 .sidebar-container1{
