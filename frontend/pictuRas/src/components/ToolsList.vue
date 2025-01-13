@@ -66,7 +66,7 @@ export default {
     }
     // Fetch tools when the component is mounted
     onMounted(async () => {
-      await store.fetchTools()
+      // await store.fetchTools()
       previousTools.value = [...tools.value] // Save initial state
     })
 

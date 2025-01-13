@@ -10,6 +10,8 @@
 
 <script>
 import { useProjectStore } from '../stores/projectStore';
+import { useEditingToolStore } from '../stores/EditingTool';
+import { useImageStore } from '../stores/ImageStore';
 import { useRouter } from 'vue-router';
 import Navbar from '../components/Navbar.vue';
 import ImageList from '../components/ImageList.vue';
@@ -27,6 +29,8 @@ export default {
   },
   setup() {
     const projectStore = useProjectStore();
+    const editingToolsStore = useEditingToolStore();
+    const imageStore = useImageStore();
     const router = useRouter();
 
     // Check for selected project and user status
@@ -51,8 +55,16 @@ export default {
       // update das tools para aqui depois
     };
 
+    const setState = async() =>{
+      // State igual a imagens + tools, para ja so fetch das tools aqui
+      const projectId = projectStore.selectProject.id;
+      await editingToolsStore.fetchTools();
+      // await imageStore.fetchImages(projectId);
+      // update toolsStore tendo em conta o que recebemos do projeto.
+    }
     // Call the check function when the component mounts
     checkProjectAndUserStatus();
+    setState();
   }
 };
 
