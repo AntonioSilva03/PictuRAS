@@ -1,8 +1,12 @@
-FROM border-base
+FROM python:3.12.3-slim
 
 COPY . /app/picturas/tools/border
 
 WORKDIR /app/picturas/tools/border
+
+RUN apt update
+
+RUN apt install ffmpeg -y
 
 RUN pip install -r requirements.txt
 
