@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
+var axios = require('axios');
 var userModel = require('../models/user');
 var User = require('../controllers/user');
 const multer = require('multer');
@@ -10,25 +11,39 @@ router.get('/', function (req, res) {
   res.jsonp('Im here. My name is api')
 })
 
+// not yet
 router.post('/register', function (req, res) {
   var d = new Date().toISOString().substring(0, 19);
   User.checkUserExistence(req.body.username)
     .then(user => {
-      if (user) {
-        if (user.username === req.body.username) {
-          res.status(400).jsonp({ error: 'Já existe um utilizador com este email!' });
-        }
-        } else {
+      if (!user) {
         userModel.register(new userModel({
           username: req.body.username,
           dateCreated: d,
           dateAccessed: d
-        }), req.body.password, function (err, user) {
+        }), req.body.password, function async (err, user) {
           if (err) {
             res.status(401).jsonp({ error: err, message: "Register error: " + err });
           } else {
-            // MANDAR AO BACK
-            res.jsonp('Utilizador registado com sucesso!')
+            // Get the hash from the saved user
+            const newUser = {
+              username: req.body.username,
+              password_hash: user.hash,  // The hash is stored in the user object
+              name: req.body.name,
+              email: req.body.email,
+            }
+            console.log(newUser);
+            const apiBaseUrl = process.env.USERS_MICRO_SERVICE // Ensure this is set in your .env file
+            axios.post(`${apiBaseUrl}/users`, newUser)
+              .then(response => {
+                console.log('Microservice Response:', response.data);
+                res.jsonp('User registed with sucess!');
+              })
+              .catch(error => {
+                console.error('Error posting to microservice:', error);
+                // You might want to handle this error appropriately
+                res.status(500).jsonp({ error: "Microservice error: " + error });
+              });
           }
         });
       }
@@ -38,6 +53,7 @@ router.post('/register', function (req, res) {
     });
 });
 
+// done
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', async (err, user, info) => {
     if (err) {
@@ -69,6 +85,7 @@ router.post('/login', (req, res, next) => {
   })(req, res, next);
 });
 
+// done
 router.post('/logout', function (req, res) {
   req.logout(function (err) {
     if (err) return res.status(500).json({ error: err });
@@ -76,6 +93,7 @@ router.post('/logout', function (req, res) {
   });
 });
 
+// not yet
 router.get('/profile', passport.authenticate(['local', 'anonymous'], { session: false }), (req, res) => {
   if (req.isAuthenticated()) {
     // request ao micro serviço a info do user
@@ -85,13 +103,7 @@ router.get('/profile', passport.authenticate(['local', 'anonymous'], { session: 
   }
 });
 
-router.get('/mixed', passport.authenticate(['local', 'anonymous'], { session: false }), (req, res) => {
-  if (req.isAuthenticated()) {
-    return res.json({ message: `Welcome back, ${req.user.username}.`, sessionId:req.sessionID });
-  }
-  res.json({ message: 'Hello anonymous user!', sessionId:req.sessionID});
-});
-
+// done
 router.get('/user/status', passport.authenticate(['local', 'anonymous'], { session: false }), (req, res) => {
   if (req.isAuthenticated()) {
     res.json({ status: 'loggedIn', sessionId:req.sessionID  });
@@ -100,166 +112,16 @@ router.get('/user/status', passport.authenticate(['local', 'anonymous'], { sessi
   }
 });
 
-router.get('/tools', passport.authenticate(['local', 'anonymous'], { session: false }), (req, res) => {
+//done
+router.get('/tools', passport.authenticate(['local', 'anonymous'], { session: false }), async (req, res) => {
   try {
-    return res.status(200).json([
-      {
-          "name": "Remove Background",
-          "input_type": "image",
-          "output_type": "image",
-          "parameters": []
-      },
-      {
-          "name": "Border",
-          "input_type": "image",
-          "output_type": "image",
-          "parameters": [
-              {
-                  "name": "border_width",
-                  "type": "int",
-                  "value": 0,
-                  "min_value": 0,
-                  "max_value": 1000
-              },
-              {
-                  "name": "border_height",
-                  "type": "int",
-                  "value": 0,
-                  "min_value": 0,
-                  "max_value": 1000
-              },
-              {
-                  "name": "border_color",
-                  "type": "hex",
-                  "value": "#000000",
-                  "min_value": "#000000",
-                  "max_value": "#FFFFFF"
-              }
-          ]
-      },
-      {
-          "name": "Brightness",
-          "input_type": "image",
-          "output_type": "image",
-          "parameters": [
-              {
-                  "name": "brightness",
-                  "type": "float",
-                  "value": 0,
-                  "min_value": -1,
-                  "max_value": 1
-              }
-          ]
-      },
-      {
-          "name": "Contrast",
-          "input_type": "image",
-          "output_type": "image",
-          "parameters": [
-              {
-                  "name": "contrast",
-                  "type": "float",
-                  "value": 1,
-                  "min_value": -100,
-                  "max_value": 100
-              }
-          ]
-      },
-      {
-          "name": "Crop",
-          "input_type": "image",
-          "output_type": "image",
-          "parameters": [
-              {
-                  "name": "width",
-                  "type": "int",
-                  "value": 0,
-                  "min_value": 0,
-                  "max_value": 1920
-              },
-              {
-                  "name": "height",
-                  "type": "int",
-                  "value": 0,
-                  "min_value": 0,
-                  "max_value": 1080
-              },
-              {
-                  "name": "x_top_left",
-                  "type": "int",
-                  "value": 0,
-                  "min_value": 0,
-                  "max_value": 1920
-              },
-              {
-                  "name": "y_top_left",
-                  "type": "int",
-                  "value": 0,
-                  "min_value": 0,
-                  "max_value": 1080
-              }
-          ]
-      },
-      {
-          "name": "Object Counter",
-          "input_type": "image",
-          "output_type": "text",
-          "parameters": []
-      },
-      {
-          "name": "OCR",
-          "input_type": "image",
-          "output_type": "text",
-          "parameters": []
-      },
-      {
-          "name": "People Counter",
-          "input_type": "image",
-          "output_type": "text",
-          "parameters": []
-      },
-      {
-          "name": "Rotate",
-          "input_type": "image",
-          "output_type": "image",
-          "parameters": [
-              {
-                  "name": "angle",
-                  "type": "int",
-                  "value": 0,
-                  "min_value": 0,
-                  "max_value": 360
-              }
-          ]
-      },
-      {
-          "name": "Scale",
-          "input_type": "image",
-          "output_type": "image",
-          "parameters": [
-              {
-                  "name": "width",
-                  "type": "int",
-                  "value": 0,
-                  "min_value": 0,
-                  "max_value": 1920
-              },
-              {
-                  "name": "height",
-                  "type": "int",
-                  "value": 0,
-                  "min_value": 0,
-                  "max_value": 1080
-              }
-          ]
-      },
-      {
-          "name": "Watemark",
-          "input_type": "image",
-          "output_type": "image",
-          "parameters": []
-      }
-  ]);
+    // Use the API base URL from your environment variables
+    const apiBaseUrl = process.env.TOOL_MICRO_SERVICE // Ensure this is set in your .env file
+    // Make the GET request to the external API
+    const response = await axios.get(`${apiBaseUrl}/tools`);
+    // Optionally process the response.data here if needed
+    const staticTools = response.data;
+    return res.status(200).json(staticTools)
   
   } catch (error) {
     // Handle errors and send an appropriate response
@@ -272,6 +134,7 @@ router.get('/tools', passport.authenticate(['local', 'anonymous'], { session: fa
   }
 });
 
+// not yet
 router.get('/projects', passport.authenticate(['local', 'anonymous'], { session: false }), (req, res) => {
   try {
     // logica de enviar const = axios.get wtv
@@ -323,20 +186,7 @@ router.post(
   async (req, res) => {
     if (req.isAuthenticated()) {
       try {
-        // Handle the authenticated user case
-        // Save the file to the server, database, or a storage service
-        // You can access req.user for authenticated user info
-
-        // Example: Assume `req.file` has the uploaded image (if using middleware like multer)
-        const file = req.file;
-        if (!file) {
-          return res.status(400).json({ error: 'No image provided.' });
-        }
-        // Send to Backend
-        // Generate the URI for the saved file (placeholder logic)
-        const savedImageURI = `/uploads/${file.filename}`;
-        // Send the URI of the uploaded image
-        return res.status(200).json({ uri: savedImageURI });
+        //
       } catch (err) {
         console.error('Error uploading file for authenticated user:', err);
         return res.status(500).json({ error: 'Internal server error.' });

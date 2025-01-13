@@ -23,7 +23,7 @@
             v-model="password"
             required
           />
-          <Button1 type="submit" @click="handleLogin" label="Login" />
+          <Button1 type="submit" label="Login" />
         </form>
 
         <!-- Links para Forget Password e Sign Up -->
