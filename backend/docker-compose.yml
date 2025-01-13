@@ -1,87 +1,86 @@
 services:
 
-  # plans-app:
-  #   container_name: plans-app
-  #   build:
-  #     context: ./plans_app
-  #     dockerfile: Dockerfile 
-  #   ports:
-  #     - "3004:3004"
-  #   depends_on:
-  #     - plans-mongodb
-  #   links:
-  #     - plans-mongodb
+  plans-app:
+    container_name: plans-app
+    build:
+      context: ./plans_app
+      dockerfile: Dockerfile 
+    ports:
+      - "3004:3004"
+    depends_on:
+      - plans-mongodb
+    links:
+      - plans-mongodb
 
+  projects-app:
+    container_name: projects-app
+    build:
+      context: ./projects_app
+      dockerfile: Dockerfile 
+    ports:
+      - "3003:3003"
+    depends_on:
+      - projects-mongodb
+    links:
+      - projects-mongodb
 
-  # projects-app:
-  #   container_name: projects-app
-  #   build:
-  #     context: ./projects_app
-  #     dockerfile: Dockerfile 
-  #   ports:
-  #     - "3003:3003"
-  #   depends_on:
-  #     - projects-mongodb
-  #   links:
-  #     - projects-mongodb
+  images-app:
+    container_name: images-app
+    build:
+      context: ./images_app
+      dockerfile: Dockerfile 
+    ports:
+      - "3002:3002"
+    depends_on:
+      - images-mongodb
+    links:
+      - images-mongodb
 
-  # images-app:
-  #   container_name: images-app
-  #   build:
-  #     context: ./images_app
-  #     dockerfile: Dockerfile 
-  #   ports:
-  #     - "3002:3002"
-  #   depends_on:
-  #     - images-mongodb
-  #   links:
-  #     - images-mongodb
+  tools-app:
+    container_name: tools-app
+    build:
+      context: ./tools_app
+      dockerfile: Dockerfile 
+    ports:
+      - "3001:3001"
+    depends_on:
+      - tools-mongodb
+    links:
+      - tools-mongodb
 
-  # tools-app:
-  #   container_name: tools-app
-  #   build:
-  #     context: ./tools_app
-  #     dockerfile: Dockerfile 
-  #   ports:
-  #     - "3001:3001"
-  #   depends_on:
-  #     - tools-mongodb
-  #   links:
-  #     - tools-mongodb
+  plans-mongodb:
+    container_name: plans-db
+    image: mongo:latest
+    # ports:
+    #   - "27004:27017"
+    depends_on:
+      - plans-mongo-seed
 
-  # plans-mongodb:
-  #   container_name: plans-db
-  #   image: mongo:latest
-  #   ports:
-  #     - "27004:27017"
-  #   depends_on:
-  #     - plans-mongo-seed
+  projects-mongodb:
+    container_name: projects-db
+    image: mongo:latest
+    # ports:
+    #  - "27003:27017"
 
-  # projects-mongodb:
-  #   container_name: projects-db
-  #   image: mongo:latest
-  #   # ports:
-  #   #  - "27003:27017"
-
-  # images-mongodb:
-  #   container_name: images-db
-  #   image: mongo:latest
-  #   # ports:
-  #   #   - "27002:27017"
+  images-mongodb:
+    container_name: images-db
+    image: mongo:latest
+    # ports:
+    #   - "27002:27017"
 
   tools-mongodb:
     container_name: tools-db
     image: mongo:latest
-    ports:
-      - "27001:27017"
+    # ports:
+    #   - "27001:27017"
     depends_on:
       - tools-mongo-seed
 
-  # plans-mongo-seed:
-  #   image: mongo:latest
-  #   volumes:
-  #     - ./db/plans.json:/plans.json
-  #   command: mongoimport --host plans-db --port 27017 -d picturas-plans -c plans --type json --file /plans.json --jsonArray
+  plans-mongo-seed:
+    image: mongo:latest
+    volumes:
+      - ./db/plans.json:/plans.json
+    command: mongoimport --host plans-db --port 27017 -d picturas-plans -c plans --type json --file /plans.json --jsonArray
 
   tools-mongo-seed:
     image: mongo:latest
