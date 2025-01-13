@@ -15,7 +15,6 @@ export const useImageStore = defineStore('imageStore', {
       'https://placehold.co/1000x1200',
       'https://placehold.co/1800x1200'
     ], // depois vai ser vazia
-    multiSelectedImages:[], // ainda fazer algo com isto
     selectedImage: null,
   }),
   actions: {
