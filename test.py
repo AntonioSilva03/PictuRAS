@@ -24,12 +24,14 @@ from tools.objectcounter.oc_message_request import ObjectCountingMessageRequest
 from tools.objectcounter.oc_message_reply import ObjectCountingMessageReply
 from tools.watermark.watermark_message_request import WatermarkMessageRequest
 from tools.watermark.watermark_message_reply import WatermarkMessageReply
+from tools.binarization.binarization_message_request import BinarizationMessageRequest
+from tools.binarization.binarization_message_reply import BinarizationMessageReply
 
-IN = 'watermark_input_queue'
-OUT = 'watermark_output_queue'
-REPLY = WatermarkMessageReply
-REQUEST = WatermarkMessageRequest
-IMAGE_INPUT = './images/image-12.jpg'
+IN = 'binarization_input_queue'
+OUT = 'binarization_output_queue'
+REPLY = BinarizationMessageReply
+REQUEST = BinarizationMessageRequest
+IMAGE_INPUT = './images/image-10.jpg'
 IMAGE_OUTPUT = 'out'
 
 

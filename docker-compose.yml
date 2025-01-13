@@ -10,6 +10,17 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
+
+  binarization-worker:
+    container_name: binarization-worker
+    build:
+      context: ./tools/binarization
+      dockerfile: Dockerfile
+    links:
+      - rabbitmq
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
   
   border-worker:
     container_name: border-worker
