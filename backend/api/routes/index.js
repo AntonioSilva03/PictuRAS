@@ -5,7 +5,8 @@ var axios = require('axios');
 var userModel = require('../models/user');
 var User = require('../controllers/user');
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' }); // Save files to 'uploads/' directory
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 router.get('/', function (req, res) {
   res.jsonp('Im here. My name is api')
@@ -197,7 +198,8 @@ router.post('/projects', passport.authenticate(['local', 'anonymous'], { session
     }
   }
 });
-// not yet
+
+// todo testar isto
 router.post(
   '/projects/images',
   upload.single('image'),
@@ -220,13 +222,14 @@ router.post(
           return res.status(400).json({ error: 'No image provided.' });
         }
         const formData = new FormData();
-        formData.append("image", file);
+        formData.append("image", file.buffer, file.originalname);
         const response = await axios.post(`${apiBaseUrl}/projects/images/${projectId}`, formData, {
           headers: {
           "Content-Type": "multipart/form-data",
         },
         withCredentials: true, // Include credentials for authentication
         });
+        // apagar imagem do upload
         // Return the dummy URI for now
         return res.status(200).json({ uri: response.image});
       } catch (e) {
@@ -249,7 +252,7 @@ router.post(
           return res.status(400).json({ error: 'No image provided.' });
         }
         const formData = new FormData();
-        formData.append("image", file);
+        formData.append("image", file.buffer, file.originalname);
         const response = await axios.post(`${apiBaseUrl}/projects/images/${projectId}`, formData, {
           headers: {
           "Content-Type": "multipart/form-data",
@@ -266,7 +269,34 @@ router.post(
   }
 );
 
+// todo - `GET localhost:3003/projects/images/<project_id>`: obter as imagens do projeto 
+router.get('/projects/images', passport.authenticate(['local', 'anonymous'], { session: false }), async (req, res) => {
+  const apiBaseUrl = process.env.PROJECTS_MICRO_SERVICE
+    if (req.isAuthenticated()) {
+      try{
+        const { projectId } = req.body;
+        const uris = await axios.get(`${apiBaseUrl}/projects/images/${projectId}`);
+        res.status(200).json(uris)
 
+      }catch(e){
+        console.error(e)
+      }
+      
+    }else{
+      try{
+        const { projectId } = req.body;
+        const uris = await axios.get(`${apiBaseUrl}/projects/images/${projectId}`);
+        res.status(200).json(uris)
+
+      }catch(e){
+        console.error(e)
+      }
+    }
+});
+
+// todo download
+
+// todo
 router.put('/projects', passport.authenticate(['local', 'anonymous'], { session: false }), (req, res) => {
   if (req.isAuthenticated()) {
     // todo
