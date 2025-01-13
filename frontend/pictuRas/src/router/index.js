@@ -5,6 +5,7 @@ import Login from '../views/Login.vue';
 import Project from '../views/Project.vue';
 import Register from '../views/Register.vue';
 import Profile from '../views/Profile.vue';
+import Payment from '../views/Payment.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,6 +35,11 @@ const router = createRouter({
       path: '/profile',
       name: 'profile',
       component: Profile,
+    },
+    {
+      path: '/payment',
+      name: 'payment',
+      component: Payment,
     },
     {
       path: '/:pathMatch(.*)*', // Catch-all route for 404
