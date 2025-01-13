@@ -1,5 +1,17 @@
 services:
 
+  users-app:
+    container_name: users-app
+    build:
+      context: ./users_app
+      dockerfile: Dockerfile 
+    ports:
+      - "3005:3005"
+    depends_on:
+      - users-mongodb
+    links:
+      - users-mongodb
+
   plans-app:
     container_name: plans-app
     build:
@@ -47,6 +59,12 @@ services:
       - tools-mongodb
     links:
       - tools-mongodb
+
+  users-mongodb:
+    container_name: users-db
+    image: mongo:latest
+    # ports:
+    #   - "27005:27017"
 
   plans-mongodb:
     container_name: plans-db

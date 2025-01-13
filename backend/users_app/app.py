@@ -3,17 +3,11 @@ from dotenv import load_dotenv # type: ignore
 from flask import Flask # type: ignore
 from mongoengine import connect # type: ignore
 from flask_cors import CORS # type: ignore
-from flask_jwt_extended import JWTManager # type: ignore
 from routes.users import users_blueprint
-from routes.auth import auth__blueprint
-from config import Config
 
 load_dotenv()
 
 app = Flask(__name__)
-app.config.from_object(Config)
-jwt = JWTManager(app)
-
 CORS(app, resources={
     r"/*": {
         "origins": [
@@ -22,13 +16,11 @@ CORS(app, resources={
     }
 })
 
-
 connect(
     db=os.getenv('USERS_DB','picturas-users'),
     host=os.getenv('MONGO_HOST','localhost'),
     port=int(os.getenv('MONGO_PORT', 27005)))
 
-app.register_blueprint(auth__blueprint, url_prefix="/auth")
 app.register_blueprint(users_blueprint, url_prefix="/users")
 
 if __name__ == '__main__':
