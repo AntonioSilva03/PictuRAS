@@ -7,7 +7,7 @@
 </template>
   
 <script>
-import { useProjectStore } from '../stores/projectStore';
+import { useProjectStore } from '../stores/ProjectStore.js';
 import { useRouter } from 'vue-router';
 import Navbar from '../components/Navbar.vue';
 import ImageList from '../components/ImageList.vue';
