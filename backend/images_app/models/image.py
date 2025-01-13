@@ -2,7 +2,7 @@ from mongoengine import Document, ImageField, StringField, IntField, LongField, 
 
 
 class ImageChunk(Document):
-    
+
     meta = {'collection': 'images.chunks'}
 
     files_id = ObjectIdField(required=True)
@@ -19,7 +19,7 @@ class ImageChunk(Document):
 
 
 class ImageFile(Document):
-    
+
     meta = {'collection': 'images.files'}
 
     width = IntField(required=True)

@@ -54,7 +54,7 @@ def route_update_project(project_id: str):
 
 
 @projects_blueprint.route('/<string:project_id>', methods=['DELETE'])
-def route_delete_(project_id: str):
+def route_delete_project(project_id: str):
     try:
         project = delete_project(project_id)
         return jsonify(project.to_json()), 200

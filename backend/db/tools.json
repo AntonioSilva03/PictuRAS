@@ -1,18 +1,12 @@
 [
     {
-        "name": "contrast",
+        "name": "Remove Background",
         "input_type": "image",
         "output_type": "image",
-        "parameters": [
-            {
-                "name": "contrast",
-                "type": "float",
-                "value": 1
-            }
-        ]
+        "parameters": []
     },
     {
-        "name": "border",
+        "name": "Border",
         "input_type": "image",
         "output_type": "image",
         "parameters": [
@@ -36,7 +30,7 @@
         ]
     },
     {
-        "name": "brightness",
+        "name": "Brightness",
         "input_type": "image",
         "output_type": "image",
         "parameters": [
@@ -50,7 +44,19 @@
         ]
     },
     {
-        "name": "crop",
+        "name": "Contrast",
+        "input_type": "image",
+        "output_type": "image",
+        "parameters": [
+            {
+                "name": "contrast",
+                "type": "float",
+                "value": 1
+            }
+        ]
+    },
+    {
+        "name": "Crop",
         "input_type": "image",
         "output_type": "image",
         "parameters": [
@@ -81,13 +87,25 @@
         ]
     },
     {
-        "name": "ocr",
+        "name": "Object Counter",
         "input_type": "image",
         "output_type": "text",
         "parameters": []
     },
     {
-        "name": "rotate",
+        "name": "OCR",
+        "input_type": "image",
+        "output_type": "text",
+        "parameters": []
+    },
+    {
+        "name": "People Counter",
+        "input_type": "image",
+        "output_type": "text",
+        "parameters": []
+    },
+    {
+        "name": "Rotate",
         "input_type": "image",
         "output_type": "image",
         "parameters": [
@@ -101,7 +119,7 @@
         ]
     },
     {
-        "name": "scale",
+        "name": "Scale",
         "input_type": "image",
         "output_type": "image",
         "parameters": [
@@ -118,5 +136,11 @@
                 "min_value": 0
             }
         ]
+    },
+    {
+        "name": "Watemark",
+        "input_type": "image",
+        "output_type": "image",
+        "parameters": []
     }
 ]
