@@ -24,11 +24,7 @@ app.use(session({
   cookie: { 
     secure: false,
     maxAge: 24 * 60 * 60 * 1000
-<<<<<<< HEAD
   } //Test true after implementation //Session expiring after 24 hours
-=======
-  } //Test true after implementation //Session expiring after 1 hour
->>>>>>> profilePage
 }));
 
 // Passport configuration
