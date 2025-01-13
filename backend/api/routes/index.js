@@ -58,7 +58,7 @@ router.post('/login', (req, res, next) => {
       try {
         const date = new Date().toISOString().substring(0, 19); // Current timestamp
         await User.updateUser(user.username, { dateAccessed: date }); // Update user's last accessed date
-        res.status(200).json({ message: 'Login successful' });
+        res.status(200).json({ message: 'Login successful', sessionId:req.sessionID});
       } catch (updateErr) {
         console.error('Error updating user access date:', updateErr);
         res.status(500).json({ message: 'Error updating user access date' });
@@ -74,10 +74,12 @@ router.post('/logout', function (req, res) {
   });
 });
 
-router.get('/profile', function (req, res) {
+router.get('/profile', passport.authenticate(['local', 'anonymous'], { session: false }), (req, res) => {
   if (req.isAuthenticated()) {
-    res.jsonp({ user: req.user });
+    // request ao micro serviço a info do user
+    res.status(200).jsonp({ email: req.user.username, name:"jmf",status:"premium"});
   } else {
+    console.log("Not Auth")
     res.status(401).jsonp({ error: "Not authenticated" });
   }
 });
@@ -91,9 +93,10 @@ router.get('/mixed', passport.authenticate(['local', 'anonymous'], { session: fa
 
 router.get('/user/status', passport.authenticate(['local', 'anonymous'], { session: false }), (req, res) => {
   if (req.isAuthenticated()) {
-    res.json({ status: 'loggedIn' });
+    console.log("loggedIn")
+    res.json({ status: 'loggedIn', sessionId:req.sessionID  });
   } else {
-    res.json({ status: 'anonymous' });
+    res.json({ status: 'anonymous', sessionId:req.sessionID  });
   }
 });
 
