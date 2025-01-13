@@ -5,11 +5,7 @@ const api = import.meta.env.VITE_API_GATEWAY;
 
 export const useProfileStore = defineStore('profileStore', {
     state: () => ({
-        profile: {
-            name: 'jmf',
-            email: 'jmf@example.com',
-            status: 'premium',
-        },
+        profile: {},
         loading: false,
         error: null
     }),

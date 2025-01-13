@@ -29,6 +29,7 @@ export const useProjectStore = defineStore('projectStore', {
             withCredentials: true, // Ensure credentials are sent with the request
           });
           this.projects = response.data;
+          console.log(response.data)
         } catch (error) {
           console.error('Error fetching projects:', error);
         }
@@ -42,9 +43,9 @@ export const useProjectStore = defineStore('projectStore', {
             owner: ""          // Will be replaced by the server
           };
           // vou ter id + data + tools vazias
-          const projectsResponse = await this.fetchProjects();
+          await this.fetchProjects();
 
-          if(!projectsResponse){
+          if(this.projects.length === 0){
             const response = await axios.post(
               `${api}/api/projects`, 
               tempProject, // No need to stringify; Axios automatically sets JSON headers
@@ -56,6 +57,8 @@ export const useProjectStore = defineStore('projectStore', {
             this.projects.push(newProject);   // Add it to the project list
         
             console.log('New session-based project generated:', newProject);
+        }else{
+          this.selectProject = this.projects[0];
         }
         } catch (error) {
           console.error('Error generating session project:', error);

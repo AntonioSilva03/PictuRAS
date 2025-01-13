@@ -17,7 +17,7 @@ class User(Document):
     name = StringField(required=True)
     email = StringField(required=True)
     type = EnumField(UserType, required=True)
-    plan = ObjectIdField(required=True)
+    plan = ObjectIdField()
     registered_at = DateTimeField(default=datetime.datetime.now())
 
     def to_json(self) -> dict:

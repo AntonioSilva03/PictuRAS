@@ -52,7 +52,6 @@ export default {
         }
       }
 
-      // update das tools para aqui depois
     };
 
     const setState = async() =>{

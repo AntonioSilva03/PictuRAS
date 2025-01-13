@@ -11,7 +11,7 @@ router.get('/', function (req, res) {
   res.jsonp('Im here. My name is api')
 })
 
-// not yet
+// done
 router.post('/register', function (req, res) {
   var d = new Date().toISOString().substring(0, 19);
   User.checkUserExistence(req.body.username)
@@ -31,9 +31,8 @@ router.post('/register', function (req, res) {
               password_hash: user.hash,  // The hash is stored in the user object
               name: req.body.name,
               email: req.body.email,
-              type:"registred"
+              type: "registered"
             }
-            console.log(newUser);
             const apiBaseUrl = process.env.USERS_MICRO_SERVICE // Ensure this is set in your .env file
             axios.post(`${apiBaseUrl}/users`, newUser)
               .then(response => {
@@ -94,11 +93,14 @@ router.post('/logout', function (req, res) {
   });
 });
 
-// not yet
-router.get('/profile', passport.authenticate(['local', 'anonymous'], { session: false }), (req, res) => {
+// done
+router.get('/profile', passport.authenticate(['local', 'anonymous'], { session: false }), async (req, res) => {
   if (req.isAuthenticated()) {
     // request ao micro serviço a info do user
-    res.status(200).jsonp({ email: req.user.username, name:"jmf",status:"premium"});
+    const apiBaseUrl = process.env.USERS_MICRO_SERVICE // Ensure this is set in your .env file
+    // Make the GET request to the external API
+    const response = await axios.get(`${apiBaseUrl}/users/${req.user.username}`);
+    res.status(200).jsonp({ email: response.data.email, name:response.data.name,status:response.data.plan});
   } else {
     res.status(401).jsonp({ error: "Not authenticated" });
   }
@@ -135,11 +137,22 @@ router.get('/tools', passport.authenticate(['local', 'anonymous'], { session: fa
   }
 });
 
-// not yet
-router.get('/projects', passport.authenticate(['local', 'anonymous'], { session: false }), (req, res) => {
+// done
+router.get('/projects', passport.authenticate(['local', 'anonymous'], { session: false }), async (req, res) => {
   try {
     // logica de enviar const = axios.get wtv
-    return res.status(200).json([]);
+    // localhost:3003/projects/owner/<user_id></user_id>
+    if(req.isAuthenticated()){
+
+      const apiBaseUrl = process.env.PROJECTS_MICRO_SERVICE
+      const response = await axios.get(`${apiBaseUrl}/projects/owner/${req.user.username}`);
+      return res.status(200).json(response.data);
+
+    }else{
+    const apiBaseUrl = process.env.PROJECTS_MICRO_SERVICE
+    const response = await axios.get(`${apiBaseUrl}/projects/owner/anonymous-${req.sessionID}`);
+    return res.status(200).json(response.data);
+    }
   
   } catch (error) {
     // Handle errors and send an appropriate response
@@ -152,9 +165,20 @@ router.get('/projects', passport.authenticate(['local', 'anonymous'], { session:
   }
 });
 
-router.post('/projects', passport.authenticate(['local', 'anonymous'], { session: false }), (req, res) => {
+// done (testar para registados)
+router.post('/projects', passport.authenticate(['local', 'anonymous'], { session: false }), async (req, res) => {
   if (req.isAuthenticated()) {
-    // todo
+    const { name, owner } = req.body;
+      // Create a new project
+      const newProjectWrapper = {
+        name: name || 'Untitled', // Default to 'Untitled' if no name is provided
+        owner: req.user.username, // Use user ID if authenticated, otherwise use session ID
+        tools:[]
+      };
+      const apiBaseUrl = process.env.PROJECTS_MICRO_SERVICE
+      const response = await axios.post(`${apiBaseUrl}/projects`,newProjectWrapper);
+      const newProject = response.data;
+      res.json(newProject);
   } else {
     try{
       const { name, owner } = req.body;
@@ -162,34 +186,51 @@ router.post('/projects', passport.authenticate(['local', 'anonymous'], { session
       const newProjectWrapper = {
         name: name || 'Untitled', // Default to 'Untitled' if no name is provided
         owner: `anonymous-${req.sessionID}`, // Use user ID if authenticated, otherwise use session ID
-      };
-
-      // send to backend
-      // retrieve from backend
-      const newProject = {
-        id: "umId",
-        name: name || 'Untitled', // Default to 'Untitled' if no name is provided
-        owner: `anonymous-${req.sessionID}`, // Use user ID if authenticated, otherwise use session ID
         tools:[]
       };
-      // Return the newly created project
+      const apiBaseUrl = process.env.PROJECTS_MICRO_SERVICE
+      const response = await axios.post(`${apiBaseUrl}/projects`,newProjectWrapper);
+      const newProject = response.data;
       res.json(newProject);
     }catch(e){
       console.error(e)
     }
   }
 });
-
+// not yet
 router.post(
   '/projects/images',
   upload.single('image'),
   passport.authenticate(['local', 'anonymous'], { session: false }),
   async (req, res) => {
+    const apiBaseUrl = process.env.PROJECTS_MICRO_SERVICE
     if (req.isAuthenticated()) {
       try {
-        //
-      } catch (err) {
-        console.error('Error uploading file for authenticated user:', err);
+        // Handle the anonymous user case
+        // Extract `projectId` and process the image file
+
+        const projectId = req.body.projectId;
+        if (!projectId) {
+          return res.status(400).json({ error: 'Project ID is required.' });
+        }
+
+        // Assume `req.file` has the uploaded image (if using middleware like multer)
+        const file = req.file;
+        if (!file) {
+          return res.status(400).json({ error: 'No image provided.' });
+        }
+        const formData = new FormData();
+        formData.append("image", file);
+        const response = await axios.post(`${apiBaseUrl}/projects/images/${projectId}`, formData, {
+          headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true, // Include credentials for authentication
+        });
+        // Return the dummy URI for now
+        return res.status(200).json({ uri: response.image});
+      } catch (e) {
+        console.error('Error uploading file for anonymous user:', e);
         return res.status(500).json({ error: 'Internal server error.' });
       }
     } else {
@@ -207,25 +248,16 @@ router.post(
         if (!file) {
           return res.status(400).json({ error: 'No image provided.' });
         }
-        // Send to Backend
-        // Here, you'd save the file somewhere or process it as needed
-        // Placeholder logic: Generate a dummy URI
-        /*
-          const formData = new FormData();
-          formData.append("image", file); // Append the file as 'image'
-          formData.append("projectId", projectId); // Include the project ID
-          const response = await axios.post(`${api}/api/projects/images`, formData, {
+        const formData = new FormData();
+        formData.append("image", file);
+        const response = await axios.post(`${apiBaseUrl}/projects/images/${projectId}`, formData, {
           headers: {
           "Content-Type": "multipart/form-data",
         },
         withCredentials: true, // Include credentials for authentication
-      });
-
-        */
-        const savedImageURI = `https://placehold.co/420x420?text=Project%20${projectId}`;
-
+        });
         // Return the dummy URI for now
-        return res.status(200).json({ uri: savedImageURI });
+        return res.status(200).json({ uri: response.image});
       } catch (e) {
         console.error('Error uploading file for anonymous user:', e);
         return res.status(500).json({ error: 'Internal server error.' });
