@@ -31,6 +31,7 @@ router.post('/register', function (req, res) {
               password_hash: user.hash,  // The hash is stored in the user object
               name: req.body.name,
               email: req.body.email,
+              type:"registred"
             }
             console.log(newUser);
             const apiBaseUrl = process.env.USERS_MICRO_SERVICE // Ensure this is set in your .env file
