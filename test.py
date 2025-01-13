@@ -16,8 +16,8 @@ from tools.crop.crop_message_reply import CropMessageReply
 from tools.crop.crop_message_request import CropMessageRequest
 from tools.contrast.contrast_message_reply import ContrastMessageReply
 from tools.contrast.contrast_message_request import ContrastMessageRequest
-from tools.rembg.rembg_message_request import RembgMessageRequest
-from tools.rembg.rembg_message_reply import RembgMessageReply
+from tools.autocrop.autocrop_message_request import AutoCropMessageRequest
+from tools.autocrop.autocrop_message_reply import AutoCropMessageReply
 from tools.peoplecounter.pc_message_request import PeopleCountingMessageRequest
 from tools.peoplecounter.pc_message_reply import PeopleCountingMessageReply
 from tools.objectcounter.oc_message_request import ObjectCountingMessageRequest
