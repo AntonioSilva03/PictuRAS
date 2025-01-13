@@ -1,6 +1,6 @@
+import datetime
 from enum import Enum
-from mongoengine import Document # type: ignore
-from mongoengine.fields import StringField, ListField, EmbeddedDocument, EmbeddedDocumentField, DynamicField, EnumField # type: ignore
+from mongoengine import Document, StringField, DateTimeField, ListField, EmbeddedDocument, EmbeddedDocumentField, EnumField, DynamicField # type: ignore
 
 
 class InputOutputType(Enum):
@@ -32,20 +32,35 @@ class Parameter(EmbeddedDocument):
         }
 
 
-class Tool(Document):
-
-    meta = {'collection': 'tools'}
-
-    name = StringField(required=True, unique=True) 
+class Tool(EmbeddedDocument):
+    name = StringField(required=True) 
     input_type = EnumField(InputOutputType, required=True)
     output_type = EnumField(InputOutputType, required=True)
     parameters = ListField(EmbeddedDocumentField(Parameter), default=[])
 
     def to_json(self) -> dict:
         return {
-            'id': str(self.id),
             'name': self.name,
             'input_type': self.input_type.value,
             'output_type': self.output_type.value,
-            'parameters': [parameter.to_json() for parameter in self.parameters],
+            'paramteres': [parameter.to_json() for parameter in self.parameters],
+        }
+
+
+class Project(Document):
+
+    meta = {'collection': 'projects'}
+
+    name = StringField(required=True)
+    owner = StringField(required=True)
+    date = DateTimeField(default=datetime.datetime.now())
+    tools = ListField(EmbeddedDocumentField(Tool), default=[])
+
+    def to_json(self) -> dict:
+        return {
+            'id': str(self.id),
+            'name': self.name,
+            'owner': self.owner,
+            'date': str(self.date),
+            'tools': [tool.to_json() for tool in self.tools],
         }

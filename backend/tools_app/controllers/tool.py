@@ -1,4 +1,4 @@
-from typing import Optional, List, Dict, Any
+from typing import Optional, List
 from models.tool import Tool
 
 
@@ -6,48 +6,22 @@ def list_tools() -> List[Tool]:
     return Tool.objects()
 
 
-def find_by_id(tool_name: str) -> Optional[Tool]:
-
-    try:
-        return Tool.objects.get(name=tool_name)
-
-    except Exception:
-        return None
+def find_by_id(tool_id: str) -> Optional[Tool]:
+    return Tool.objects.get(id=tool_id)
 
 
-def insert_tool(tool_data: Dict[str, Any]) -> Optional[Tool]:
-
-    try:
-
-        new_tool = Tool(**tool_data)
-
-        if Tool.objects.filter(name=new_tool.name):
-            raise Exception('Tool alredy inserted')
-
-        new_tool.save()
-        return new_tool
-
-    except Exception:
-        return None
+def insert_tool(tool: Tool) -> Optional[Tool]:
+    tool.save()
+    return tool
 
 
-def update_tool(tool_name: str, tool_data: Dict[str, Any]) -> Optional[Tool]:
-
-    try:
-        tool = Tool.objects.get(name=tool_name)
-        tool.update(**tool_data)
-        return Tool.objects.get(name=tool_name)
-
-    except Exception:
-        return None
+def update_tool(tool_id: str, tool_data: dict) -> Optional[Tool]:
+    tool = Tool.objects.get(id=tool_id)
+    tool.update(**tool_data)
+    return Tool.objects.get(id=tool_id)
 
 
-def delete_tool(tool_name: str) -> Optional[Tool]:
-
-    try:
-        tool = Tool.objects.get(name=tool_name)
-        tool.delete()
-        return tool
-
-    except Exception:
-        return None
+def delete_tool(tool_id: str) -> Optional[Tool]:
+    tool = Tool.objects.get(id=tool_id)
+    tool.delete()
+    return tool

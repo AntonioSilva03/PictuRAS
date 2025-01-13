@@ -2,12 +2,12 @@ from mongoengine import Document, ImageField, StringField, IntField, LongField, 
 
 
 class ImageChunk(Document):
-    
+
     meta = {'collection': 'images.chunks'}
 
-    files_id = ObjectIdField()
-    n = IntField()
-    data = BinaryField()
+    files_id = ObjectIdField(required=True)
+    n = IntField(required=True)
+    data = BinaryField(required=True)
 
     def to_json(self) -> dict:
         return {
@@ -19,12 +19,12 @@ class ImageChunk(Document):
 
 
 class ImageFile(Document):
-    
+
     meta = {'collection': 'images.files'}
 
-    width = IntField()
-    height = IntField()
-    format = StringField()
+    width = IntField(required=True)
+    height = IntField(required=True)
+    format = StringField(required=True)
     thumbnail_id = ObjectIdField()
     chunkSize = IntField()
     length = LongField()
@@ -44,14 +44,14 @@ class ImageFile(Document):
 
 class Image(Document):
 
-    meta = {'collection': 'image'}
+    meta = {'collection': 'images'}
 
-    project = StringField(required=True)
+    project = ObjectIdField(required=True)
     image = ImageField(size=(1920, 1080, True),required=True)
 
     def to_json(self) -> dict:
         return {
-            '_id': str(self.id),
-            'project': self.project,
+            'id': str(self.id),
+            'project': str(self.project),
             'image': str(self.image._id),
         }
