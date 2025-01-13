@@ -1,11 +1,13 @@
 <template>
-    <div class="main-layout">
-        <Navbar id="nav"></Navbar>
-        <ImageList id="image-list"></ImageList>
-        <EditingSpace id="editing-space"></EditingSpace>
+  <div class="main-layout">
+    <Navbar id="nav"></Navbar>
+    <div class="main-part">
+      <ImageList id="image-list"></ImageList>
+      <EditingSpace id="editing-space"></EditingSpace>
     </div>
+  </div>
 </template>
-  
+
 <script>
 import { useProjectStore } from '../stores/projectStore';
 import { useRouter } from 'vue-router';
@@ -64,32 +66,62 @@ const getUserStatus = async () => {
 
 
 </script>
-  
-  <style scoped>
-  
-  
-  .main-layout {
-      background-color: rgb(255, 255, 255);
-      display: grid;
+
+<style scoped>
+.main-layout {
+  background-color: rgb(255, 255, 255);
+  height: 100vh;
+}
+
+/*
+  .main-part {
+    display: grid;
       height: 100%;
       width: 100%;
       grid-template-columns: 25% 75%;
       grid-template-areas:
-        "nav nav"
         "image-list editing-space";
       overflow: auto;
       gap:0px;
   }
+*/
 
-  #nav{
-    grid-area: nav;
-  }
+.main-part {
+  flex-grow: 1;
+  display: flex;
+  height: 100vh;
+  overflow: auto;
+}
 
-  #image-list{
-    grid-area: image-list;
-  }
-  #editing-space{
-    grid-area: editing-space;
-  }
-  </style>
-  
+#nav {
+    flex-shrink: 0;
+}
+
+.main-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    max-height: 100vh;
+}
+
+.main-part {
+    flex-grow: 1;
+    overflow-y: auto;
+    display: flex;
+}
+
+#nav {
+    position: sticky;
+    top: 0;
+}
+
+#image-list {
+  grid-area: image-list;
+  width: 25%;
+}
+
+#editing-space {
+  grid-area: editing-space;
+  width: 75%;
+}
+</style>

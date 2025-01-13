@@ -4,6 +4,12 @@ import App from './App.vue';
 import router from './router';
 
 import VueColor from '@ckpack/vue-color';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faPlay, faPause);
+
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';

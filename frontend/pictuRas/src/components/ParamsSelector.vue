@@ -211,7 +211,6 @@ export default {
     display: flex;
     flex-direction: column;
     height: 100%;
-    overflow-y: scroll;
     align-items: center;
 }
 
@@ -219,7 +218,7 @@ export default {
 
     display: flex;
     flex-direction: column;
-    overflow-y: inherit;
+    overflow-y: scroll;
     height: 60%;
 
 }

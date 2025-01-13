@@ -20,19 +20,19 @@ export default {
     flex-direction: column;
     width: 100%;
     height: 100%;
-    position: relative;
+    gap: 30px;
+    padding-top: 20px;
 }
 
 .btn-wrapper button:nth-child(1) {
-    top: 10%;
 }
 
 .btn-wrapper button:nth-child(2) {
-    top: 30%;
+    top: 100px;
 }
 
 .btn-wrapper button {
-    padding: 10px 30px;
+    padding: 10px 40px;
     border-radius: 20px;
     background: #000000;
     color: #ffffff;
@@ -42,7 +42,6 @@ export default {
     border: 1px solid #000000;
     transition: 0.25s;
     width: fit-content;
-    position: absolute;
     align-self: center;
 }
 

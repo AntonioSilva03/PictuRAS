@@ -3,7 +3,7 @@ import NotFound from '../views/NotFound.vue';
 import Landing from '../views/Landing.vue';
 import Login from '../views/Login.vue';
 import Project from '../views/Project.vue';
-import Register from '../views/Register.vue'
+import Register from '../views/Register.vue';
 import Profile from '../views/Profile.vue';
 
 const router = createRouter({

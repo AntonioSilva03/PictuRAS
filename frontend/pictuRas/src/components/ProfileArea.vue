@@ -21,6 +21,12 @@
                     <button>
                         <RouterLink to="/plans">Change plan</RouterLink>
                     </button>
+                    <button>
+                        <RouterLink to="/profile">Edit profile</RouterLink>
+                    </button>
+                    <button>
+                        <RouterLink to="/plans">Change plan</RouterLink>
+                    </button>
                 </div>
             </div>
             <div class="right-side">
