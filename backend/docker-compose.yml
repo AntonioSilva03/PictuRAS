@@ -1,16 +1,16 @@
 services:
 
-  plans-app:
-    container_name: plans-app
-    build:
-      context: ./plans_app
-      dockerfile: Dockerfile 
-    ports:
-      - "3004:3004"
-    depends_on:
-      - plans-mongodb
-    links:
-      - plans-mongodb
+  # plans-app:
+  #   container_name: plans-app
+  #   build:
+  #     context: ./plans_app
+  #     dockerfile: Dockerfile 
+  #   ports:
+  #     - "3004:3004"
+  #   depends_on:
+  #     - plans-mongodb
+  #   links:
+  #     - plans-mongodb
 
 
   # projects-app:
@@ -49,13 +49,13 @@ services:
   #   links:
   #     - tools-mongodb
 
-  plans-mongodb:
-    container_name: plans-db
-    image: mongo:latest
-    ports:
-      - "27004:27017"
-    depends_on:
-      - plans-mongo-seed
+  # plans-mongodb:
+  #   container_name: plans-db
+  #   image: mongo:latest
+  #   ports:
+  #     - "27004:27017"
+  #   depends_on:
+  #     - plans-mongo-seed
 
   # projects-mongodb:
   #   container_name: projects-db
@@ -69,22 +69,22 @@ services:
   #   # ports:
   #   #   - "27002:27017"
 
-  # tools-mongodb:
-  #   container_name: tools-db
-  #   image: mongo:latest
-  #   # ports:
-  #   #   - "27001:27017"
-  #   depends_on:
-  #     - tools-mongo-seed
-
-  plans-mongo-seed:
+  tools-mongodb:
+    container_name: tools-db
     image: mongo:latest
-    volumes:
-      - ./db/plans.json:/plans.json
-    command: mongoimport --host plans-db --port 27017 -d picturas-plans -c plans --type json --file /plans.json --jsonArray
+    ports:
+      - "27001:27017"
+    depends_on:
+      - tools-mongo-seed
 
-  # tools-mongo-seed:
+  # plans-mongo-seed:
   #   image: mongo:latest
   #   volumes:
-  #     - ./db/tools.json:/tools.json
-  #   command: mongoimport --host tools-db --port 27017 -d picturas-tools -c tools --type json --file /tools.json --jsonArray
+  #     - ./db/plans.json:/plans.json
+  #   command: mongoimport --host plans-db --port 27017 -d picturas-plans -c plans --type json --file /plans.json --jsonArray
+
+  tools-mongo-seed:
+    image: mongo:latest
+    volumes:
+      - ./db/tools.json:/tools.json
+    command: mongoimport --host tools-db --port 27017 -d picturas-tools -c tools --type json --file /tools.json --jsonArray

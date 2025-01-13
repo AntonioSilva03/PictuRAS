@@ -11,10 +11,10 @@ def route_get_tools():
     return jsonify([tool.to_json() for tool in tools]), 200
 
 
-@tools_blueprint.route('/<string:tool_name>', methods=['GET'])
-def route_get_tool(tool_name: str):
+@tools_blueprint.route('/<string:tool_id>', methods=['GET'])
+def route_get_tool(tool_id: str):
     try:
-        tool = find_by_id(tool_name)
+        tool = find_by_id(tool_id)
         return jsonify(tool.to_json()), 200
     except Exception as e:
         traceback.print_exc()
@@ -31,20 +31,20 @@ def route_insert_tool():
         return jsonify({'error': f'{e}'}), 500
 
 
-@tools_blueprint.route('/<string:tool_name>', methods=['PUT'])
-def route_update_tool(tool_name: str):
+@tools_blueprint.route('/<string:tool_id>', methods=['PUT'])
+def route_update_tool(tool_id: str):
     try:
-        tool = update_tool(tool_name, request.json)
+        tool = update_tool(tool_id, request.json)
         return jsonify(tool.to_json()), 200
     except Exception as e:
         traceback.print_exc()
         return jsonify({'error': f'{e}'}), 500
 
 
-@tools_blueprint.route('/<string:tool_name>', methods=['DELETE'])
-def route_delete_tool(tool_name: str):
+@tools_blueprint.route('/<string:tool_id>', methods=['DELETE'])
+def route_delete_tool(tool_id: str):
     try:
-        tool = delete_tool(tool_name)
+        tool = delete_tool(tool_id)
         return jsonify(tool.to_json()), 200
     except Exception as e:
         traceback.print_exc()
