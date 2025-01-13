@@ -65,34 +65,34 @@ services:
   users-mongodb:
     container_name: users-db
     image: mongo:latest
-    # ports:
-    #   - "27005:27017"
+    ports:
+      - "27005:27017"
 
   plans-mongodb:
     container_name: plans-db
     image: mongo:latest
-    # ports:
-    #   - "27004:27017"
+    ports:
+      - "27004:27017"
     depends_on:
       - plans-mongo-seed
 
   projects-mongodb:
     container_name: projects-db
     image: mongo:latest
-    # ports:
-    #  - "27003:27017"
+    ports:
+     - "27003:27017"
 
   images-mongodb:
     container_name: images-db
     image: mongo:latest
-    # ports:
-    #   - "27002:27017"
+    ports:
+      - "27002:27017"
 
   tools-mongodb:
     container_name: tools-db
     image: mongo:latest
-    # ports:
-    #   - "27001:27017"
+    ports:
+      - "27001:27017"
     depends_on:
       - tools-mongo-seed
 

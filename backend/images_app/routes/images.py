@@ -33,6 +33,12 @@ def route_get_image_info(image_id: str):
         return jsonify({'error': f'{e}'}), 404
 
 
+@images_blueprint.route('/project/<string:project_id>', methods=['GET'])
+def route_get_project_images(project_id: str):
+    images = list_project_images(project_id)
+    return jsonify([image.to_json() for image in images]), 200
+
+
 @images_blueprint.route('/data/<string:image_id>', methods=['GET'])
 def route_get_image_data(image_id: str):
     try:

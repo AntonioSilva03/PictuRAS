@@ -1,6 +1,7 @@
 import os
+from io import BytesIO
 from dotenv import load_dotenv # type: ignore
-from flask import Blueprint, request, jsonify # type: ignore
+from flask import Blueprint, request, jsonify, send_file # type: ignore
 from models.project import Project
 from controllers.project import *
 import traceback
@@ -35,6 +36,26 @@ def route_get_user_projects(user_id: str):
     try:
         projects = find_user_projects(user_id)
         return jsonify([project.to_json() for project in projects]), 200
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({'error': f'{e}'}), 404
+
+
+@projects_blueprint.route('/images/<string:project_id>', methods=['GET'])
+def route_get_project_images(project_id: str):
+    try:
+        response = requests.get(f'http://{IMAGES_HOST}:{IMAGES_PORT}/images/project/{project_id}')
+        return jsonify(response.json()), 200
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({'error': f'{e}'}), 404
+
+
+@projects_blueprint.route('/images/data/<string:image_id>', methods=['GET'])
+def route_get_image_data(image_id: str):
+    try:
+        response = requests.get(f'http://{IMAGES_HOST}:{IMAGES_PORT}/images/data/{image_id}')
+        return send_file(BytesIO(response.content), mimetype=response.headers.get('Content-Type')), 200
     except Exception as e:
         traceback.print_exc()
         return jsonify({'error': f'{e}'}), 404
