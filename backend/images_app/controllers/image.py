@@ -20,6 +20,10 @@ def find_chunks_by_id(image_id) -> Optional[List[ImageChunk]]:
     return ImageChunk.objects.filter(files_id=image.image._id).order_by('n')
 
 
+def list_project_images(project_id: str) -> Optional[List[Image]]:
+    return Image.objects.filter(project=project_id)
+
+
 def insert_image(image: Image) -> Optional[Image]:
     image.save()
     return image
