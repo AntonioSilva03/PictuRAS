@@ -41,7 +41,7 @@ export const useProjectStore = defineStore('projectStore', {
             name: "Undefined", // Default name
             owner: ""          // Will be replaced by the server
           };
-
+          // vou ter id + data + tools vazias
           const projectsResponse = await this.fetchProjects();
 
           if(!projectsResponse){

@@ -106,7 +106,7 @@ export default {
   padding: 1rem;
   background-color: #f7f7f7;
   /*width: 100%;*/
-  height: fit-content;
+  height: 50vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -114,6 +114,7 @@ export default {
   border-radius: 20px;
   border: 1px solid #000000;
   box-shadow: 0 0 6px #000000;
+  overflow-y: scroll;
 }
 
 ul {

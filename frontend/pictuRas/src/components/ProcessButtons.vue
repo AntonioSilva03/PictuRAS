@@ -2,12 +2,39 @@
     <div class="btn-wrapper">
         <button @click="">Preview</button>
         <button @click="">Process</button>
+        <button @click="saveProject">Save</button>
     </div>
 </template>
 <script>
+
+import { useProjectStore } from '../stores/projectStore';
+import { useEditingToolStore } from '../stores/EditingTool'
+import axios from 'axios';
+
+const api = import.meta.env.VITE_API_GATEWAY;
+
 export default {
     name:"ProcessButtons",
     methods: {
+        async saveProject(){
+            try{
+            const projectStore = useProjectStore();
+            const toolsStore = useEditingToolStore();
+            let tempProject = JSON.parse(JSON.stringify(projectStore.selectedProject));
+            const activeToolsInOrder = toolsStore.tools.filter(tool => tool.active);
+            const activeToolsInOrderWrapper = activeToolsInOrder .map(({ active, position, ...rest }) => rest);
+            tempProject.tools = activeToolsInOrderWrapper;
+            console.log(tempProject)
+            const response = await axios.put(
+              `${api}/api/projects`, 
+               tempProject,
+              { withCredentials: true }
+            );
+
+            }catch(e){
+                console.error(e)
+            }
+        }
         
     },
     

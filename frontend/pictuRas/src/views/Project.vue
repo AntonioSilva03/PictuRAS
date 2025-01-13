@@ -47,6 +47,8 @@ export default {
           console.log(projectStore.selectProject.name)
         }
       }
+
+      // update das tools para aqui depois
     };
 
     // Call the check function when the component mounts
@@ -68,11 +70,6 @@ const getUserStatus = async () => {
 </script>
 
 <style scoped>
-.main-layout {
-  background-color: rgb(255, 255, 255);
-  height: 100vh;
-}
-
 /*
   .main-part {
     display: grid;
@@ -86,18 +83,13 @@ const getUserStatus = async () => {
   }
 */
 
-.main-part {
-  flex-grow: 1;
-  display: flex;
-  height: 100vh;
-  overflow: auto;
-}
 
 #nav {
     flex-shrink: 0;
 }
 
 .main-layout {
+    background-color: rgb(255, 255, 255);
     display: flex;
     flex-direction: column;
     height: 100vh;
