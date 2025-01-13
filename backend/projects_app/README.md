@@ -6,5 +6,7 @@
 - `GET localhost:3003/projects/<project_id>`: obter o projeto *project_id*
 - `GET localhost:3003/projects/owner/<user_id>`: obter os projetos do utilizador *user_id*
 - `POST localhost:3003/projects`: adicionar um projeto
+- `POST localhost:3003/projects/images/<project_id>`: adicionar uma imagem ao projeto *project_id*
 - `PUT localhost:3003/projects/<project_id>`: atualizar o projeto *project_id*
 - `DELETE localhost:3003/projects/<project_id>`: eliminar o projeto *project_id*
+- `DELETE localhost:3003/projects/images/<image_id>`: eliminar a image *image_id*

@@ -39,7 +39,7 @@ class Tool(Document):
     name = StringField(required=True, unique=True) 
     input_type = EnumField(InputOutputType, required=True)
     output_type = EnumField(InputOutputType, required=True)
-    parameters = ListField(EmbeddedDocumentField(Parameter), required=True)
+    parameters = ListField(EmbeddedDocumentField(Parameter), default=[])
 
     def to_json(self) -> dict:
         return {
