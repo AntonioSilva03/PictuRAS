@@ -1,5 +1,11 @@
 [
     {
+        "name": "free",
+        "price": "0.00",
+        "type": "monthly",
+        "inserted_at": "2025-01-13 10:38:22.000000"
+    },
+    {
         "name": "basic",
         "price": "5.99",
         "type": "annual",

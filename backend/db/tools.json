@@ -14,18 +14,22 @@
                 "name": "border_width",
                 "type": "int",
                 "value": 0,
-                "min_value": 0
+                "min_value": 0,
+                "max_value": 1000
             },
             {
                 "name": "border_height",
                 "type": "int",
                 "value": 0,
-                "min_value": 0
+                "min_value": 0,
+                "max_value": 1000
             },
             {
                 "name": "border_color",
                 "type": "hex",
-                "value": "#000000"
+                "value": "#000000",
+                "min_value": "#000000",
+                "max_value": "#FFFFFF"
             }
         ]
     },
@@ -51,7 +55,9 @@
             {
                 "name": "contrast",
                 "type": "float",
-                "value": 1
+                "value": 1,
+                "min_value": -100,
+                "max_value": 100
             }
         ]
     },
@@ -64,25 +70,29 @@
                 "name": "width",
                 "type": "int",
                 "value": 0,
-                "min_value": 0
+                "min_value": 0,
+                "max_value": 1920
             },
             {
                 "name": "height",
                 "type": "int",
                 "value": 0,
-                "min_value": 0
+                "min_value": 0,
+                "max_value": 1080
             },
             {
                 "name": "x_top_left",
                 "type": "int",
                 "value": 0,
-                "min_value": 0
+                "min_value": 0,
+                "max_value": 1920
             },
             {
                 "name": "y_top_left",
                 "type": "int",
                 "value": 0,
-                "min_value": 0
+                "min_value": 0,
+                "max_value": 1080
             }
         ]
     },
@@ -127,13 +137,15 @@
                 "name": "width",
                 "type": "int",
                 "value": 0,
-                "min_value": 0
+                "min_value": 0,
+                "max_value": 1920
             },
             {
                 "name": "height",
                 "type": "int",
                 "value": 0,
-                "min_value": 0
+                "min_value": 0,
+                "max_value": 1080
             }
         ]
     },
