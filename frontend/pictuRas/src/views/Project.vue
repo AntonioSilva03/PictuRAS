@@ -55,7 +55,7 @@ export default {
 
 const getUserStatus = async () => {
   try {
-    const response = await axios.get('http://localhost:3000/api/user/status', { withCredentials: true });
+    const response = await axios.get(api+'/api/user/status', { withCredentials: true });
     return response.data.status;
   } catch (error) {
     console.error('Error fetching user status:', error);

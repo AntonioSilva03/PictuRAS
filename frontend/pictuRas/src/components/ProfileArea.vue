@@ -11,7 +11,7 @@
         <div v-else class="profile-Container">
             <div class="left-side">
                 <img src="/logo-no-text.png" alt="Logo" class="logo1" />
-                <h1>Username: {{ profileStore.profile.username }}</h1>
+                <h1>Name: {{ profileStore.profile.name }}</h1>
                 <p>Email: {{ profileStore.profile.email }}</p>
                 <p>Satus: <b>{{ profileStore.profile.status }}</b></p>
                 <div class="profile-buttons">

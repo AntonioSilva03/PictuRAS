@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
+import { useEditingToolStore } from '../stores/EditingTool'
 
 const api = import.meta.env.VITE_API_GATEWAY;
 
@@ -59,6 +60,9 @@ export const useProjectStore = defineStore('projectStore', {
         } catch (error) {
           console.error('Error generating session project:', error);
         }
-      },      
+      }, 
+      async updateProject(){
+          console.log(tools.tools)
+      }     
   },
 });

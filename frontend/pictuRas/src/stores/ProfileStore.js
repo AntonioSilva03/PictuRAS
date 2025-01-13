@@ -1,11 +1,12 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 
+const api = import.meta.env.VITE_API_GATEWAY;
+
 export const useProfileStore = defineStore('profileStore', {
     state: () => ({
         profile: {
-            id: '1',
-            username: 'jmf',
+            name: 'jmf',
             email: 'jmf@example.com',
             status: 'premium',
         },
@@ -14,18 +15,16 @@ export const useProfileStore = defineStore('profileStore', {
     }),
 
     actions: {
-        async fetchProfile(userId) {
+        async fetchProfile() {
             this.loading = true;
             this.error = null;
             
             try {
-                // const response = await axios.get(`/api/users/${userId}`);
-                // this.profile = response.data;
-                console.log(`Fetching profile for user ID: ${userId}`);
+                const response = await axios.get(`${api}/api/profile`,{ withCredentials: true } );
+                this.profile = response.data;
             }
             catch (error) {
-                this.error = `Failed to fetch profile for user ID: ${userId}`;
-                console.error(error);
+                this.error = `Failed to fetch profile for user ID: ${this.profile.email}`;
             }
             finally {
                 this.loading = false;
