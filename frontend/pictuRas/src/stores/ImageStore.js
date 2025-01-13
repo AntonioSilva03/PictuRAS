@@ -4,14 +4,14 @@ import axios from 'axios';
 export const useImageStore = defineStore('imageStore', {
   state: () => ({
     images: [
-      'https://via.placeholder.com/150/FF0000/FFFFFF?text=1',
-      'https://via.placeholder.com/150/00FF00/FFFFFF?text=2',
-      'https://via.placeholder.com/150/0000FF/FFFFFF?text=3',
-      'https://via.placeholder.com/150/FFFF00/FFFFFF?text=4',
-      'https://via.placeholder.com/150/FFFF00/FFFFFF?text=5',
-      'https://via.placeholder.com/150/FFFF00/FFFFFF?text=6',
-      'https://via.placeholder.com/150/FFFF00/FFFFFF?text=7',
-      'https://via.placeholder.com/150/FFFF00/FFFFFF?text=8',
+      'https://placehold.co/800x800',
+      'https://placehold.co/400x400',
+      'https://placehold.co/800x800',
+      'https://placehold.co/400x400',
+      'https://placehold.co/800x800',
+      'https://placehold.co/400x400',
+      'https://placehold.co/800x800',
+      'https://placehold.co/400x400',
       'https://placehold.co/1000x1200',
       'https://placehold.co/1800x1200'
     ], // depois vai ser vazia
