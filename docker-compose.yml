@@ -55,6 +55,17 @@ services:
       rabbitmq:
         condition: service_healthy
 
+  # objectcounter-worker:
+  #   container_name: peoplecounter-worker
+  #   build:
+  #     context: ./tools/peoplecounter
+  #     dockerfile: Dockerfile
+  #   links:
+  #     - rabbitmq
+  #   depends_on:
+  #     rabbitmq:
+  #       condition: service_healthy
+
   ocr-worker:
     container_name: ocr-worker
     build:
@@ -65,6 +76,17 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
+
+  # peoplecounter-worker:
+  #   container_name: peoplecounter-worker
+  #   build:
+  #     context: ./tools/peoplecounter
+  #     dockerfile: Dockerfile
+  #   links:
+  #     - rabbitmq
+  #   depends_on:
+  #     rabbitmq:
+  #       condition: service_healthy
 
   rotate-worker:
     container_name: rotate-worker
