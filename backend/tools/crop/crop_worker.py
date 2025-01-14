@@ -89,5 +89,7 @@ class CropWorker:
              worker.join()
 
 
-server = CropWorker()
-server.start()
+if __name__ == '__main__':
+    server = CropWorker()
+    print('CropWorker start consuming...')
+    server.start()

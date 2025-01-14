@@ -89,5 +89,7 @@ class BrightnessWorker:
              worker.join()
 
 
-server = BrightnessWorker()
-server.start()
+if __name__ == '__main__':
+    server = BrightnessWorker()
+    print('BrightnessWorker start consuming...')
+    server.start()

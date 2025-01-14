@@ -3,7 +3,7 @@ import json
 import asyncio
 from dotenv import load_dotenv # type: ignore
 from websockets.asyncio.server import serve # type: ignore
-from backend.ws.processor.processor import ProcessorWorker
+from processor.processor import ProcessorWorker
 
 
 class Server:

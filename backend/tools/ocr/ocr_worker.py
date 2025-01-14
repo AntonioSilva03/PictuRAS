@@ -89,5 +89,7 @@ class OCRWorker:
              worker.join()
 
 
-server = OCRWorker()
-server.start()
+if __name__ == '__main__':
+    server = OCRWorker()
+    print('OCRWorker start consuming...')
+    server.start()

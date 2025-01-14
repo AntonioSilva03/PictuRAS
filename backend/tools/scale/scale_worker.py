@@ -89,5 +89,7 @@ class ScaleWorker:
              worker.join()
 
 
-server = ScaleWorker()
-server.start()
+if __name__ == '__main__':
+    server = ScaleWorker()
+    print('ScaleWorker start consuming...')
+    server.start()

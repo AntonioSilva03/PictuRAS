@@ -89,5 +89,7 @@ class WatermarkWorker:
              worker.join()
 
 
-server = WatermarkWorker()
-server.start()
+if __name__ == '__main__':
+    server = WatermarkWorker()
+    print('WatermarkWorker start consuming...')
+    server.start()

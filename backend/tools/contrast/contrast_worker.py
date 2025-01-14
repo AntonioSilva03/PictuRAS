@@ -89,5 +89,7 @@ class ContrastWorker:
              worker.join()
 
 
-server = ContrastWorker()
-server.start()
+if __name__ == '__main__':
+    server = ContrastWorker()
+    print('ContrastWorker start consuming...')
+    server.start()

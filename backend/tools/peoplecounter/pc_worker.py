@@ -89,5 +89,7 @@ class PeopleCountingWorker:
              worker.join()
 
 
-server = PeopleCountingWorker()
-server.start()
+if __name__ == '__main__':
+    server = PeopleCountingWorker()
+    print('PeopleCountingWorker start consuming...')
+    server.start()

@@ -89,5 +89,7 @@ class ObjectCountingWorker:
              worker.join()
 
 
-server = ObjectCountingWorker()
-server.start()
+if __name__ == '__main__':
+    server = ObjectCountingWorker()
+    print('ObjectCountingWorker start consuming...')
+    server.start()

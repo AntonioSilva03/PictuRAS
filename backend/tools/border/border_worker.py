@@ -89,5 +89,7 @@ class BorderWorker:
              worker.join()
 
 
-server = BorderWorker()
-server.start()
+if __name__ == '__main__':
+    server = BorderWorker()
+    print('BorderWorker start consuming...')
+    server.start()

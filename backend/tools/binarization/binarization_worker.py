@@ -88,5 +88,8 @@ class BinarizationWorker:
         for worker in self.workers:
             worker.join()
 
-server = BinarizationWorker()
-server.start()
+
+if __name__ == '__main__':
+    server = BinarizationWorker()
+    print('BinarizationWorker start consuming...')
+    server.start()

@@ -1,10 +1,12 @@
 import os
 import json
-from utils.fetch import *
-from utils.preparer import get_prepared_requets
+from processor.utils.fetch import *
+from processor.utils.preparer import get_prepared_requets
+from processor.processor_worker import ProcessorWorker
 
 PROJECTS_HOST = os.getenv('PROJECTS_HOST', 'localhost')
-PROJECTS_PORT = os.getenv('PROJECTS_PORT', 3003)
+PROJECTS_PORT = int(os.getenv('PROJECTS_PORT', 3003))
+
 
 class Processor:
 
@@ -21,17 +23,14 @@ class Processor:
 
     async def process_project(websocket, request):
 
-        project = get_project(request['project'])
-        images = get_project_images(request['project'])
+        project = get_project(PROJECTS_HOST, PROJECTS_PORT, request['project'])
+        images = get_project_images(PROJECTS_HOST, PROJECTS_PORT, request['project'])
 
-        images_data = [(image['id'],get_image_data(image['id'])) for image in images]
+        images = {image['id']: {'data': get_image_data(PROJECTS_HOST, PROJECTS_PORT, image['id'])} for image in images}
         bus_requests = get_prepared_requets(project['tools'])
 
-        ### CRIAR UMA NOVA CLASS
-        #### images_data = class(websocket,bus_requests,images_data)
-        ## esta merda tem de devolver (id, bytes) a conversão de e para base64 é dentro da class
-
-        ### FAZER PUT DAS NOVAS IMAGENS
+        processorWorker = ProcessorWorker(websocket,bus_requests,images,'images')
+        await processorWorker.start()
 
 
     async def process_preview(websocket, request):
@@ -39,14 +38,11 @@ class Processor:
         project = get_project(request['project'])
         images = get_project_images(request['project'])
 
-        images_data = [(image['id'],get_image_data(image['id'])) for image in images]
+        images = [(image['id'],get_image_data(image['id'])) for image in images]
         bus_requests = get_prepared_requets(project['tools'])
 
-        ### CRIAR UMA NOVA CLASS
-        #### images_data = class(websocket,bus_requests,images_data)
-        ## esta merda tem de devolver (id, bytes) a conversão de e para base64 é dentro da class
-
-        ### FAZER POST NA COLLEÇÃO DE PREVIEW
+        processorWorker = ProcessorWorker(websocket,bus_requests,images,'preview')
+        await processorWorker.start()
 
 
     async def process_cancel(websocket, request):

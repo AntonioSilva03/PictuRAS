@@ -89,5 +89,7 @@ class RotateWorker:
              worker.join()
 
 
-server = RotateWorker()
-server.start()
+if __name__ == '__main__':
+    server = RotateWorker()
+    print('RotateWorker start consuming...')
+    server.start()

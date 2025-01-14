@@ -89,5 +89,7 @@ class AutoCropWorker:
              worker.join()
 
 
-server = AutoCropWorker()
-server.start()
+if __name__ == '__main__':
+    server = AutoCropWorker()
+    print('AutoCropWorker start consuming...')
+    server.start()
