@@ -44,7 +44,6 @@
     padding-bottom: 1rem;
     display: flex;
     align-items: center;
-    height: 50%;
     width: 100%;
     justify-content: center; /* Align everything to the left */
   }
@@ -72,6 +71,32 @@
     gap: 1rem;
     margin: 0;
     padding: 0;
+  }
+
+  .navbar-links li {
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    transition: background-color 0.3s, color 0.3s, transform 0.3s;
+    border: none;
+    cursor: pointer;
+    padding: 5px 10px;
+  }
+
+  .navbar-links li:after{
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: #fff;
+    transition: width 0.3s ease, left 0.3s ease;
+  }
+
+  .navbar-links li:hover::after{
+    width: 100%;
+    left: 0;
   }
   
   .navbar-links a {

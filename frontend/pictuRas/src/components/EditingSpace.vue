@@ -1,5 +1,6 @@
 <template>
-    <div class="editing-space">
+  <div class="editing-space">
+    <div class="relative" id="first-relative">
       <div v-if="imageStore.selectedImage" class="image-preview" id="prev">
         <img :src="imageStore.selectedImage" alt="Selected Image" />
       </div>
@@ -8,56 +9,104 @@
       </div>
       <ToolsList id="tools"></ToolsList>
     </div>
-  </template>
-  
-  <script setup>
-  import { useImageStore } from '../stores/ImageStore';
-  import ToolsList from './ToolsList.vue';
-  
-  const imageStore = useImageStore();
-  </script>
-  
-  <style scoped>
+    <div class="relative" id="second-relative">
+      <ParamsSelector v-if="imageStore.selectedImage" id="params"></ParamsSelector>
+      <ProcessButtons id="submit-area" />
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { useImageStore } from '../stores/ImageStore';
+import ParamsSelector from './ParamsSelector.vue';
+import ProcessButtons from './ProcessButtons.vue'
+import ToolsList from './ToolsList.vue';
+
+const imageStore = useImageStore();
+</script>
+
+<style scoped>
+/*
   .editing-space {
     background-color: #fff;
-    border: 1px solid #ccc;
     display: grid;
-    grid-template-rows: 10% 60% 30%;
-    grid-template-columns: 30% 60% 10%;
     grid-template-areas:
-      ". . ."   
-      "tools prev ."
-      ". . .";
-    height: 100%;
+      "prev tools"
+      "params submit-area";
+    grid-template-columns: 75% 25%;
     width: 100%;
+    margin-top: 10%;
   }
+ */
 
-  .image-preview {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .image-preview img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-  }
-  
-  .placeholder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3rem;
-    color: #999;
-  }
-  #prev{
-    grid-area: prev;
-  }
+.editing-space {
+  display: flex;
+  flex-direction: column;
+}
 
-  #tools{
-    grid-area: tools;
-  }
+.relative {
+  position: relative;
+  width: 100%;
+  display: flex;
+}
 
-  </style>
-  
+#first-relative{
+  justify-content: space-around;
+  max-height: 60%;
+  min-height: 60%;
+  margin-top: 50px;
+}
+
+.image-preview,
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 76%;
+  height: auto;
+}
+
+.image-preview img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.image-preview img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: #999;
+}
+
+#tools {
+  width: 15%;
+  align-self: center;
+}
+
+#second-relative {
+  flex-grow: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+#params {
+  width: 85%;
+  position: relative;
+  margin-top: 20px;
+}
+
+#submit-area {
+  width: 15%;
+  position: absolute;
+  right: 3%;
+}
+
+</style>

@@ -4,7 +4,10 @@ import Landing from '../views/Landing.vue';
 import Login from '../views/Login.vue';
 import Project from '../views/Project.vue';
 import Register from '../views/Register.vue';
-import Plan from '../views/Plan.vue'
+import Profile from '../views/Profile.vue';
+import Payment from '../views/Payment.vue';
+import PaymentResult from '../views/PaymentResult.vue';
+import Plan from '../views/Plan.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -16,9 +19,9 @@ const router = createRouter({
       props: true
     },
     {
-     path: '/login',
-     name: 'login',
-     component: Login,
+      path: '/login',
+      name: 'login',
+      component: Login,
     },
     {
       path: '/register',
@@ -26,10 +29,30 @@ const router = createRouter({
       component: Register,
      },
     {
-        path: '/project',
-        name: 'project',
-        component: Project,
-       },
+      path: '/project',
+      name: 'project',
+      component: Project,
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: Profile,
+    },
+    {
+      path: '/plan',
+      name: 'plan',
+      component: Plan,
+    },
+    {
+      path: '/payment',
+      name: 'payment',
+      component: Payment,
+    },
+    {
+      path: '/payment/result',
+      name: 'payment-result',
+      component: PaymentResult, 
+    },
     {
         path: '/plan',
         name: 'plan',
