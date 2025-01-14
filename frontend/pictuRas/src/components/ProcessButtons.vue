@@ -2,12 +2,39 @@
     <div class="btn-wrapper">
         <button @click="">Preview</button>
         <button @click="">Process</button>
+        <button @click="saveProject">Save</button>
     </div>
 </template>
 <script>
+
+import { useProjectStore } from '../stores/projectStore';
+import { useEditingToolStore } from '../stores/EditingTool'
+import axios from 'axios';
+
+const api = import.meta.env.VITE_API_GATEWAY;
+
 export default {
     name:"ProcessButtons",
     methods: {
+        async saveProject(){
+            try{
+            const projectStore = useProjectStore();
+            const toolsStore = useEditingToolStore();
+            let tempProject = JSON.parse(JSON.stringify(projectStore.selectedProject));
+            const activeToolsInOrder = toolsStore.tools.filter(tool => tool.active);
+            const activeToolsInOrderWrapper = activeToolsInOrder .map(({ active, position, ...rest }) => rest);
+            tempProject.tools = activeToolsInOrderWrapper;
+            console.log(tempProject)
+            const response = await axios.put(
+              `${api}/api/projects`, 
+               tempProject,
+              { withCredentials: true }
+            );
+
+            }catch(e){
+                console.error(e)
+            }
+        }
         
     },
     
@@ -20,19 +47,19 @@ export default {
     flex-direction: column;
     width: 100%;
     height: 100%;
-    position: relative;
+    gap: 30px;
+    padding-top: 20px;
 }
 
 .btn-wrapper button:nth-child(1) {
-    top: 10%;
 }
 
 .btn-wrapper button:nth-child(2) {
-    top: 30%;
+    top: 100px;
 }
 
 .btn-wrapper button {
-    padding: 10px 30px;
+    padding: 10px 40px;
     border-radius: 20px;
     background: #000000;
     color: #ffffff;
@@ -42,7 +69,6 @@ export default {
     border: 1px solid #000000;
     transition: 0.25s;
     width: fit-content;
-    position: absolute;
     align-self: center;
 }
 

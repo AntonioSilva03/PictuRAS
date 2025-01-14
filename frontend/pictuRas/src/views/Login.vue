@@ -23,13 +23,13 @@
             v-model="password"
             required
           />
-          <Button1 type="submit" @click="handleLogin" label="Login" />
+          <Button1 type="submit" label="Login" />
         </form>
 
         <!-- Links para Forget Password e Sign Up -->
         <div class="login-links">
           <a href="/forgot-password" class="link">Forgot Password?</a>
-          <a href="/sign-up" class="link">Sign Up</a>
+          <a href="/register" class="link">Sign Up</a>
         </div>
 
         <GoogleButton label="Continue with Google" />

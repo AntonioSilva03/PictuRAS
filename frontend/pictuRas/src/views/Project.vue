@@ -1,13 +1,17 @@
 <template>
-    <div class="main-layout">
-        <Navbar id="nav"></Navbar>
-        <ImageList id="image-list"></ImageList>
-        <EditingSpace id="editing-space"></EditingSpace>
+  <div class="main-layout">
+    <Navbar id="nav"></Navbar>
+    <div class="main-part">
+      <ImageList id="image-list"></ImageList>
+      <EditingSpace id="editing-space"></EditingSpace>
     </div>
+  </div>
 </template>
-  
+
 <script>
-import { useProjectStore } from '../stores/ProjectStore.js';
+import { useProjectStore } from '../stores/projectStore';
+import { useEditingToolStore } from '../stores/EditingTool';
+import { useImageStore } from '../stores/ImageStore';
 import { useRouter } from 'vue-router';
 import Navbar from '../components/Navbar.vue';
 import ImageList from '../components/ImageList.vue';
@@ -25,6 +29,8 @@ export default {
   },
   setup() {
     const projectStore = useProjectStore();
+    const editingToolsStore = useEditingToolStore();
+    const imageStore = useImageStore();
     const router = useRouter();
 
     // Check for selected project and user status
@@ -45,17 +51,26 @@ export default {
           console.log(projectStore.selectProject.name)
         }
       }
+
     };
 
+    const setState = async() =>{
+      // State igual a imagens + tools, para ja so fetch das tools aqui
+      const projectId = projectStore.selectProject.id;
+      await editingToolsStore.fetchTools();
+      // await imageStore.fetchImages(projectId);
+      // update toolsStore tendo em conta o que recebemos do projeto.
+    }
     // Call the check function when the component mounts
     checkProjectAndUserStatus();
+    setState();
   }
 };
 
 
 const getUserStatus = async () => {
   try {
-    const response = await axios.get('http://localhost:3000/api/user/status', { withCredentials: true });
+    const response = await axios.get(api+'/api/user/status', { withCredentials: true });
     return response.data.status;
   } catch (error) {
     console.error('Error fetching user status:', error);
@@ -64,32 +79,52 @@ const getUserStatus = async () => {
 
 
 </script>
-  
-  <style scoped>
-  
-  
-  .main-layout {
-      background-color: rgb(255, 255, 255);
-      display: grid;
+
+<style scoped>
+/*
+  .main-part {
+    display: grid;
       height: 100%;
       width: 100%;
       grid-template-columns: 25% 75%;
       grid-template-areas:
-        "nav nav"
         "image-list editing-space";
       overflow: auto;
       gap:0px;
   }
+*/
 
-  #nav{
-    grid-area: nav;
-  }
 
-  #image-list{
-    grid-area: image-list;
-  }
-  #editing-space{
-    grid-area: editing-space;
-  }
-  </style>
-  
+#nav {
+    flex-shrink: 0;
+}
+
+.main-layout {
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    max-height: 100vh;
+}
+
+.main-part {
+    flex-grow: 1;
+    overflow-y: auto;
+    display: flex;
+}
+
+#nav {
+    position: sticky;
+    top: 0;
+}
+
+#image-list {
+  grid-area: image-list;
+  width: 25%;
+}
+
+#editing-space {
+  grid-area: editing-space;
+  width: 75%;
+}
+</style>

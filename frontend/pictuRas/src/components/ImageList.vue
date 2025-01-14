@@ -2,7 +2,7 @@
   <div class="wrapper">
     <div class="image-list">
       <div
-        v-for="(image, index) in images"
+        v-for="(image, index) in imageStore.images"
         :key="index"
         class="image-thumbnail"
         @click="selectImage(image)"
@@ -28,10 +28,14 @@
 <script setup>
 import { ref } from 'vue'; // Import ref
 import { useImageStore } from '../stores/ImageStore';
+import { useProjectStore } from '../stores/ProjectStore';
+import axios from 'axios';
+
+const api = import.meta.env.VITE_API_GATEWAY;
 
 // Access the store
 const imageStore = useImageStore();
-const images = imageStore.images;
+const projectStore = useProjectStore();
 
 // File input reference
 const fileInput = ref(null);
@@ -47,7 +51,7 @@ function triggerFileUpload() {
 }
 
 // Handle file upload
-function handleFileUpload(event) {
+async function handleFileUpload(event) {
   const files = Array.from(event.target.files);
 
   // Filter only valid image files
@@ -66,9 +70,36 @@ function handleFileUpload(event) {
     return;
   }
 
-  // Create object URLs for valid images
-  // const imageUrls = validImageFiles.map((file) => URL.createObjectURL(file));
-  // imageStore.addImages(imageUrls); // Assuming `addImages` is a store action
+  const projectStore = useProjectStore();
+  const projectId = projectStore.selectedProject?.id;
+
+  if (!projectId) {
+    console.error("No project selected. Cannot upload files.");
+    return;
+  }
+
+  // Iterate over each image file and send it in a separate request
+  for (const file of validImageFiles) {
+    const formData = new FormData();
+    formData.append("image", file); // Append the file as 'image'
+    formData.append("projectId", projectId); // Include the project ID
+
+    try {
+      const response = await axios.post(`${api}/api/projects/images`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true, // Include credentials for authentication
+      });
+      imageStore.images.push(response.data.uri)
+    } catch (error) {
+      console.error(`Failed to upload ${file.name}:`, error);
+      alert(`Error uploading ${file.name}. Please try again.`);
+    }
+  }
+  console.log(imageStore.images)
+  alert("All images have been uploaded.");
+  event.target.value = "";
 }
 
 </script>
