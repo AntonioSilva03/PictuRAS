@@ -4,7 +4,6 @@ EXCHANGE = os.getenv('EXCHANGE', 'TOOL_EXCHANGE')
 RESULTS_QUEUE = os.getenv('RESULTS_QUEUE', 'RESULTS_QUEUE'),
 
 REQUEST_QUEUES = {
-    'Remove Background': os.getenv('AUTOCROP_REQUEST_QUEUE', 'AUTOCROP_REQUEST_QUEUE'),
     'Binarization': os.getenv('BINARIZATION_REQUEST_QUEUE', 'BINARIZATION_REQUEST_QUEUE'),
     'Border': os.getenv('BORDER_REQUEST_QUEUE', 'BORDER_REQUEST_QUEUE'),
     'Brightness': os.getenv('BRIGHTNESS_REQUEST_QUEUE', 'BRIGHTNESS_REQUEST_QUEUE'),
@@ -13,13 +12,13 @@ REQUEST_QUEUES = {
     'Object Counter': os.getenv('OBJECT_COUNTER_REQUEST_QUEUE', 'OBJECT_COUNTER_REQUEST_QUEUE'),
     'OCR': os.getenv('OCR_REQUEST_QUEUE', 'OCR_REQUEST_QUEUE'),
     'People Counter': os.getenv('PEOPLECOUNTER_REQUEST_QUEUE', 'PEOPLECOUNTER_REQUEST_QUEUE'),
+    'Remove Background': os.getenv('AUTOCROP_REQUEST_QUEUE', 'AUTOCROP_REQUEST_QUEUE'),
     'Rotate': os.getenv('ROTATE_REQUEST_QUEUE', 'ROTATE_REQUEST_QUEUE'),
     'Scale': os.getenv('SCALE_REQUEST_QUEUE', 'SCALE_REQUEST_QUEUE'),
     'Watemark': os.getenv('WATERMARK_REQUEST_QUEUE', 'WATERMARK_REQUEST_QUEUE'),
 }
 
 handlers = {
-    'Remove Background': lambda tool : {},
     'Binarization': lambda tool : {},
     'Border': lambda tool : handle_border(tool),
     'Brightness': lambda tool : handle_brightness(tool),
@@ -28,6 +27,7 @@ handlers = {
     'Object Counter': lambda tool : {},
     'OCR': lambda tool : {},
     'People Counter': lambda tool : {},
+    'Remove Background': lambda tool : {},
     'Rotate': lambda tool : handle_rotate(tool),
     'Scale': lambda tool : handle_scale(tool),
     'Watemark': lambda tool : {},
@@ -44,8 +44,8 @@ def get_parameter(name: str, parameters: list) -> dict:
 def handle_border(tool: dict) -> dict:
     return {
         'border_height': get_parameter('border_height', tool['parameters'])['value'],
-        'border_width': get_parameter('border_width', tool['parameters']['value']),
-        'border_color': get_parameter('border_color', tool['parameters']['value']),
+        'border_width': get_parameter('border_width', tool['parameters'])['value'],
+        'border_color': get_parameter('border_color', tool['parameters'])['value'],
     }
 
 
@@ -64,8 +64,8 @@ def handle_contrast(tool: dict) -> dict:
 def handle_crop(tool: dict) -> dict:
     return {
         'width': get_parameter('width', tool['parameters'])['value'],
-        'height': get_parameter('height', tool['parameters']['value']),
-        'x_top_left': get_parameter('x_top_left', tool['parameters']['value']),
+        'height': get_parameter('height', tool['parameters'])['value'],
+        'x_top_left': get_parameter('x_top_left', tool['parameters'])['value'],
         'y_top_left': get_parameter('y_top_left', tool['parameters'])['value'],
     }
 
@@ -79,7 +79,7 @@ def handle_rotate(tool: dict) -> dict:
 def handle_scale(tool: dict) -> dict:
     return {
         'width': get_parameter('width', tool['parameters'])['value'],
-        'height': get_parameter('height', tool['parameters']['value']),
+        'height': get_parameter('height', tool['parameters'])['value'],
     }
 
 
