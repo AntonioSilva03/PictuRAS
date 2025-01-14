@@ -127,19 +127,26 @@ export default {
             this.errorMessage = '';
 
             try {
-                const { error } = await this.stripe.confirmPayment({
+                const { error, paymentIntent } = await this.stripe.confirmPayment({
                     elements: this.elements,
                     confirmParams: {
-                        return_url: `${window.location.origin}/payment/success`,
+                        return_url: `${window.location.origin}/payment/result?status=success`, // Success URL
                     },
                 });
 
                 if (error) {
                     this.errorMessage = error.message;
+                    // Redirect to failure page if payment fails
+                    this.$router.push('/payment/result?status=failure');
+                } else if (paymentIntent && paymentIntent.status === 'succeeded') {
+                    // Redirect to success page if payment is successful
+                    this.$router.push('/payment/result?status=success');
                 }
             } catch (error) {
                 this.errorMessage = 'Payment failed. Please try again.';
                 console.error('Payment confirmation error:', error);
+                // Redirect to failure page if there was an error
+                this.$router.push('/payment/result?status=failure');
             } finally {
                 this.processing = false;
             }
