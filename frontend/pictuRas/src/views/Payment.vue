@@ -3,10 +3,7 @@
         <Navbar id="nav"></Navbar>
         <div class="payment-container">
             <h2>Complete Your Payment</h2>
-            <PaymentForm 
-                :amount="amount"
-                :planName="planName"
-            />
+            <PaymentForm :amount="amount" :planName="planName" />
         </div>
     </div>
 </template>
@@ -23,15 +20,15 @@ export default {
     },
     data() {
         return {
-            amount: 1000,
-            planName: 'anual premium'
-        }
-    }/*,
+            amount: parseFloat(this.$route.query.amount) || 0,
+            planName: this.$route.query.planName || '',
+        };
+    },
     created() {
-        // Get the amount and plan name from route query params or state management
-        this.amount = this.$route.query.amount ? parseFloat(this.$route.query.amount) : 0;
-        this.planName = this.$route.query.plan || '';
-    }*/
+        // In case you need to fetch or do other things based on amount/planName
+        console.log("Amount:", this.amount);
+        console.log("Plan Name:", this.planName);
+    }
 };
 </script>
 

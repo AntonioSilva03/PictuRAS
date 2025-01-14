@@ -7,6 +7,7 @@ import Register from '../views/Register.vue';
 import Profile from '../views/Profile.vue';
 import Payment from '../views/Payment.vue';
 import PaymentResult from '../views/PaymentResult.vue';
+import Plan from '../views/Plan.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -36,6 +37,11 @@ const router = createRouter({
       path: '/profile',
       name: 'profile',
       component: Profile,
+    },
+    {
+      path: '/plan',
+      name: 'plan',
+      component: Plan,
     },
     {
       path: '/payment',
