@@ -3,7 +3,7 @@
       <div v-if="status === 'success'" class="payment-success">
         <h1>Payment Successful</h1>
         <p>Your transaction was successful. Thank you for your payment!</p>
-        <button @click="goHome">Back to Home</button>
+        <button @click="goHome">Back to Profile Page</button>
       </div>
   
       <div v-if="status === 'failure'" class="payment-failure">
