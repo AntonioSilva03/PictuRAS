@@ -20,7 +20,7 @@
         multiple
         style="display: none"
       />
-      <button>Download</button>
+      <button @click="downloadAllImagesAsZip()" >Download</button>
     </div>
   </div>
 </template>
@@ -118,6 +118,14 @@ async function handleFileUpload(event) {
   alert("All images have been uploaded.");
   event.target.value = "";
 }
+
+
+async function downloadAllImagesAsZip (){
+  const projectStore = useProjectStore();
+  const projectId = projectStore.selectedProject?.id;
+  await imageStore.downloadAllImagesAsZip(projectId);
+  alert("Download as finished!")
+};
 
 </script>
 
