@@ -9,7 +9,7 @@ class StripeController {
                 return res.status(400).json({ error: 'Amount is required' });
             }
     
-            const paymentIntent = await stripeService.createPaymentIntent(amount, currency, paymentMethods);
+            const paymentIntent = await stripeService.createPaymentIntent(amount);
             
             res.json({
                 clientSecret: paymentIntent.client_secret

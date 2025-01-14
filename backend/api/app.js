@@ -61,7 +61,7 @@ db.once('open', () => {
 });
 
 app.use('/api', apiRouter);
-app.use('/api/payment', stripeRoutes);
+app.use('/api', stripeRoutes);
 
 app.use(function(req, res, next) {
   next(createError(404));
