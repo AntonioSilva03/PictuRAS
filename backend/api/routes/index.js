@@ -7,6 +7,7 @@ var User = require('../controllers/user');
 const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+const FormData = require('form-data');
 
 router.get('/', function (req, res) {
   res.jsonp('Im here. My name is api')
@@ -226,12 +227,11 @@ router.post(
         const response = await axios.post(`${apiBaseUrl}/projects/images/${projectId}`, formData, {
           headers: {
           "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true, // Include credentials for authentication
+        }
         });
         // apagar imagem do upload
         // Return the dummy URI for now
-        return res.status(200).json({ uri: response.image});
+        return res.status(200).json({ uri: response.data.image});
       } catch (e) {
         console.error('Error uploading file for anonymous user:', e);
         return res.status(500).json({ error: 'Internal server error.' });
@@ -256,11 +256,9 @@ router.post(
         const response = await axios.post(`${apiBaseUrl}/projects/images/${projectId}`, formData, {
           headers: {
           "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true, // Include credentials for authentication
+        }
         });
-        // Return the dummy URI for now
-        return res.status(200).json({ uri: response.image});
+        return res.status(200).json(response.data);
       } catch (e) {
         console.error('Error uploading file for anonymous user:', e);
         return res.status(500).json({ error: 'Internal server error.' });
@@ -272,39 +270,42 @@ router.post(
 // todo - `GET localhost:3003/projects/images/<project_id>`: obter as imagens do projeto 
 router.get('/projects/images', passport.authenticate(['local', 'anonymous'], { session: false }), async (req, res) => {
   const apiBaseUrl = process.env.PROJECTS_MICRO_SERVICE
-    if (req.isAuthenticated()) {
+    
       try{
-        const { projectId } = req.body;
+        const { projectId } = req.query;
         const uris = await axios.get(`${apiBaseUrl}/projects/images/${projectId}`);
-        res.status(200).json(uris)
+        res.status(200).json(uris.data)
 
       }catch(e){
         console.error(e)
       }
       
-    }else{
-      try{
-        const { projectId } = req.body;
-        const uris = await axios.get(`${apiBaseUrl}/projects/images/${projectId}`);
-        res.status(200).json(uris)
+});
 
-      }catch(e){
-        console.error(e)
-      }
-    }
+// pedir bytes de image uma a uma
+router.get('/projects/images/:id', passport.authenticate(['local', 'anonymous'], { session: false }), async (req, res) => {
+  const apiBaseUrl = process.env.PROJECTS_MICRO_SERVICE
+  axios.get(`${apiBaseUrl}/projects/images/data/${req.params.id}`, { responseType: 'arraybuffer' })
+      .then(response => {
+          res.contentType(response.headers.get('content-type'))
+          res.status(200).send(response.data)
+      })
+      .catch(error => res.status(500).jsonp(error))
 });
 
 // todo download
 
-// todo
-router.put('/projects', passport.authenticate(['local', 'anonymous'], { session: false }), (req, res) => {
+// done (testar para autenticado)
+router.put('/projects', passport.authenticate(['local', 'anonymous'], { session: false }), async (req, res) => {
   if (req.isAuthenticated()) {
-    // todo
-    console.log(req.body)
+    const apiBaseUrl = process.env.PROJECTS_MICRO_SERVICE
+    const response = await axios.put(`${apiBaseUrl}/projects/${req.body.id}`)
+    res.status(200).json(`Sucess on saving ${req.body.id}`);
   } else {
     try{
-      console.log(req.body)
-      res.status(200).json([]);
+      const apiBaseUrl = process.env.PROJECTS_MICRO_SERVICE
+      const response = await axios.put(`${apiBaseUrl}/projects/${req.body.id}`,req.body)
+      res.status(200).json(`Sucess on saving ${req.body.id}`);
     }catch(e){
       console.error(e)
     }

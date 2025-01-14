@@ -58,6 +58,31 @@ export const useEditingToolStore = defineStore('editingTool', {
       if (param) {
         param.value = value
       }
+    },
+    mergeTools(activeTools){
+      console.log(activeTools)
+      console.log(this.tools)
+      for (let i = 0;i < activeTools.length; i++){
+        for(let j = 0; j < this.tools.length; j++){
+          if (this.tools[j].name === activeTools[i].name){
+            console.log(activeTools[i].parameters)
+            if (activeTools[i].parameters != null && activeTools[i].parameters.length > 0) {
+              this.tools[j].parameters = JSON.parse(JSON.stringify(activeTools[i].parameters));
+          }
+            
+            this.tools[j].position = i;
+            this.tools[j].active=true;
+
+
+            let b = this.tools[j];
+            this.tools[j] = this.tools[i];
+            this.tools[i] = b;
+          }
+
+        }
+
+      }
+      console.log(this.tools)
     }
   },
 

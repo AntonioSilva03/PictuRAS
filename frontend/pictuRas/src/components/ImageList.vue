@@ -77,7 +77,7 @@ async function handleFileUpload(event) {
     console.error("No project selected. Cannot upload files.");
     return;
   }
-
+  let tempArray = [];
   // Iterate over each image file and send it in a separate request
   for (const file of validImageFiles) {
     const formData = new FormData();
@@ -91,12 +91,29 @@ async function handleFileUpload(event) {
         },
         withCredentials: true, // Include credentials for authentication
       });
-      imageStore.images.push(response.data.uri)
+      tempArray.push(response.data)
+          // Iterate through each image element returned by the API
     } catch (error) {
       console.error(`Failed to upload ${file.name}:`, error);
       alert(`Error uploading ${file.name}. Please try again.`);
     }
   }
+
+      for (const element of tempArray) {
+            // Fetch the actual image as an ArrayBuffer
+            const response2 = await axios.get(`${api}/api/projects/images/${element.id}`, { 
+                responseType: 'arraybuffer' 
+            });
+            // Extract MIME type from response headers
+            const mimeType = response2.headers['content-type'];
+            // Create a Blob using the ArrayBuffer and MIME type
+            const blob = new Blob([response2.data], { type: mimeType });
+            // Generate an object URL for the image Blob
+            const imageSrc = URL.createObjectURL(blob);
+            // Store the image source URL for later use
+            imageStore.images.push(imageSrc);
+             
+    }
   console.log(imageStore.images)
   alert("All images have been uploaded.");
   event.target.value = "";

@@ -16,7 +16,9 @@ import { useRouter } from 'vue-router';
 import Navbar from '../components/Navbar.vue';
 import ImageList from '../components/ImageList.vue';
 import EditingSpace from '../components/EditingSpace.vue';
+import { storeToRefs } from 'pinia'
 import axios from 'axios';
+
 
 const api = import.meta.env.VITE_API_GATEWAY;
 
@@ -32,10 +34,8 @@ export default {
     const editingToolsStore = useEditingToolStore();
     const imageStore = useImageStore();
     const router = useRouter();
-
     // Check for selected project and user status
     const checkProjectAndUserStatus = async () => {
-
       if (!projectStore.selectedProject) {
 
         const userStatus = await getUserStatus(); // Example: Replace with real API or authentication logic
@@ -47,23 +47,22 @@ export default {
           
           // generate session project
           alert('You are currently Anonymous. Reduced features ');
-          projectStore.generateSessionProject();
-          console.log(projectStore.selectProject.name)
+          await projectStore.generateSessionProject();
         }
       }
-
+      await setState();
     };
 
     const setState = async() =>{
-      // State igual a imagens + tools, para ja so fetch das tools aqui
-      const projectId = projectStore.selectProject.id;
+      const projectId = projectStore.getId()
       await editingToolsStore.fetchTools();
-      // await imageStore.fetchImages(projectId);
+      await imageStore.fetchImages(projectId);
+      const tools = projectStore.getTools()
+      editingToolsStore.mergeTools(tools)
       // update toolsStore tendo em conta o que recebemos do projeto.
     }
     // Call the check function when the component mounts
-    checkProjectAndUserStatus();
-    setState();
+     checkProjectAndUserStatus();
   }
 };
 
