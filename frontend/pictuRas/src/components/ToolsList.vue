@@ -93,12 +93,8 @@ export default {
     return {
       tools,
       activeTool,
-<<<<<<< HEAD
-      selectTool
-=======
       selectTool,
       updateList
->>>>>>> origin/projectPage
     }
   }
 }
