@@ -7,7 +7,7 @@
 </template>
 <script>
 
-import { useProjectStore } from '../stores/projectStore';
+import { useProjectStore } from '../stores/ProjectStore.js';
 import { useEditingToolStore } from '../stores/EditingTool'
 import axios from 'axios';
 
