@@ -1,7 +1,7 @@
 import os
 import json
-from processor.utils.fetch import *
-from processor.utils.preparer import get_prepared_requets
+from utils.fetch import *
+from utils.preparer import get_prepared_requets
 from processor.processor_worker import ProcessorWorker
 
 PROJECTS_HOST = os.getenv('PROJECTS_HOST', 'localhost')

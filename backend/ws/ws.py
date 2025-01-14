@@ -6,7 +6,7 @@ from websockets.asyncio.server import serve # type: ignore
 from processor.processor import ProcessorWorker
 
 
-class Server:
+class ServerSocket:
 
     def __init__(self, host: str, port: int) -> None:
         self.host = host
@@ -14,7 +14,7 @@ class Server:
 
 
     async def start(self) -> None:
-        async with serve(Server.on_request, self.host, self.port) as server:
+        async with serve(ServerSocket.on_request, self.host, self.port) as server:
             print(f'WebSocket server started at ws://{self.host}:{self.port}')
             await server.serve_forever()
 
@@ -38,7 +38,7 @@ if __name__ == '__main__':
 
     load_dotenv()
 
-    server = Server(
+    server = ServerSocket(
         host=os.getenv('SERVER_SOCKET_HOST', 'localhost'),
         port=int(os.getenv('SERVER_SOCKET_PORT', 8765)))
 
