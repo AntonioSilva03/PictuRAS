@@ -1,8 +1,8 @@
 ## Run
 
 ```
-docker compose up -d
-docker compose down
+docker compose -f docker-compose-app.yml up -d
+docker compose -f docker-compose-app.yml down
 ```
 
 ## Endpoints
