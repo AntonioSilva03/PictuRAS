@@ -1,9 +1,21 @@
 services:
 
+  api-gateway:
+    container_name: api-gateway
+    build:
+      context: ./backend/api
+      dockerfile: Dockerfile 
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api-mongodb
+    links:
+      - api-mongodb
+
   users-app:
     container_name: users-app
     build:
-      context: ./users_app
+      context: ./backend/users_app
       dockerfile: Dockerfile 
     ports:
       - "3005:3005"
@@ -15,7 +27,7 @@ services:
   plans-app:
     container_name: plans-app
     build:
-      context: ./plans_app
+      context: ./backend/plans_app
       dockerfile: Dockerfile 
     ports:
       - "3004:3004"
@@ -27,7 +39,7 @@ services:
   projects-app:
     container_name: projects-app
     build:
-      context: ./projects_app
+      context: ./backend/projects_app
       dockerfile: Dockerfile 
     ports:
       - "3003:3003"
@@ -41,7 +53,7 @@ services:
   images-app:
     container_name: images-app
     build:
-      context: ./images_app
+      context: ./backend/images_app
       dockerfile: Dockerfile 
     ports:
       - "3002:3002"
@@ -53,7 +65,7 @@ services:
   tools-app:
     container_name: tools-app
     build:
-      context: ./tools_app
+      context: ./backend/tools_app
       dockerfile: Dockerfile 
     ports:
       - "3001:3001"
@@ -95,15 +107,21 @@ services:
       - "27001:27017"
     depends_on:
       - tools-mongo-seed
+  
+  api-mongodb:
+    container_name:  api-mongodb
+    image: mongo:latest
+    ports:
+      - "27017:27017"
 
   plans-mongo-seed:
     image: mongo:latest
     volumes:
-      - ./db/plans.json:/plans.json
+      - ./backend/db/plans.json:/plans.json
     command: mongoimport --host plans-db --port 27017 -d picturas-plans -c plans --type json --file /plans.json --jsonArray
 
   tools-mongo-seed:
     image: mongo:latest
     volumes:
-      - ./db/tools.json:/tools.json
+      - ./backend/db/tools.json:/tools.json
     command: mongoimport --host tools-db --port 27017 -d picturas-tools -c tools --type json --file /tools.json --jsonArray

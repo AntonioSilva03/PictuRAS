@@ -123,6 +123,7 @@ router.get('/tools', passport.authenticate(['local', 'anonymous'], { session: fa
     // Use the API base URL from your environment variables
     const apiBaseUrl = process.env.TOOL_MICRO_SERVICE // Ensure this is set in your .env file
     // Make the GET request to the external API
+    console.log(`${apiBaseUrl}/tools`)
     const response = await axios.get(`${apiBaseUrl}/tools`);
     // Optionally process the response.data here if needed
     const staticTools = response.data;
@@ -292,8 +293,6 @@ router.get('/projects/images/:id', passport.authenticate(['local', 'anonymous'],
       })
       .catch(error => res.status(500).jsonp(error))
 });
-
-// todo download
 
 // done (testar para autenticado)
 router.put('/projects', passport.authenticate(['local', 'anonymous'], { session: false }), async (req, res) => {
