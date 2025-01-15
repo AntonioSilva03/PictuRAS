@@ -1,0 +1,231 @@
+<template>
+    <div class="projects-list">
+        <div class="projects-wrapper">
+            <h2>All Projects</h2>
+            <div class="top-projects">
+                <div class="search-bar">
+                    <input type="text" v-model="searchQuery" placeholder="Search in all projects..." />
+                </div>
+                <div class="plan-projects">
+                    <p>You’re on the free plan! </p>
+                    <Button1 style="margin-top: 0; margin-left: 1em;" label="Upgrade"></Button1>
+                </div>
+            </div>
+            <table>
+            <thead>
+                <tr>
+                    <th style="width: 5%;"><input type="checkbox" /></th>
+                    <th style="width: 55%;">Title</th>
+                    <th style="width: 30%;">Created at</th>
+                    <th style="width: 10%;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Projetos -->
+                <template v-if="filteredProjects.length > 0">
+                        <tr v-for="project in filteredProjects" :key="project.id">
+                            <td><input type="checkbox" /></td>
+                            <td>{{ project.name }}</td>
+                            <td>{{ formatDate(project.date) }}</td>
+                            <td class="actions">
+                                <FontAwesomeIcon :icon="['fas', 'edit']" title="Edit" class="action-icon" @click="editProject(project.id)" />
+                                <FontAwesomeIcon :icon="['fas', 'trash']" title="Delete" class="action-icon" @click="handleDeleteProject(project.id)" />
+                            </td>
+                        </tr>
+                    </template>
+
+                    <!-- Mensagem para quando não há projetos -->
+                    <template v-else>
+                        <tr>
+                            <td colspan="4" style="text-align: center;">No projects found.</td>
+                        </tr>
+                    </template>
+            </tbody>
+        </table>
+        <p class="footer">Showing {{ filteredProjects.length }} out of {{ projects.length }} projects.</p>
+        </div>
+    </div>
+</template>
+
+
+<script>
+import Button1 from '../components/Button-style1.vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faDownload, faEdit, faEye, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { useRouter } from 'vue-router';
+import { useProjectStore } from '../stores/ProjectStore.js';
+
+library.add(faDownload, faEdit, faEye, faTrash);
+
+export default {
+    name: "ProjectsList",
+    components:{
+        Button1,
+        FontAwesomeIcon,
+    },
+    props: {
+        projects: {
+            type: Array,
+            required: true,
+            default: () => [], 
+        },
+    },
+    data() {
+        return {
+            searchQuery: "",
+        };
+    },
+    computed: {
+        filteredProjects() {
+            if (!this.projects || this.projects.length === 0) {
+                return [];
+            }
+            return this.projects.filter((project) =>
+                project.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+            );
+        },
+    },
+    methods: {
+        
+
+        formatDate(date) {
+        if (!date) return 'N/A'; // Caso não tenha data
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        return new Intl.DateTimeFormat('en-GB', options).format(new Date(date));
+        },
+
+        editProject(projectId) {
+            const router = useRouter();
+            router.push(`/project/`);
+        },
+
+    },
+
+    setup(){
+        const handleDeleteProject = async (projectId) => {
+            const projectStore = useProjectStore();
+            try {
+                await projectStore.deleteProject(projectId);
+                console.log('Project deleted successfully.');
+            } catch (error) {
+                console.error('Failed to delete project:', error);
+            }
+        }
+        return {
+            handleDeleteProject,
+        }
+    },
+}
+
+
+</script>
+
+<style scoped>
+    .projects-list {
+    width: 83%;
+    align-self: flex-end;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    flex: 1;
+    overflow-y: auto; 
+    
+}
+
+.projects-wrapper{
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    padding: 20px;
+    width: 95%;
+    height: 100%;
+}
+
+.top-projects{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: center;
+    width: 90%;
+    align-self: center;
+    margin-bottom: 4em;
+}
+
+.plan-projects{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    color: #333;
+    margin-left: 5%
+}
+
+.search-bar {
+    width: 60%;
+}
+
+.search-bar input {
+    width: 50%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+table {
+    width: 70%;
+    align-self: center;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+thead {
+    background-color: #f9f9f9;
+}
+
+th, td {
+    text-align: left;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+th {
+    font-weight: bold;
+    color: #555;
+}
+
+td.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.action-icon {
+    font-size: 1.2em; 
+    cursor: pointer; 
+    color: #555; 
+    transition: color 0.3s ease-in-out; 
+}
+
+.action-icon:hover {
+    color: #ff6600c2; 
+    cursor: pointer; 
+}
+
+
+.actions{
+    display: flex;
+    justify-content: space-around;
+}
+
+.footer {
+    font-size: 0.9em;
+    color: #555;
+    align-self: center;
+}
+
+</style>

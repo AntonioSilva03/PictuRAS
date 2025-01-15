@@ -2,7 +2,7 @@
   <div class="wrapper">
     <div class="image-list">
       <div
-        v-for="(image, index) in images"
+        v-for="(image, index) in imageStore.images"
         :key="index"
         class="image-thumbnail"
         @click="selectImage(image)"
@@ -20,7 +20,7 @@
         multiple
         style="display: none"
       />
-      <button>Download</button>
+      <button @click="downloadAllImagesAsZip()" >Download</button>
     </div>
   </div>
 </template>
@@ -28,10 +28,14 @@
 <script setup>
 import { ref } from 'vue'; // Import ref
 import { useImageStore } from '../stores/ImageStore';
+import { useProjectStore } from '../stores/ProjectStore';
+import axios from 'axios';
+
+const api = import.meta.env.VITE_API_GATEWAY;
 
 // Access the store
 const imageStore = useImageStore();
-const images = imageStore.images;
+const projectStore = useProjectStore();
 
 // File input reference
 const fileInput = ref(null);
@@ -47,7 +51,7 @@ function triggerFileUpload() {
 }
 
 // Handle file upload
-function handleFileUpload(event) {
+async function handleFileUpload(event) {
   const files = Array.from(event.target.files);
 
   // Filter only valid image files
@@ -66,10 +70,62 @@ function handleFileUpload(event) {
     return;
   }
 
-  // Create object URLs for valid images
-  // const imageUrls = validImageFiles.map((file) => URL.createObjectURL(file));
-  // imageStore.addImages(imageUrls); // Assuming `addImages` is a store action
+  const projectStore = useProjectStore();
+  const projectId = projectStore.selectedProject?.id;
+  console.log(projectId)
+  if (!projectId) {
+    console.error("No project selected. Cannot upload files.");
+    return;
+  }
+  let tempArray = [];
+  // Iterate over each image file and send it in a separate request
+  for (const file of validImageFiles) {
+    const formData = new FormData();
+    formData.append("image", file); // Append the file as 'image'
+    formData.append("projectId", projectId); // Include the project ID
+
+    try {
+      const response = await axios.post(`${api}/api/projects/images`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true, // Include credentials for authentication
+      });
+      tempArray.push(response.data)
+          // Iterate through each image element returned by the API
+    } catch (error) {
+      console.error(`Failed to upload ${file.name}:`, error);
+      alert(`Error uploading ${file.name}. Please try again.`);
+    }
+  }
+
+      for (const element of tempArray) {
+            // Fetch the actual image as an ArrayBuffer
+            const response2 = await axios.get(`${api}/api/projects/images/${element.id}`, { 
+                responseType: 'arraybuffer' 
+            });
+            // Extract MIME type from response headers
+            const mimeType = response2.headers['content-type'];
+            // Create a Blob using the ArrayBuffer and MIME type
+            const blob = new Blob([response2.data], { type: mimeType });
+            // Generate an object URL for the image Blob
+            const imageSrc = URL.createObjectURL(blob);
+            // Store the image source URL for later use
+            imageStore.images.push(imageSrc);
+             
+    }
+  console.log(imageStore.images)
+  alert("All images have been uploaded.");
+  event.target.value = "";
 }
+
+
+async function downloadAllImagesAsZip (){
+  const projectStore = useProjectStore();
+  const projectId = projectStore.selectedProject?.id;
+  await imageStore.downloadAllImagesAsZip(projectId);
+  alert("Download as finished!")
+};
 
 </script>
 

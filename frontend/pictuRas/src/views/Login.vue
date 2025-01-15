@@ -23,13 +23,13 @@
             v-model="password"
             required
           />
-          <Button1 type="submit" @click="handleLogin" label="Login" />
+          <Button1 type="submit" label="Login" />
         </form>
 
         <!-- Links para Forget Password e Sign Up -->
         <div class="login-links">
           <a href="/forgot-password" class="link">Forgot Password?</a>
-          <a href="/sign-up" class="link">Sign Up</a>
+          <a href="/register" class="link">Sign Up</a>
         </div>
 
         <GoogleButton label="Continue with Google" />
@@ -49,6 +49,8 @@
   import GoogleButton from "../components/GoogleButton.vue"; 
   import Toastify from "toastify-js";
   import "toastify-js/src/toastify.css";
+  import axios from 'axios';
+  const api = import.meta.env.VITE_API_GATEWAY;
 
   export default {
     name: 'Login',
@@ -65,7 +67,22 @@
     };
   },
   methods: {
-    handleLogin() {
+    async sendLogin(){
+      try{
+            const possibleUser = {
+            username:this.email,
+            password: this.password
+          };
+            const response = await axios.post(`${api}/api/login`,possibleUser, {
+                  withCredentials: true, // Ensure credentials are sent with the request
+                });
+                this.$router.push('/projects'); // Navigate to the projects page
+          }catch(e){
+              alert("Password or username is incorrect")
+          }
+
+    },
+    async handleLogin() {
 
       if (!this.email || !this.password) {
                 Toastify({
@@ -84,8 +101,7 @@
                 }).showToast();
                 return;
             }
-      console.log("Email:", this.email);
-      console.log("Password:", this.password);
+            await this.sendLogin();
       
     },
   },

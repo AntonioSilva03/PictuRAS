@@ -4,8 +4,6 @@ COPY . /var/www/tools_app
 
 WORKDIR /var/www/tools_app
 
-EXPOSE 5000
-
 RUN pip install -r requirements.txt
 
 CMD ["python", "app.py"]

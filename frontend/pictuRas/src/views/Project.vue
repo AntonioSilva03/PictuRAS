@@ -9,13 +9,18 @@
 </template>
 
 <script>
-
+import { useProjectStore } from '../stores/ProjectStore.js';
+import { useEditingToolStore } from '../stores/EditingTool';
+import { useImageStore } from '../stores/ImageStore';
+import { useRouter } from 'vue-router';
 import Navbar from '../components/Navbar.vue';
 import ImageList from '../components/ImageList.vue';
 import EditingSpace from '../components/EditingSpace.vue';
+import { storeToRefs } from 'pinia'
+import axios from 'axios';
 
-// Example: Hardcode or get project ID dynamically
-const projectId = 1; // Assume this comes from route params or user selection
+
+const api = import.meta.env.VITE_API_GATEWAY;
 
 export default {
   name: 'Project',
@@ -24,16 +29,57 @@ export default {
     ImageList,
     EditingSpace
   },
+  setup() {
+    const projectStore = useProjectStore();
+    const editingToolsStore = useEditingToolStore();
+    const imageStore = useImageStore();
+    const router = useRouter();
+    // Check for selected project and user status
+    const checkProjectAndUserStatus = async () => {
+      if (!projectStore.selectedProject) {
+
+        const userStatus = await getUserStatus(); // Example: Replace with real API or authentication logic
+
+        if (userStatus === 'loggedIn') {
+
+          router.push('/projects'); // Redirect to projects page
+        } else if (userStatus === 'anonymous') {
+          
+          // generate session project
+          alert('You are currently Anonymous. Reduced features ');
+          await projectStore.generateSessionProject();
+        }
+      }
+      await setState();
+    };
+
+    const setState = async() =>{
+      const projectId = projectStore.getId()
+      await editingToolsStore.fetchTools();
+      await imageStore.fetchImages(projectId);
+      const tools = projectStore.getTools()
+      editingToolsStore.mergeTools(tools)
+      // update toolsStore tendo em conta o que recebemos do projeto.
+    }
+    // Call the check function when the component mounts
+     checkProjectAndUserStatus();
+  }
 };
+
+
+const getUserStatus = async () => {
+  try {
+    const response = await axios.get(api+'/api/user/status', { withCredentials: true });
+    return response.data.status;
+  } catch (error) {
+    console.error('Error fetching user status:', error);
+  }
+};
+
 
 </script>
 
 <style scoped>
-.main-layout {
-  background-color: rgb(255, 255, 255);
-  height: 100vh;
-}
-
 /*
   .main-part {
     display: grid;
@@ -47,18 +93,13 @@ export default {
   }
 */
 
-.main-part {
-  flex-grow: 1;
-  display: flex;
-  height: 100vh;
-  overflow: auto;
-}
 
 #nav {
     flex-shrink: 0;
 }
 
 .main-layout {
+    background-color: rgb(255, 255, 255);
     display: flex;
     flex-direction: column;
     height: 100vh;
