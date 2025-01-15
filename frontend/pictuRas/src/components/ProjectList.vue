@@ -16,7 +16,7 @@
                 <tr>
                     <th style="width: 5%;"><input type="checkbox" /></th>
                     <th style="width: 55%;">Title</th>
-                    <th style="width: 30%;">Created at</th>
+                    <th style="width: 30%;">Last modified at</th>
                     <th style="width: 10%;">Actions</th>
                 </tr>
             </thead>
@@ -25,7 +25,38 @@
                 <template v-if="filteredProjects.length > 0">
                         <tr v-for="project in filteredProjects" :key="project.id">
                             <td><input type="checkbox" /></td>
-                            <td>{{ project.name }}</td>
+                            <td 
+                                class="editable-cell"
+                                @mouseover="hoveringProjectId = project.id"
+                                @mouseleave="hoveringProjectId = null"
+                                >
+                                <span v-if="editingProjectId !== project.id" class="project-name">
+                                    {{ project.name }}
+                                    <FontAwesomeIcon 
+                                    v-if="hoveringProjectId === project.id"
+                                    :icon="['fas', 'pen']"
+                                    class="edit-icon" 
+                                    @click.stop="startEditing(project.id)" 
+                                    title="Edit project name"
+                                    />
+                                </span>
+                                <div v-else class="edit-container">
+                                    <input
+                                    type="text"
+                                    v-model="editName"
+                                    @blur="saveEdit(project.id)"
+                                    @keyup.enter="saveEdit(project.id)"
+                                    class="edit-input"
+                                    />
+                                    <FontAwesomeIcon 
+                                    :icon="['fas', 'check']" 
+                                    class="save-icon"
+                                    @click="saveEdit(project.id)"
+                                    title="Save changes"
+                                    />
+                                </div>
+                                </td>
+
                             <td>{{ formatDate(project.date) }}</td>
                             <td class="actions">
                                 <FontAwesomeIcon :icon="['fas', 'edit']" title="Edit" class="action-icon" @click="editProject(project.id)" />
@@ -51,12 +82,12 @@
 <script>
 import Button1 from '../components/Button-style1.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faDownload, faEdit, faEye, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faDownload, faEdit, faEye, faTrash, faPen,faCheck } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { useRouter } from 'vue-router';
 import { useProjectStore } from '../stores/ProjectStore.js';
 
-library.add(faDownload, faEdit, faEye, faTrash);
+library.add(faDownload, faEdit, faEye, faTrash,faPen,faCheck);
 
 export default {
     name: "ProjectsList",
@@ -74,6 +105,9 @@ export default {
     data() {
         return {
             searchQuery: "",
+            editingProjectId: null,
+            hoveringProjectId: null, 
+            editName: "",
         };
     },
     computed: {
@@ -98,6 +132,18 @@ export default {
         editProject(projectId) {
             const router = useRouter();
             router.push(`/project/`);
+        },
+
+        startEditing(projectId) {
+            this.editingProjectId = projectId;
+            this.editName = this.projects.find((project) => project.id === projectId).name;
+        },
+        saveEdit(projectId) {
+            const project = this.projects.find((project) => project.id === projectId);
+            if (project) {
+                project.name = this.editName;
+            }
+            this.editingProjectId = null;
         },
 
     },
@@ -226,6 +272,50 @@ td.actions {
     font-size: 0.9em;
     color: #555;
     align-self: center;
+}
+
+.editable-cell {
+  position: relative; 
+}
+
+.edit-icon {
+  visibility: hidden; 
+  opacity: 0;
+  margin-left: 8px;
+  color: #6c757d; 
+  font-size: 1rem; 
+  transition: visibility 0.2s, opacity 0.2s, color 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.editable-cell:hover .edit-icon {
+  visibility: visible; 
+  opacity: 1;
+}
+
+.edit-icon:hover {
+  color: #ffa602; 
+}
+
+.edit-input {
+  width: 90%;
+  padding: 5px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.save-icon {
+  color: #000000;
+  margin-left: 10px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.save-icon:hover {
+  color: #218838;
 }
 
 </style>
