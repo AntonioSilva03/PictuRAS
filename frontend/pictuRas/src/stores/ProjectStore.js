@@ -144,10 +144,33 @@ export const useProjectStore = defineStore('projectStore', {
         throw error;
       }
     }, 
-    clear(){
-      this.projects = [],
-      this.selectedProject = null
+  clear(){
+    this.projects = [],
+    this.selectedProject = null
+  },
+  
+  async updateProjectName(projectId, newName) {
+    try {
+        const api = import.meta.env.VITE_API_GATEWAY; 
+        const updateData = { 
+            id: projectId, 
+            name: newName, 
+        };
+
+        const response = await axios.put(`${api}/api/projects`, updateData, {
+            withCredentials: true,
+        });
+
+        console.log(`Project ${projectId} updated successfully.`);
+        return response.data;
+    } catch (error) {
+        console.error('Error updating project in the back-end:', error);
+        throw error;
     }
+}
+
+
+    
     
   },
 });
