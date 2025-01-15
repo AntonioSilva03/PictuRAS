@@ -10,7 +10,7 @@
                 </div>
                 <div class="total-amount">
                     <span class="label">Total Amount:</span>
-                    <span class="value">${{ amount.toFixed(2) }}</span>
+                    <span class="value">{{ amount.toFixed(2) }}€</span>
                 </div>
             </div>
         </div>
@@ -22,7 +22,7 @@
             <form @submit.prevent="handleSubmit">
                 <div ref="paymentElement" class="payment-element"></div>
                 <LoadingButton :loading="processing" :disabled="!stripe || processing" class="pay-button">
-                    Pay ${{ amount.toFixed(2) }}
+                    Pay {{ amount.toFixed(2) }}€ 
                 </LoadingButton>
                 <div v-if="errorMessage" class="error-message">
                     {{ errorMessage }}
