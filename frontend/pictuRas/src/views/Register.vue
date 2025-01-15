@@ -129,9 +129,6 @@
                 return;
             }
             await this.sendRegister();
-            console.log("Email:", this.email);
-            console.log("Name:", this.name);
-            console.log("Password:", this.password);
             
         },
 

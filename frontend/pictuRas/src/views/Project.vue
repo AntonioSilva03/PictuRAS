@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { useProjectStore } from '../stores/projectStore';
+import { useProjectStore } from '../stores/ProjectStore.js';
 import { useEditingToolStore } from '../stores/EditingTool';
 import { useImageStore } from '../stores/ImageStore';
 import { useRouter } from 'vue-router';

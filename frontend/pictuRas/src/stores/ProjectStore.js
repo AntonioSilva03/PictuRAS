@@ -96,6 +96,48 @@ export const useProjectStore = defineStore('projectStore', {
     },
     getTools(){
       return this.selectedProject ? this.selectedProject.tools : [];
-    }
+    },
+    async createProject(projectData) {
+      const api = import.meta.env.VITE_API_GATEWAY;
+    
+      try {
+        // Envia os dados ao backend
+        const response = await axios.post(`${api}/api/projects`, projectData, {
+          withCredentials: true, 
+        });
+    
+        const newProject = response.data;
+    
+        // Atualiza os estados locais
+        this.projects.push(newProject);
+        this.selectedProject = newProject;
+    
+        console.log('Project created successfully:', newProject);
+        return newProject; // Retorna o projeto criado
+      } catch (error) {
+        console.error('Error creating project:', error.message);
+        throw error;
+      }
+  },
+
+  async deleteProject(projectId) {
+      const api = import.meta.env.VITE_API_GATEWAY;
+
+      try {
+        // Faz uma requisição DELETE para o API Gateway
+        await axios.delete(`${api}/api/projects/${projectId}`, {
+          withCredentials: true, // Inclui credenciais de autenticação
+        });
+
+        // Remove o projeto da lista local
+        this.projects = this.projects.filter((project) => project.id !== projectId);
+
+        console.log(`Project ${projectId} deleted successfully.`);
+      } catch (error) {
+        console.error('Error deleting project:', error);
+        throw error;
+      }
+    }, 
+    
   },
 });
