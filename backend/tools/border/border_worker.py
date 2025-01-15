@@ -1,8 +1,8 @@
 import os
 import functools
 import pika # type: ignore
-from threading import Thread
 from pika.exchange_type import ExchangeType # type: ignore
+from multiprocessing.pool import ThreadPool
 from border_tool import BorderTool
 from border_message_request import BorderMessageRequest
 import time
@@ -12,6 +12,7 @@ RABBITMQ_PORT = os.getenv('RABBITMQ_PORT', '5672')
 
 EXCHANGE=os.getenv('EXCHANGE', 'tools-exchange')
 REQUEST_QUEUE = os.getenv('REQUEST_QUEUE', 'border-queue')
+POOL_SIZE = int(os.getenv('POOL_SIZE', 5))
 
 
 class BorderWorker:
@@ -20,7 +21,7 @@ class BorderWorker:
         self.parameters = pika.ConnectionParameters(host=RABBITMQ_HOST,port=RABBITMQ_PORT)
         self.connection = pika.BlockingConnection(self.parameters)
         self.channel = self.connection.channel()
-        self.workers = []
+        self.pool = ThreadPool(processes=POOL_SIZE)
 
 
     def setup(self):
@@ -43,9 +44,7 @@ class BorderWorker:
 
 
     def on_request(self, ch, method, properties, body):
-        worker = Thread(target=BorderWorker.worker_handle_request, args=(ch, method, properties, body))
-        worker.start()
-        self.workers.append(worker)
+        self.pool.apply_async(BorderWorker.worker_handle_request, (ch, method, properties, body))
 
 
     def worker_handle_request(ch, method, properties, body):
@@ -83,8 +82,6 @@ class BorderWorker:
     def start(self):
         self.setup()
         self.channel.start_consuming()
-        for worker in self.workers:
-             worker.join()
 
 
 if __name__ == '__main__':

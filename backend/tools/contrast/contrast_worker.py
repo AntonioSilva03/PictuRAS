@@ -1,9 +1,8 @@
 import os
-import json
 import functools
 import pika # type: ignore
-from threading import Thread
 from pika.exchange_type import ExchangeType # type: ignore
+from multiprocessing.pool import ThreadPool
 from contrast_tool import ContrastTool
 from contrast_message_request import ContrastMessageRequest
 
@@ -12,7 +11,7 @@ RABBITMQ_PORT = os.getenv('RABBITMQ_PORT', '5672')
 
 EXCHANGE=os.getenv('EXCHANGE', 'tools-exchange')
 REQUEST_QUEUE = os.getenv('REQUEST_QUEUE', 'contrast-queue')
-RESULTS_QUEUE = os.getenv('RESULTS_QUEUE', 'results-queue')
+POOL_SIZE = int(os.getenv('POOL_SIZE', 5))
 
 
 class ContrastWorker:
@@ -21,13 +20,12 @@ class ContrastWorker:
         self.parameters = pika.ConnectionParameters(host=RABBITMQ_HOST,port=RABBITMQ_PORT)
         self.connection = pika.BlockingConnection(self.parameters)
         self.channel = self.connection.channel()
-        self.workers = []
+        self.pool = ThreadPool(processes=POOL_SIZE)
 
 
     def setup(self):
 
         self.channel.queue_declare(queue=REQUEST_QUEUE, durable=True)
-        self.channel.queue_declare(queue=RESULTS_QUEUE, durable=True)
 
         self.channel.exchange_declare(
             exchange=EXCHANGE,
@@ -39,37 +37,30 @@ class ContrastWorker:
             exchange=EXCHANGE,
             routing_key=REQUEST_QUEUE)
 
-        self.channel.queue_bind(
-            queue=RESULTS_QUEUE,
-            exchange=EXCHANGE,
-            routing_key=RESULTS_QUEUE)
-
         self.channel.basic_consume(
             queue=REQUEST_QUEUE,
-            on_message_callback=self.on_request)
+            on_message_callback=functools.partial(self.on_request))
 
 
     def on_request(self, ch, method, properties, body):
-        worker = Thread(target=self.worker_handle_request, args=(ch, method, properties, body))
-        worker.start()
-        self.workers.append(worker)
+        self.pool.apply_async(ContrastWorker.worker_handle_request, (ch, method, properties, body))
 
 
-    def worker_handle_request(self, ch, method, properties, body):
+    def worker_handle_request(ch, method, properties, body):
 
         print(f'ContrastWorker received image: {properties.correlation_id}')
         request = ContrastMessageRequest.from_json(body.decode())
         tool = ContrastTool(request)
         response = tool.apply().to_json()
 
-        self.channel.connection.add_callback_threadsafe(
-            functools.partial(self.publish_response, ch, properties, response))
+        ch.connection.add_callback_threadsafe(
+            functools.partial(ContrastWorker.publish_response, ch, properties, response))
 
-        self.channel.connection.add_callback_threadsafe(
-            functools.partial(self.ack_message, ch, method.delivery_tag))
+        ch.connection.add_callback_threadsafe(
+            functools.partial(ContrastWorker.ack_message, ch, method.delivery_tag))
 
 
-    def publish_response(self, ch, properties, response):
+    def publish_response(ch, properties, response):
         ch.basic_publish(
             exchange=EXCHANGE,
             routing_key=properties.reply_to,
@@ -79,15 +70,13 @@ class ContrastWorker:
         print(f'ContrastWorker sent image: {properties.correlation_id}')
 
 
-    def ack_message(self, ch, delivery_tag):
+    def ack_message(ch, delivery_tag):
         ch.basic_ack(delivery_tag=delivery_tag)
 
 
     def start(self):
         self.setup()
         self.channel.start_consuming()
-        for worker in self.workers:
-             worker.join()
 
 
 if __name__ == '__main__':
