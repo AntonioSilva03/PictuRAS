@@ -47,7 +47,7 @@ class Image(Document):
     meta = {'collection': 'images'}
 
     project = ObjectIdField(required=True)
-    image = ImageField(size=(1920, 1080, True),required=True)
+    image = ImageField(required=True)
 
     def to_json(self) -> dict:
         return {

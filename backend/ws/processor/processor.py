@@ -1,17 +1,18 @@
 import os
 import json
 import asyncio
-from utils.fetch import *
-from utils.preparer import get_prepared_requets
-from processor.processor_worker import ProcessorWorker
 from dotenv import load_dotenv # type: ignore
+from utils.preparer import get_prepared_requets
+from utils.fetch import get_image_data, get_project, get_project_images
+from processor.processor_worker import ProcessorWorker
 
 load_dotenv()
 
-PROJECTS_HOST = os.getenv('PROJECTS_HOST', 'localhost')
-PROJECTS_PORT = int(os.getenv('PROJECTS_PORT', 3003))
 IMAGES_HOST = os.getenv('IMAGES_HOST', 'localhost')
 IMAGES_PORT = int(os.getenv('IMAGES_PORT', 3002))
+
+PROJECTS_HOST = os.getenv('PROJECTS_HOST', 'localhost')
+PROJECTS_PORT = int(os.getenv('PROJECTS_PORT', 3003))
 
 
 class Processor:
