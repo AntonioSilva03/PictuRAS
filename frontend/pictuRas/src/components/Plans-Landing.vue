@@ -6,16 +6,20 @@
         </ul>
         <div class="plan-footer">
             <h3>{{ price }}</h3>
-            <button @click="onChoosePlan" :class="`${planType}-btn`">
-                Prosseguir →
-            </button>
+            <Button1 @click="onChoosePlan" label=" Prosseguir →"></Button1>
         </div>
     </div>
 </template>
 
 <script>
+
+import Button1 from './Button-style1.vue';
+
 export default {
     name: "PlanCard",
+    components:{
+        Button1,
+    },
     props: {
         title: { type: String, required: true },
         features: { type: Array, required: true },
@@ -70,14 +74,7 @@ export default {
     font-weight: bold;
 }
 
-.plan-box button {
-    color: white;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
+
 
 .free-plan {
     border: 2px solid #007bff;
@@ -91,17 +88,7 @@ export default {
     border: 2px solid #d415cb;
 }
 
-.free-plan-btn {
-    background-color: #007bff;
-}
 
-.monthly-plan-btn {
-    background-color: #8a2be2;
-}
-
-.annual-plan-btn {
-    background-color: #d415cb;
-}
 
 .plan-box button:hover {
     opacity: 0.9;

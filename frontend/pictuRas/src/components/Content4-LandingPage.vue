@@ -19,7 +19,7 @@
         price="Free"
         planType="free-plan"
         :isActive="currentPlan === 'free'"
-        :onChoosePlan="() => choosePlan('free', 0, 'Free Plan')"
+        :onChoosePlan="() => choosePlan()"
     />
     <PlanCard
         title="Monthly"
@@ -33,7 +33,7 @@
         price="€15.00 per month"
         planType="monthly-plan"
         :isActive="currentPlan === 'monthly'"
-        :onChoosePlan="() => choosePlan('monthly', 15, 'Monthly Plan')"
+        :onChoosePlan="() => choosePlan()"
     />
     <PlanCard
         title="Annual"
@@ -47,7 +47,7 @@
         price="€100.00 per year"
         planType="annual-plan"
         :isActive="currentPlan === 'annual'"
-        :onChoosePlan="() => choosePlan('annual', 100, 'Annual Plan')"
+        :onChoosePlan="() => choosePlan()"
     />
 </div>
     </div>
@@ -56,6 +56,7 @@
 
 <script>
 import PlanCard from '../components/Plans-Landing.vue';
+import { useRouter } from 'vue-router';
 
 export default {
   name: 'Content4',
@@ -66,12 +67,9 @@ export default {
     };
   },
   methods: {
-    choosePlan(plan, amount, planName) {
-      // Navega para a página de pagamento com os parâmetros
-      this.$router.push({
-        path: '/payment',
-        query: { amount: amount, planName: planName },
-      });
+    choosePlan() {
+      const router = useRouter();
+      router.push(`/plan`);
     },
   },
 };
