@@ -25,8 +25,9 @@ class ScaleWorker:
 
 
     def setup(self):
-        self.channel.queue_declare(queue=REQUEST_QUEUE)
-        self.channel.queue_declare(queue=RESULTS_QUEUE)
+
+        self.channel.queue_declare(queue=REQUEST_QUEUE, durable=True)
+        self.channel.queue_declare(queue=RESULTS_QUEUE, durable=True)
 
         self.channel.exchange_declare(
             exchange=EXCHANGE,
@@ -72,7 +73,7 @@ class ScaleWorker:
         ch.basic_publish(
             exchange=EXCHANGE,
             routing_key=properties.reply_to,
-            body=json.dumps(response),
+            body=response.encode(),
             properties=pika.BasicProperties(
                 correlation_id=properties.correlation_id))
         print(f'ScaleWorker sent image: {properties.correlation_id}')
