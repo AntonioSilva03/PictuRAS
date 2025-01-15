@@ -35,6 +35,7 @@
 <script>
 import { loadStripe } from '@stripe/stripe-js';
 import LoadingButton from './LoadingButton.vue';
+const api = import.meta.env.VITE_API_GATEWAY;
 
 export default {
     name: 'PaymentForm',
@@ -78,7 +79,7 @@ export default {
                 };
                 console.log('Sending payment intent request:', requestData);
 
-                const response = await fetch('http://localhost:3000/api/create-payment-intent', {
+                const response = await fetch(`${api}/api/create-paymen-intent`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
