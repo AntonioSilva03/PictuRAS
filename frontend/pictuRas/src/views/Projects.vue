@@ -3,7 +3,7 @@
         <SidebarProjects />
         <div class="content-layout">
             <Navbar id="nav"></Navbar>
-            <ProjectList/>
+            <ProjectList :projects="projects" />
         </div>
     </div>
 </template>
@@ -14,6 +14,8 @@
 import Navbar from '../components/Navbar.vue';
 import SidebarProjects from '../components/Sidebar-Projects.vue';
 import ProjectList from '../components/ProjectList.vue';
+import { useProjectStore } from '../stores/ProjectStore.js';
+import { onMounted, computed } from 'vue';
 
 export default {
     name: 'Projects',
@@ -21,6 +23,22 @@ export default {
         Navbar,
         SidebarProjects,
         ProjectList,
+    },
+    setup() {
+        const projectStore = useProjectStore();
+
+        // Fetch projects on component mount
+        onMounted(() => {
+            projectStore.fetchProjects();
+        });
+
+         // Use a computed property to access projects from the store
+        const projects = computed(() => projectStore.projects);
+        console.log(projects)
+
+        return {
+            projects,
+        };
     },
 }
 

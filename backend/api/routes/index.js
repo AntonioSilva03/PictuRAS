@@ -297,18 +297,37 @@ router.get('/projects/images', passport.authenticate(['local', 'anonymous'], { s
 // todo download
 
 // todo
-router.put('/projects', passport.authenticate(['local', 'anonymous'], { session: false }), (req, res) => {
-  if (req.isAuthenticated()) {
-    // todo
-    console.log(req.body)
-  } else {
-    try{
-      console.log(req.body)
-      res.status(200).json([]);
-    }catch(e){
-      console.error(e)
-    }
+router.delete('/projects/:id', passport.authenticate(['local', 'anonymous'], { session: false }), async (req, res) => {
+  const projectId = req.params.id; // Obter o ID do projeto da URL
+  const apiBaseUrl = process.env.PROJECTS_MICRO_SERVICE; // URL do microserviço
+
+  try {
+      if (req.isAuthenticated()) {
+          const response = await axios.delete(`${apiBaseUrl}/projects/${projectId}`, {
+              withCredentials: true,
+          });
+
+          res.status(response.status).json({
+              message: 'Project deleted successfully',
+              data: response.data,
+          });
+      } else {
+          res.status(401).json({
+              error: 'Unauthorized',
+              details: 'User must be authenticated to delete a project.',
+          });
+      }
+  } catch (error) {
+      console.error('Error deleting project:', error.message);
+
+      res.status(error.response?.status || 500).json({
+          error: 'Failed to delete project',
+          details: error.response?.data || error.message,
+      });
   }
 });
+
+
+
 
 module.exports = router;

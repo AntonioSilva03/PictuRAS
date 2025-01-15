@@ -15,23 +15,31 @@
             <thead>
                 <tr>
                     <th style="width: 5%;"><input type="checkbox" /></th>
-                    <th style="width: 50%;">Title</th>
-                    <th style="width: 25%;">Last Modified</th>
-                    <th style="width: 20%;">Actions</th>
+                    <th style="width: 55%;">Title</th>
+                    <th style="width: 30%;">Created at</th>
+                    <th style="width: 10%;">Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="project in filteredProjects" :key="project.id">
-                    <td><input type="checkbox" /></td>
-                    <td>{{ project.title }}</td>
-                    <td>{{ project.lastModified }}</td>
-                    <td class="actions">
-                        <FontAwesomeIcon :icon="['fas', 'download']" title="Download" class="action-icon" />
-                        <FontAwesomeIcon :icon="['fas', 'edit']" title="Edit" class="action-icon" />
-                        <FontAwesomeIcon :icon="['fas', 'eye']" title="View" class="action-icon" />
-                        <FontAwesomeIcon :icon="['fas', 'trash']" title="Delete" class="action-icon" />
-                    </td>
-                </tr>
+                <!-- Projetos -->
+                <template v-if="filteredProjects.length > 0">
+                        <tr v-for="project in filteredProjects" :key="project.id">
+                            <td><input type="checkbox" /></td>
+                            <td>{{ project.name }}</td>
+                            <td>{{ formatDate(project.date) }}</td>
+                            <td class="actions">
+                                <FontAwesomeIcon :icon="['fas', 'edit']" title="Edit" class="action-icon" @click="editProject(project.id)" />
+                                <FontAwesomeIcon :icon="['fas', 'trash']" title="Delete" class="action-icon" @click="handleDeleteProject(project.id)" />
+                            </td>
+                        </tr>
+                    </template>
+
+                    <!-- Mensagem para quando não há projetos -->
+                    <template v-else>
+                        <tr>
+                            <td colspan="4" style="text-align: center;">No projects found.</td>
+                        </tr>
+                    </template>
             </tbody>
         </table>
         <p class="footer">Showing {{ filteredProjects.length }} out of {{ projects.length }} projects.</p>
@@ -45,6 +53,8 @@ import Button1 from '../components/Button-style1.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faDownload, faEdit, faEye, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
+import { useRouter } from 'vue-router';
+import { useProjectStore } from '../stores/ProjectStore.js';
 
 library.add(faDownload, faEdit, faEye, faTrash);
 
@@ -54,20 +64,57 @@ export default {
         Button1,
         FontAwesomeIcon,
     },
+    props: {
+        projects: {
+            type: Array,
+            required: true,
+            default: () => [], 
+        },
+    },
     data() {
         return {
             searchQuery: "",
-            projects: [
-                { id: 1, title: "ASCN TP",lastModified: "8 days ago" },
-            ],
         };
     },
     computed: {
         filteredProjects() {
+            if (!this.projects || this.projects.length === 0) {
+                return [];
+            }
             return this.projects.filter((project) =>
-                project.title.toLowerCase().includes(this.searchQuery.toLowerCase())
+                project.name.toLowerCase().includes(this.searchQuery.toLowerCase())
             );
         },
+    },
+    methods: {
+        
+
+        formatDate(date) {
+        if (!date) return 'N/A'; // Caso não tenha data
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        return new Intl.DateTimeFormat('en-GB', options).format(new Date(date));
+        },
+
+        editProject(projectId) {
+            const router = useRouter();
+            router.push(`/project/`);
+        },
+
+    },
+
+    setup(){
+        const handleDeleteProject = async (projectId) => {
+            const projectStore = useProjectStore();
+            try {
+                await projectStore.deleteProject(projectId);
+                console.log('Project deleted successfully.');
+            } catch (error) {
+                console.error('Failed to delete project:', error);
+            }
+        }
+        return {
+            handleDeleteProject,
+        }
     },
 }
 
@@ -169,6 +216,11 @@ td.actions {
     cursor: pointer; 
 }
 
+
+.actions{
+    display: flex;
+    justify-content: space-around;
+}
 
 .footer {
     font-size: 0.9em;

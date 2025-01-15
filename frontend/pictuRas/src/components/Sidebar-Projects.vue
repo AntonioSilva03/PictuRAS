@@ -4,7 +4,7 @@
             <img src="../assets/logo.png">
             <h2>PictuRAS</h2>
         </div>
-        <Button1 label="New Project"></Button1>
+        <Button1 label="New Project" @click="createNewProject"></Button1>
 
         <!-- Menu Section -->
         <ul class="menu">
@@ -14,7 +14,7 @@
             >
                 All Projects
             </li>
-            <li 
+            <!-- <li 
                 :class="{ active: activeItem === 'Archived Projects' }"
                 @click="setActive('Archived Projects')"
             >
@@ -25,7 +25,7 @@
                 @click="setActive('Trashed Projects')"
             >
                 Trashed Projects
-            </li>
+            </li> -->
             <hr>
         </ul>
 
@@ -56,6 +56,8 @@
 
 <script>
 import Button1 from '../components/Button-style1.vue';
+import { useProjectStore } from '../stores/ProjectStore.js';
+import { useRouter } from 'vue-router';
 
 export default {
     name: 'SidebarProjects',
@@ -66,14 +68,42 @@ export default {
 
     data() {
         return {
-            activeItem: 'All Projects', // Define o item ativo inicial
+            activeItem: 'All Projects', 
         };
     },
     methods: {
         setActive(item) {
-            this.activeItem = item; // Atualiza o item ativo
+            this.activeItem = item; 
         },
     },
+    setup() {
+        const router = useRouter();
+        const projectStore = useProjectStore();
+
+        const createNewProject = async () => {
+            try {
+                const projectData = {
+                    name: 'New Project', // Nome do projeto padrão
+                };
+
+                // Chama a função na store
+                const newProject = await projectStore.createProject(projectData);
+
+                console.log('Project created:', newProject);
+
+                // Redirecionar para a página do novo projeto
+                router.push(`/project`);
+            } catch (error) {
+                console.error('Failed to create project:', error);
+            }
+        };
+
+        return {
+            createNewProject,
+        }; 
+
+   
+  },
 };
 </script>
 
@@ -85,6 +115,7 @@ export default {
     padding: 20px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     height: 100vh;
+    padding-bottom: 0;
     max-height: 100vh;
     position: fixed;
     width: 13%;
@@ -185,9 +216,11 @@ hr{
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     padding: 15px;
-    width: 90%;
-    border-radius: 5px;
+    width: 70%;
+    border-radius: 20px;
     margin-top: 20px;
+    position: absolute;
+    bottom: 10em; 
 }
 
 .feedback-section h3 {
@@ -220,6 +253,8 @@ hr{
     display:flex;
     gap: 10px;
     margin-top: 60%;
+    position: absolute;
+    bottom: 30px; 
 
 }
 
