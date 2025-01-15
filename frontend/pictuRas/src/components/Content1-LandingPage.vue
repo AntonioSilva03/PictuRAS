@@ -15,7 +15,7 @@
         </p>
         <p>
           Start now for free and explore premium features at an unbeatable price. Unlock your full
-          creative potential with PictuRAS for only €9.99/month (VAT included). Let your imagination
+          creative potential with PictuRAS for only €15.00/month (VAT included). Let your imagination
           lead the way. Terms apply.
         </p>
         <Button1 @click="goProject" label="Start Now" />
