@@ -33,9 +33,8 @@ class Processor:
         bus_requests = get_prepared_requets(project['tools'])
         print(json.dumps(bus_requests, indent=4))
 
-        processorWorker = ProcessorWorker(websocket,bus_requests,images,'images')
+        processorWorker = ProcessorWorker(websocket,request['project'],bus_requests,images,'images')
         await processorWorker.start()
-        print('FIMMMMMMMMMMMMMMMMMMMM')
 
 
     async def process_preview(websocket, request):
@@ -46,7 +45,7 @@ class Processor:
         images = [(image['id'],get_image_data(image['id'])) for image in images]
         bus_requests = get_prepared_requets(project['tools'])
 
-        processorWorker = ProcessorWorker(websocket,bus_requests,images,'preview')
+        processorWorker = ProcessorWorker(websocket,request['project'],bus_requests,images,'preview')
         await processorWorker.start()
 
 

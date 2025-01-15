@@ -21,21 +21,26 @@ class ServerSocket:
 
 
     async def on_request(websocket) -> None:
-        async for message in websocket:
-            try:
-                request = json.loads(message)
-                print(json.dumps(request, indent=4))
-                processor = Processor(websocket,request)
-                await asyncio.create_task(processor.start())
 
-            except json.JSONDecodeError:
-                traceback.print_exc()
-                print('Received invalid JSON')
-                await websocket.send(json.dumps({'error': 'Invalid JSON'}))
+        try:
+            async for message in websocket:
+                try:
+                    request = json.loads(message)
+                    print(json.dumps(request, indent=4))
+                    processor = Processor(websocket,request)
+                    await asyncio.create_task(processor.start())
 
-            except Exception as e:
-                traceback.print_exc()
-                await websocket.send(json.dumps({'error': f'{e}'}))
+                except json.JSONDecodeError:
+                    traceback.print_exc()
+                    print('Received invalid JSON')
+                    await websocket.send(json.dumps({'error': 'Invalid JSON'}))
+
+                except Exception as e:
+                    traceback.print_exc()
+                    await websocket.send(json.dumps({'error': f'{e}'}))
+
+        finally:
+            await websocket.close() 
 
 
 if __name__ == '__main__':

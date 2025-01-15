@@ -1,7 +1,7 @@
 import os
 import json
 import base64
-import asyncio
+import uuid
 import aio_pika # type: ignore
 from pika.exchange_type import ExchangeType # type: ignore
 from dotenv import load_dotenv # type: ignore
@@ -14,11 +14,14 @@ RABBITMQ_PORT = int(os.getenv('RABBITMQ_PORT', 3003))
 
 class ProcessorWorker:
 
-    def __init__(self, websocket, requests, images, save_place):
+    def __init__(self, websocket, project, requests, images, save_place):
         self.websocket = websocket
+        self.project = project
         self.requests = requests
         self.images = images
         self.save_place = save_place
+        self.ids = dict()
+        self.exclusive_queue = str(uuid.uuid4())
         self.channel = None
         self.connection = None
         self.consumer_tag = None
@@ -35,7 +38,7 @@ class ProcessorWorker:
         for request in self.requests:
 
             request_queue = await self.channel.declare_queue(request['request_queue'], durable=True)
-            results_queue = await self.channel.declare_queue(request['results_queue'], durable=True)
+            results_queue = await self.channel.declare_queue(self.exclusive_queue, durable=True)
 
             await self.channel.declare_exchange(
                 request['exchange'],
@@ -48,9 +51,9 @@ class ProcessorWorker:
 
             await results_queue.bind(
                 exchange=request['exchange'],
-                routing_key=request['request_queue'])
+                routing_key=self.exclusive_queue)
 
-        results_queue = await self.channel.get_queue(self.requests[0]['results_queue'])
+        results_queue = await self.channel.get_queue(self.exclusive_queue)
         self.consumer_tag = await results_queue.consume(self.on_response)
 
 
@@ -60,37 +63,41 @@ class ProcessorWorker:
 
             properties = message.properties
 
-            if properties.correlation_id in self.images:
+            if properties.correlation_id in self.ids:
 
-                image_id = properties.correlation_id
+                correlation_id = properties.correlation_id
+                image_id = self.ids[correlation_id]
 
                 self.images[image_id]['iterations'] += 1
                 self.images[image_id]['data'] = json.loads(message.body.decode())['image']
 
                 current_iteration = self.images[image_id]['iterations']
+                print(f'Iteration {current_iteration}/{len(self.requests)}: {image_id}')
 
                 if current_iteration < len(self.requests):
+
                     current_request = self.requests[current_iteration]
                     current_request['request']['image'] = self.images[image_id]['data']
 
                     await self.channel.default_exchange.publish(
                         aio_pika.Message(
                             body=json.dumps(current_request['request']).encode(),
-                            reply_to=current_request['results_queue'],
-                            correlation_id=image_id),
+                            reply_to=self.exclusive_queue,
+                            correlation_id=correlation_id),
                         routing_key=current_request['request_queue'])
 
-            if all(image['iterations'] == len(self.requests) for image in self.images.values()):
+                if all(image['iterations'] == len(self.requests) for image in self.images.values()):
 
-                print('All requests processed')
+                    print(f'All project images processed: {self.project} -> {json.dumps(self.ids, indent=0)}')
 
-                results_queue = await self.channel.get_queue(self.requests[0]['results_queue'])
-                await results_queue.cancel(self.consumer_tag)
+                    results_queue = await self.channel.get_queue(self.exclusive_queue)
+                    await results_queue.cancel(self.consumer_tag)
+                    await results_queue.delete(if_unused=False, if_empty=False)
 
-                for image_id in self.images:
-                    with open(image_id + '.png', 'wb') as file:
-                        image_data = self.images[image_id]['data']
-                        file.write(base64.b64decode(image_data))
+                    for image_id in self.images:
+                        with open(image_id + '.png', 'wb') as file:
+                            image_data = self.images[image_id]['data']
+                            file.write(base64.b64decode(image_data))
 
 
     async def start(self):
@@ -101,6 +108,8 @@ class ProcessorWorker:
 
             for image_id in self.images:
 
+                correlation_id = str(uuid.uuid4())
+                self.ids[correlation_id] = image_id
                 self.images[image_id]['iterations'] = 0
                 self.images[image_id]['data'] = base64.b64encode(self.images[image_id]['data']).decode('utf-8')
 
@@ -110,10 +119,8 @@ class ProcessorWorker:
                 await self.channel.default_exchange.publish(
                     aio_pika.Message(
                         body=json.dumps(current_request['request']).encode(),
-                        reply_to=current_request['results_queue'],
-                        correlation_id=image_id),
+                        reply_to=self.exclusive_queue,
+                        correlation_id=correlation_id),
                     routing_key=current_request['request_queue'])
 
-            print('Start consuming...')
-
-        await asyncio.Future() 
+            print(f'Start processing project images: {self.project} -> {json.dumps(self.ids, indent=0)}')
