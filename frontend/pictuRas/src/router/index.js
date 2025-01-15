@@ -42,7 +42,7 @@ const router = createRouter({
       component: NotFound,
     },
     {
-      path:'/landing/projects',
+      path:'/projects',
       name: 'projects',
       component: Projects,
     },

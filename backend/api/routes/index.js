@@ -230,9 +230,7 @@ router.post(
           "Content-Type": "multipart/form-data",
         }
         });
-        // apagar imagem do upload
-        // Return the dummy URI for now
-        return res.status(200).json({ uri: response.data.image});
+        return res.status(200).json(response.data);
       } catch (e) {
         console.error('Error uploading file for anonymous user:', e);
         return res.status(500).json({ error: 'Internal server error.' });
@@ -298,7 +296,7 @@ router.get('/projects/images/:id', passport.authenticate(['local', 'anonymous'],
 router.put('/projects', passport.authenticate(['local', 'anonymous'], { session: false }), async (req, res) => {
   if (req.isAuthenticated()) {
     const apiBaseUrl = process.env.PROJECTS_MICRO_SERVICE
-    const response = await axios.put(`${apiBaseUrl}/projects/${req.body.id}`)
+    const response = await axios.put(`${apiBaseUrl}/projects/${req.body.id}`,req.body)
     res.status(200).json(`Sucess on saving ${req.body.id}`);
   } else {
     try{

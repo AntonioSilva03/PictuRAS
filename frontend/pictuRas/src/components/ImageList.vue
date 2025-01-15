@@ -72,7 +72,7 @@ async function handleFileUpload(event) {
 
   const projectStore = useProjectStore();
   const projectId = projectStore.selectedProject?.id;
-
+  console.log(projectId)
   if (!projectId) {
     console.error("No project selected. Cannot upload files.");
     return;
