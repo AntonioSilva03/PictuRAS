@@ -2,6 +2,7 @@
     <div class="main-layout">
         <Navbar id="nav"></Navbar>
         <div class="payment-container">
+            <img src="../assets/logo.png" >
             <h2>Complete Your Payment</h2>
             <PaymentForm :amount="amount" :planName="planName" />
         </div>
@@ -41,8 +42,20 @@ export default {
     max-width: 600px;
     margin: 2rem auto;
     padding: 2rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, 
+                 rgba(0, 0, 0, 0.12) 0px -12px 30px, 
+                 rgba(0, 0, 0, 0.12) 0px 4px 6px, 
+                 rgba(0, 0, 0, 0.17) 0px 12px 13px, 
+                 rgba(0, 0, 0, 0.09) 0px -3px 5px;
     border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.payment-container img{
+    width: 100px;
+    margin-bottom: 2rem;
 }
 
 h2 {
