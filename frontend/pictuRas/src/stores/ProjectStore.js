@@ -14,10 +14,15 @@ export const useProjectStore = defineStore('projectStore', {
     },
     async fetchProject(projectId) {
       try {
-        const response = await axios.get(`${api}/api/projects/${projectId}`, {
+        const response = await axios.get(`${api}/api/projects`, {
           withCredentials: true,
         });
+        this.projects = [];
         this.projects = response.data;
+        this.selectedProject = this.projects.find((elem) => elem.id === projectId)
+        if(!this.selectedProject){
+          console.log("Projeto não pertence ao user:",projectId)
+        }
       } catch (error) {
         console.error('Error fetching projects:', error);
       }
@@ -27,6 +32,7 @@ export const useProjectStore = defineStore('projectStore', {
         const response = await axios.get(`${api}/api/projects`, {
           withCredentials: true,
         });
+        this.projects = [];
         this.projects = response.data;
       } catch (error) {
         console.error('Error fetching projects:', error);
@@ -138,6 +144,10 @@ export const useProjectStore = defineStore('projectStore', {
         throw error;
       }
     }, 
+    clear(){
+      this.projects = [],
+      this.selectedProject = null
+    }
     
   },
 });

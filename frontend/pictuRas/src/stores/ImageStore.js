@@ -18,6 +18,8 @@ export const useImageStore = defineStore('imageStore', {
       this.loading = true;
       this.error = null;
       try {
+        this.image = [];
+        this.selectedImage = null;
         const response = await axios.get(`${api}/api/projects/images`, {
           params: { projectId: projectId }, // Pass query params
           withCredentials: true // Include credentials if needed (cookies, headers)
@@ -94,6 +96,11 @@ export const useImageStore = defineStore('imageStore', {
       } catch (error) {
         console.error("Error creating ZIP file:", error);
       }
+    },
+    clear(){
+      this.images = [];
+      this.bytes= [];
+      this.selectedImage = null;
     }
     
     

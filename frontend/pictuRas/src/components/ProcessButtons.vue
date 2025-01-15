@@ -7,7 +7,7 @@
   </template>
   
   <script>
-  import { useProjectStore } from '../stores/projectStore';
+  import { useProjectStore } from '../stores/ProjectStore';
   import { useEditingToolStore } from '../stores/EditingTool';
   import { storeToRefs } from 'pinia';
   

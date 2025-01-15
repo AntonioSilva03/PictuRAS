@@ -60,6 +60,7 @@ export const useEditingToolStore = defineStore('editingTool', {
       }
     },
     mergeTools(activeTools){
+      this.activeTool = null;
       for (let i = 0;i < activeTools.length; i++){
         for(let j = 0; j < this.tools.length; j++){
           if (this.tools[j].name === activeTools[i].name){
@@ -79,6 +80,10 @@ export const useEditingToolStore = defineStore('editingTool', {
         }
 
       }
+    },
+    clear(){
+      this.activeTool = null;
+      this.tools= [];
     }
   },
 

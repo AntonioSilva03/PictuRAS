@@ -92,7 +92,7 @@ export default {
                 console.log('Project created:', newProject);
 
                 // Redirecionar para a página do novo projeto
-                router.push(`/project`);
+                router.push(`/project/${newProject.id}`);
             } catch (error) {
                 console.error('Failed to create project:', error);
             }

@@ -1,5 +1,18 @@
 services:
 
+  web-client:
+    container_name: web-client
+    build:
+      context: ./frontend/pictuRas
+      dockerfile: Dockerfile 
+    environment:
+      - VITE_API_GATEWAY=http://api-gateway:3000
+      - VITE_WS_GATEWAY=http://ws-gateway:2000
+    ports:
+      - "80:80"
+    depends_on:
+      - api-gateway
+
   api-gateway:
     container_name: api-gateway
     build:

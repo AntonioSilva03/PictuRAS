@@ -14,7 +14,6 @@ const router = createRouter({
       path: '/',
       name: 'landing',
       component: Landing,
-      props: true
     },
     {
       path: '/login',
@@ -26,10 +25,17 @@ const router = createRouter({
       name: 'Register',
       component: Register,
      },
-    {
+     {
       path: '/project',
-      name: 'project',
+      name: 'projectNoId',
       component: Project,
+      props: false, // No projectId is passed as a prop
+    },
+    {
+      path: '/project/:projectUrlId',
+      name: 'projectWithId',
+      component: Project,
+      props: true, // Enables passing projectId as a prop
     },
     {
       path: '/profile',

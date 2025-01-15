@@ -87,8 +87,10 @@ export default {
       const isVisible = rect.bottom > 0;
       this.$emit('content1Visible', isVisible);
     },
-    goProject(){
-      this.$router.push('/project'); // Navigate to the project page
+    goProject() {
+
+        this.$router.push(`/projects`);
+
     }
   },
 };

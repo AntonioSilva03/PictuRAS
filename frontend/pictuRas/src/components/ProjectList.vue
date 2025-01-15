@@ -28,7 +28,7 @@
                             <td>{{ project.name }}</td>
                             <td>{{ formatDate(project.date) }}</td>
                             <td class="actions">
-                                <FontAwesomeIcon :icon="['fas', 'edit']" title="Edit" class="action-icon" @click="editProject(project.id)" />
+                                <FontAwesomeIcon :icon="['fas', 'edit']" title="Edit" class="action-icon" @click="goToProject(project.id)" />
                                 <FontAwesomeIcon :icon="['fas', 'trash']" title="Delete" class="action-icon" @click="handleDeleteProject(project.id)" />
                             </td>
                         </tr>
@@ -98,6 +98,9 @@ export default {
         editProject(projectId) {
             const router = useRouter();
             router.push(`/project/`);
+        },
+        goToProject(projectId) {
+            this.$router.push(`/project/${projectId}`);
         },
 
     },

@@ -29,31 +29,51 @@ export default {
     ImageList,
     EditingSpace
   },
-  setup() {
+  props: {
+    projectUrlId: String,
+  },
+  setup(props) {
     const projectStore = useProjectStore();
     const editingToolsStore = useEditingToolStore();
     const imageStore = useImageStore();
     const router = useRouter();
     // Check for selected project and user status
+    const receivedProjectId = props.projectUrlId || router.params.projectUrlId; // Check prop or route param
     const checkProjectAndUserStatus = async () => {
+      projectStore.clear();
+      imageStore.clear();
+      editingToolsStore.clear();
+      const userStatus = await getUserStatus(); // Example: Replace with real API or authentication logic
       if (!projectStore.selectedProject) {
 
-        const userStatus = await getUserStatus(); // Example: Replace with real API or authentication logic
-
+        
+        console.log(userStatus)
         if (userStatus === 'loggedIn') {
 
-          router.push('/projects'); // Redirect to projects page
+          if (receivedProjectId) {
+            console.log("here:",receivedProjectId)
+            await projectStore.fetchProject(receivedProjectId)
+          } else {
+            router.push('/projects'); // Redirect to projects page
+          }
+
         } else if (userStatus === 'anonymous') {
           
           // generate session project
           alert('You are currently Anonymous. Reduced features ');
           await projectStore.generateSessionProject();
         }
+      }else{
+        if (receivedProjectId) {
+            console.log("here:",receivedProjectId)
+            await projectStore.fetchProject(receivedProjectId)
+          }
       }
       await setState();
     };
 
     const setState = async() =>{
+      console.log("setingState!")
       const projectId = projectStore.getId()
       await editingToolsStore.fetchTools();
       await imageStore.fetchImages(projectId);
@@ -63,6 +83,7 @@ export default {
     }
     // Call the check function when the component mounts
      checkProjectAndUserStatus();
+     
   }
 };
 
