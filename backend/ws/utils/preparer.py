@@ -1,7 +1,11 @@
 import os
+import json
+from dotenv import load_dotenv # type: ignore
+
+load_dotenv()
 
 EXCHANGE = os.getenv('EXCHANGE', 'TOOL_EXCHANGE')
-RESULTS_QUEUE = os.getenv('RESULTS_QUEUE', 'RESULTS_QUEUE'),
+RESULTS_QUEUE = os.getenv('RESULTS_QUEUE', 'RESULTS_QUEUE')
 
 REQUEST_QUEUES = {
     'Binarization': os.getenv('BINARIZATION_REQUEST_QUEUE', 'BINARIZATION_REQUEST_QUEUE'),

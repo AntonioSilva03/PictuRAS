@@ -3,6 +3,9 @@ import json
 from utils.fetch import *
 from utils.preparer import get_prepared_requets
 from processor.processor_worker import ProcessorWorker
+from dotenv import load_dotenv # type: ignore
+
+load_dotenv()
 
 PROJECTS_HOST = os.getenv('PROJECTS_HOST', 'localhost')
 PROJECTS_PORT = int(os.getenv('PROJECTS_PORT', 3003))
@@ -25,9 +28,12 @@ class Processor:
 
         project = get_project(PROJECTS_HOST, PROJECTS_PORT, request['project'])
         images = get_project_images(PROJECTS_HOST, PROJECTS_PORT, request['project'])
-
         images = {image['id']: {'data': get_image_data(PROJECTS_HOST, PROJECTS_PORT, image['id'])} for image in images}
+
         bus_requests = get_prepared_requets(project['tools'])
+
+        print(json.dumps(bus_requests, indent=4))
+        exit()
 
         processorWorker = ProcessorWorker(websocket,bus_requests,images,'images')
         await processorWorker.start()
@@ -47,13 +53,13 @@ class Processor:
 
     async def process_cancel(websocket, request):
         project = request['project']
-        print(f'Cancel project {project}')
-        print('Not implemented')
+        print(f'Canceling project: {project}')
+        await websocket.send(json.dumps({'cancel': project}))
 
 
     async def process_error(websocket, request):
         error = request['error']
-        print(f'{error}')
+        print(f'Error: {error}')
         await websocket.send(json.dumps({'error': error}))
 
 

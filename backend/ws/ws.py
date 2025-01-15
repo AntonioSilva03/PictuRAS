@@ -1,9 +1,10 @@
 import os
 import json
 import asyncio
+import traceback
 from dotenv import load_dotenv # type: ignore
 from websockets.asyncio.server import serve # type: ignore
-from processor.processor import ProcessorWorker
+from processor.processor import Processor
 
 
 class ServerSocket:
@@ -23,14 +24,17 @@ class ServerSocket:
         async for message in websocket:
             try:
                 request = json.loads(message)
-                processorWorker = ProcessorWorker(websocket,request)
-                await asyncio.create_task(processorWorker.start())
+                print(json.dumps(request, indent=4))
+                processor = Processor(websocket,request)
+                await asyncio.create_task(processor.start())
 
             except json.JSONDecodeError:
+                traceback.print_exc()
                 print('Received invalid JSON')
                 await websocket.send(json.dumps({'error': 'Invalid JSON'}))
 
             except Exception as e:
+                traceback.print_exc()
                 await websocket.send(json.dumps({'error': f'{e}'}))
 
 

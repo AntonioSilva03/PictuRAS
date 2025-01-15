@@ -4,6 +4,9 @@ import base64
 import asyncio
 import aio_pika # type: ignore
 from pika.exchange_type import ExchangeType # type: ignore
+from dotenv import load_dotenv # type: ignore
+
+load_dotenv()
 
 RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'localhost')
 RABBITMQ_PORT = int(os.getenv('RABBITMQ_PORT', 3003))
