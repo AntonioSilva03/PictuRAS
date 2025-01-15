@@ -27,13 +27,10 @@ export default {
     // Check for selected project and user status
     const checkProfileAndUserStatus = async () => {
 
-
-
         const userStatus = await getUserStatus(); // Example: Replace with real API or authentication logic
         console.log(userStatus)
         if (userStatus === 'anonymous') {
-          alert('You are currently Anonymous. Reduced features ');
-          router.push('/project'); // Redirect to projects page
+          router.push('/projects'); // Redirect to projects page
         } else if (userStatus === 'loggedIn') {
         
           profileStore.fetchProfile()

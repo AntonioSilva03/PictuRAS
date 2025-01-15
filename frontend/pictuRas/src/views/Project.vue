@@ -16,7 +16,9 @@ import { useRouter } from 'vue-router';
 import Navbar from '../components/Navbar.vue';
 import ImageList from '../components/ImageList.vue';
 import EditingSpace from '../components/EditingSpace.vue';
+import { storeToRefs } from 'pinia'
 import axios from 'axios';
+
 
 const api = import.meta.env.VITE_API_GATEWAY;
 
@@ -27,43 +29,61 @@ export default {
     ImageList,
     EditingSpace
   },
-  setup() {
+  props: {
+    projectUrlId: String,
+  },
+  setup(props) {
     const projectStore = useProjectStore();
     const editingToolsStore = useEditingToolStore();
     const imageStore = useImageStore();
     const router = useRouter();
-
     // Check for selected project and user status
+    const receivedProjectId = props.projectUrlId || router.params.projectUrlId; // Check prop or route param
     const checkProjectAndUserStatus = async () => {
-
+      projectStore.clear();
+      imageStore.clear();
+      editingToolsStore.clear();
+      const userStatus = await getUserStatus(); // Example: Replace with real API or authentication logic
       if (!projectStore.selectedProject) {
 
-        const userStatus = await getUserStatus(); // Example: Replace with real API or authentication logic
-
+        
+        console.log(userStatus)
         if (userStatus === 'loggedIn') {
 
-          router.push('/projects'); // Redirect to projects page
+          if (receivedProjectId) {
+            console.log("here:",receivedProjectId)
+            await projectStore.fetchProject(receivedProjectId)
+          } else {
+            router.push('/projects'); // Redirect to projects page
+          }
+
         } else if (userStatus === 'anonymous') {
           
           // generate session project
           alert('You are currently Anonymous. Reduced features ');
-          projectStore.generateSessionProject();
-          console.log(projectStore.selectProject.name)
+          await projectStore.generateSessionProject();
         }
+      }else{
+        if (receivedProjectId) {
+            console.log("here:",receivedProjectId)
+            await projectStore.fetchProject(receivedProjectId)
+          }
       }
-
+      await setState();
     };
 
     const setState = async() =>{
-      // State igual a imagens + tools, para ja so fetch das tools aqui
-      const projectId = projectStore.selectProject.id;
+      console.log("setingState!")
+      const projectId = projectStore.getId()
       await editingToolsStore.fetchTools();
-      // await imageStore.fetchImages(projectId);
+      await imageStore.fetchImages(projectId);
+      const tools = projectStore.getTools()
+      editingToolsStore.mergeTools(tools)
       // update toolsStore tendo em conta o que recebemos do projeto.
     }
     // Call the check function when the component mounts
-    checkProjectAndUserStatus();
-    setState();
+     checkProjectAndUserStatus();
+     
   }
 };
 

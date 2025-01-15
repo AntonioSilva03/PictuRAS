@@ -43,7 +43,7 @@ class Tool(EmbeddedDocument):
             'name': self.name,
             'input_type': self.input_type.value,
             'output_type': self.output_type.value,
-            'paramteres': [parameter.to_json() for parameter in self.parameters],
+            'parameters': [parameter.to_json() for parameter in self.parameters],
         }
 
 
