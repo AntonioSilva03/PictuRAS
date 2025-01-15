@@ -5,7 +5,6 @@ from dotenv import load_dotenv # type: ignore
 load_dotenv()
 
 EXCHANGE = os.getenv('EXCHANGE', 'TOOL_EXCHANGE')
-RESULTS_QUEUE = os.getenv('RESULTS_QUEUE', 'RESULTS_QUEUE')
 
 REQUEST_QUEUES = {
     'Binarization': os.getenv('BINARIZATION_REQUEST_QUEUE', 'BINARIZATION_REQUEST_QUEUE'),
@@ -92,7 +91,6 @@ def get_prepared_requets(tools: list) -> list:
     for tool in tools:
         requests.append({
             'exchange': EXCHANGE,
-            'results_queue': RESULTS_QUEUE,
             'request_queue': REQUEST_QUEUES[tool['name']],
             'request': handlers[tool['name']](tool),
         })
