@@ -16,6 +16,10 @@
                 <div v-if="isCurrentPlan(plan.id)">
                     <button disabled>Current Plan</button>
                 </div>
+                <button v-else-if="plan.name === 'free'" @click="cancelPlan(plan.name, plan.price, plan.type, plan.id)"
+                    :class="`${plan.type}-plan-btn`">
+                    Cancel Subscription
+                </button>
                 <button v-else @click="choosePlan(plan.name, plan.price, plan.type, plan.id)"
                     :class="`${plan.type}-plan-btn`">
                     Proceed to payment →
@@ -54,6 +58,17 @@ export default {
                     planId: planId
                 }
             });
+        },
+        async cancelPlan(plan, amount, planType, planId) {
+            const stripeStore = useStripeStore();
+            try {
+                stripeStore.setPlanID(planId);
+                await stripeStore.updateUserPlan();
+                alert('Subscription cancelled successfully');
+                window.location.reload();
+            } catch (error) {
+                console.error('Error cancelling plan susbcription:', error);
+            }
         },
         async fetchPlans() {
             try {
@@ -124,6 +139,13 @@ export default {
     /* Pink */
 }
 
+.diary-plan h2,
+.diary-plan h3,
+.diary-plan button {
+    color: #451e43;
+    /* Pink */
+}
+
 .plan-box h2 {
     font-size: 1.5rem;
     margin-bottom: 1rem;
@@ -163,6 +185,11 @@ export default {
     /* Pink for annual plan */
 }
 
+.diary-plan-btn {
+    background-color: #451e43;
+    /* Pink for annual plan */
+}
+
 .plan-box button:hover {
     background-color: #0056b3;
     /* Darker blue on hover */
@@ -190,6 +217,11 @@ export default {
 
 .annual-plan.active {
     background-color: #fcbade;
+    /* Light pink */
+}
+
+.diary-plan.active {
+    background-color: #b88fa5;
     /* Light pink */
 }
 </style>
