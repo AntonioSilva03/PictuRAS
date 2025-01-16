@@ -28,7 +28,6 @@ export const useStripeStore = defineStore('stripe', {
             this.planID = planID;
         },
         async updateUserPlan() {
-            console.log('Updating plan:',this.planID);
             try {
                 const response = await axios.put(
                     `${api}/api/user/plan`,
@@ -37,12 +36,20 @@ export const useStripeStore = defineStore('stripe', {
                         withCredentials: true  
                     }
                 );
-                console.log('User plan updated successfully:', response.data);
                 return response.data;
             } catch (error) {
                 console.error('Error updating user plan:', error);
                 throw new Error('Failed to update user plan');
             }
         },
+        async getUserPlan() {
+            try {
+                const response = await axios.get(`${api}/api/profile`,{ withCredentials: true } );
+                return response.data.plan;
+            } catch (error) {
+                console.error('Error getting user plan:', error);
+                throw new Error('Failed to get user plan');
+            }
+        }
     },
 });

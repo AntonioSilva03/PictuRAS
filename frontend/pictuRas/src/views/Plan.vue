@@ -4,7 +4,7 @@
 
         <div class="plan-container">
             <div v-for="plan in plans" :key="plan.name" class="plan-box"
-                :class="{ active: currentPlan === plan.name, [`${plan.type}-plan`]: true }">
+                :class="{ active: isCurrentPlan(plan.id), [`${plan.type}-plan`]: true }">
 
                 <h2>{{ plan.name }}</h2>
                 <ul>
@@ -13,7 +13,7 @@
                 </ul>
                 <h3>{{ plan.price }} €</h3>
 
-                <div v-if="currentPlan === plan.name">
+                <div v-if="isCurrentPlan(plan.id)">
                     <button disabled>Current Plan</button>
                 </div>
                 <button v-else @click="choosePlan(plan.name, plan.price, plan.type, plan.id)"
@@ -28,6 +28,7 @@
 <script>
 import Navbar from '../components/Navbar.vue';
 import axios from 'axios';
+import { useStripeStore } from '../stores/StripeStore';
 
 export default {
     name: 'Plan',
@@ -36,11 +37,14 @@ export default {
     },
     data() {
         return {
-            currentPlan: 'free',
-            plans: [] // Store fetched plans here
+            plans: [], // Store fetched plans here
+            currentUserPlanId: null
         };
     },
     methods: {
+        isCurrentPlan(planId) {
+            return this.currentUserPlanId === planId;
+        },
         choosePlan(plan, amount, planType, planId) {
             this.$router.push({
                 path: '/payment',
@@ -54,16 +58,26 @@ export default {
         async fetchPlans() {
             try {
                 const response = await axios.get(`${import.meta.env.VITE_API_GATEWAY}/api/plans`, {
-                    withCredentials: true  
+                    withCredentials: true
                 });
                 this.plans = response.data;
             } catch (error) {
                 console.error('Error fetching plans:', error);
             }
+        },
+        async getCurrentPlan() {
+            const stripeStore = useStripeStore();
+            try {
+                this.currentUserPlanId = await stripeStore.getUserPlan();
+            } catch (error) {
+                console.error('Error getting current plan:', error);
+                this.currentUserPlanId = null;
+            }
         }
     },
     created() {
         this.fetchPlans(); // Fetch plans when the component is created
+        this.getCurrentPlan(); // Get the current user's plan
     }
 };
 </script>
