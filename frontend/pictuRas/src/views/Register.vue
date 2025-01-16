@@ -69,6 +69,7 @@
     import "toastify-js/src/toastify.css";
     import axios from 'axios';
     const api = import.meta.env.VITE_API_GATEWAY;
+    import { useProfileStore } from '../stores/ProfileStore';
 
   
     export default {
@@ -86,6 +87,7 @@
         name:"",
         password: "",
         showPasswordModal: false,
+        plan: "free",
       };
     },
     methods: {

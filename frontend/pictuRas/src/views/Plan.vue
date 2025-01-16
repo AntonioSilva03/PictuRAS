@@ -3,67 +3,23 @@
         <Navbar id="nav"></Navbar>
 
         <div class="plan-container">
-            <!-- Plano Gratuito -->
-            <div class="plan-box" :class="{ 'active': currentPlan === 'free', 'free-plan': true }">
-                <h2>Gratuito</h2>
-                <ul>
-                    <li>5 Operações p/dia</li>
-                    <li>Imagens de todos os tamanhos</li>
-                    <li>3 Downloads p/dia</li>
-                    <li>Downloads de baixa resolução com limite de 1GB</li>
-                    <li>Limitação de ferramentas</li>
-                </ul>
-                <h3>Grátis</h3>
-                <div v-if="currentPlan === 'free'">
-                </div>
-                <button v-else @click="choosePlan('free', 0, 'Plano Gratuito')" class="free-plan-btn">
-                    Prosseguir →
-                </button>
-                <div v-if="currentPlan === 'free'">
-                    <button disabled>Plano Selecionado</button>
-                </div>
-            </div>
+            <div v-for="plan in plans" :key="plan.name" class="plan-box"
+                :class="{ active: currentPlan === plan.name, [`${plan.type}-plan`]: true }">
 
-            <!-- Plano Mensal -->
-            <div class="plan-box" :class="{ 'active': currentPlan === 'monthly', 'monthly-plan': true }">
-                <h2>Mensal</h2>
+                <h2>{{ plan.name }}</h2>
                 <ul>
-                    <li>∞ Operações p/dia</li>
-                    <li>Imagens de todos os tamanhos</li>
-                    <li>∞ Downloads p/dia</li>
-                    <li>Downloads HD s/limite</li>
-                    <li>Disponíveis todas as ferramentas</li>
+                    <li>Price: {{ plan.price }} €</li>
+                    <li>Type: {{ plan.type }}</li>
                 </ul>
-                <h3>15,00 € p/mês</h3>
-                <div v-if="currentPlan === 'monthly'">
-                </div>
-                <button v-else @click="choosePlan('monthly', 15, 'Plano Mensal')" class="monthly-plan-btn">
-                    Prosseguir →
-                </button>
-                <div v-if="currentPlan === 'monthly'">
-                    <button disabled>Plano Selecionado</button>
-                </div>
-            </div>
+                <h3>{{ plan.price }} €</h3>
 
-            <!-- Plano Anual -->
-            <div class="plan-box" :class="{ 'active': currentPlan === 'annual', 'annual-plan': true }">
-                <h2>Anual</h2>
-                <ul>
-                    <li>∞ Operações p/dia</li>
-                    <li>Imagens de todos os tamanhos</li>
-                    <li>∞ Downloads p/dia</li>
-                    <li>Downloads HD s/limite</li>
-                    <li>Disponíveis todas as ferramentas</li>
-                </ul>
-                <h3>100,00 € p/ano</h3>
-                <div v-if="currentPlan === 'annual'">
+                <div v-if="currentPlan === plan.name">
+                    <button disabled>Current Plan</button>
                 </div>
-                <button v-else @click="choosePlan('annual', 100, 'Plano Anual')" class="annual-plan-btn">
-                    Prosseguir →
+                <button v-else @click="choosePlan(plan.name, plan.price, plan.type, plan.id)"
+                    :class="`${plan.type}-plan-btn`">
+                    Proceed to payment →
                 </button>
-                <div v-if="currentPlan === 'annual'">
-                    <button disabled>Plano Selecionado</button>
-                </div>
             </div>
         </div>
     </div>
@@ -71,7 +27,7 @@
 
 <script>
 import Navbar from '../components/Navbar.vue';
-import { useRouter } from 'vue-router';
+import axios from 'axios';
 
 export default {
     name: 'Plan',
@@ -81,28 +37,41 @@ export default {
     data() {
         return {
             currentPlan: 'free',
+            plans: [] // Store fetched plans here
         };
     },
     methods: {
-        choosePlan(plan, amount, planName) {
-            // Use Vue Router to navigate to Payment page with query params
+        choosePlan(plan, amount, planType, planId) {
             this.$router.push({
                 path: '/payment',
-                query: { amount: amount, planName: planName }
+                query: {
+                    amount: amount,
+                    planName: plan,
+                    planId: planId
+                }
             });
         },
+        async fetchPlans() {
+            try {
+                const response = await axios.get(`${import.meta.env.VITE_API_GATEWAY}/api/plans`, {
+                    withCredentials: true  
+                });
+                this.plans = response.data;
+            } catch (error) {
+                console.error('Error fetching plans:', error);
+            }
+        }
     },
+    created() {
+        this.fetchPlans(); // Fetch plans when the component is created
+    }
 };
 </script>
 
-
-
 <style scoped>
-
 .plan-container {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    /* Divisão em 3 colunas */
     gap: 20px;
     justify-items: center;
     padding: 2rem;
@@ -119,35 +88,30 @@ export default {
     transition: transform 0.3s ease;
 }
 
-/* Cores para cada plano */
+/* Plan type styles */
 .free-plan h2,
 .free-plan h3,
 .free-plan button {
     color: #007bff;
-    /* Azul */
+    /* Blue */
 }
 
 .monthly-plan h2,
 .monthly-plan h3,
 .monthly-plan button {
     color: #8a2be2;
-    /* Roxo */
+    /* Purple */
 }
 
 .annual-plan h2,
 .annual-plan h3,
 .annual-plan button {
     color: #d415cb;
-    /* Rosa */
+    /* Pink */
 }
 
 .plan-box h2 {
     font-size: 1.5rem;
-    margin-bottom: 1rem;
-}
-
-.plan-box p {
-    font-size: 1rem;
     margin-bottom: 1rem;
 }
 
@@ -172,22 +136,22 @@ export default {
 
 .free-plan-btn {
     background-color: #007bff;
-    /* Azul para o plano gratuito */
+    /* Blue for free plan */
 }
 
 .monthly-plan-btn {
     background-color: #8a2be2;
-    /* Roxo para o plano mensal */
+    /* Purple for monthly plan */
 }
 
 .annual-plan-btn {
     background-color: #d415cb;
-    /* Rosa para o plano anual */
+    /* Pink for annual plan */
 }
 
 .plan-box button:hover {
     background-color: #0056b3;
-    /* Cor mais escura ao passar o mouse */
+    /* Darker blue on hover */
 }
 
 .plan-box button[disabled] {
@@ -197,21 +161,21 @@ export default {
 
 .plan-box.active {
     background-color: #e3f2fd;
-    /* Azul claro para o plano ativo */
+    /* Light blue for active plan */
 }
 
 .free-plan.active {
     background-color: #d0e7ff;
-    /* Azul claro */
+    /* Light blue */
 }
 
 .monthly-plan.active {
     background-color: #d6bbe4;
-    /* Roxo claro */
+    /* Light purple */
 }
 
 .annual-plan.active {
     background-color: #fcbade;
-    /* Rosa claro */
+    /* Light pink */
 }
 </style>

@@ -4,7 +4,7 @@
         <div class="payment-container">
             <img src="../assets/logo.png" >
             <h2>Complete Your Payment</h2>
-            <PaymentForm :amount="amount" :planName="planName" />
+            <PaymentForm :amount="amount" :planName="planName" :planId="planId"/>
         </div>
     </div>
 </template>
@@ -23,15 +23,13 @@ export default {
         return {
             amount: parseFloat(this.$route.query.amount) || 0,
             planName: this.$route.query.planName || '',
+            planId: this.$route.query.planId || ''
         };
     },
     created() {
-        // In case you need to fetch or do other things based on amount/planName
-        console.log("Amount:", this.amount);
-        console.log("Plan Name:", this.planName);
     }
 };
-</script>
+</script>   
 
 <style scoped>
 .main-layout {
