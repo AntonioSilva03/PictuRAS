@@ -6,10 +6,10 @@
                 <div class="search-bar">
                     <input type="text" v-model="searchQuery" placeholder="Search in all projects..." />
                 </div>
-                <div class="plan-projects">
+                <!-- <div class="plan-projects">
                     <p>You’re on the free plan! </p>
                     <Button1 style="margin-top: 0; margin-left: 1em;" label="Upgrade"></Button1>
-                </div>
+                </div> -->
             </div>
             <table>
             <thead>
