@@ -309,6 +309,24 @@ router.put('/projects', passport.authenticate(['local', 'anonymous'], { session:
   }
 });
 
+router.delete('/projects/images', passport.authenticate(['local', 'anonymous'], { session: false }), async (req, res) => {
+  const apiBaseUrl = process.env.PROJECTS_MICRO_SERVICE
+
+      try{
+        const { images } = req.query;
+        for(id in images){
+          await axios.delete(`${apiBaseUrl}/projects/images/${images[id]}`);
+        }
+        res.status(200).json(`Success on deleting the images!`);
+
+      }catch(e){
+        console.error(e)
+        res.status(500).json(`Server error`);
+      }
+      
+});
+
+
 router.delete('/projects/:id', passport.authenticate(['local', 'anonymous'], { session: false }), async (req, res) => {
   const projectId = req.params.id; // Obter o ID do projeto da URL
   const apiBaseUrl = process.env.PROJECTS_MICRO_SERVICE; // URL do microserviço
@@ -338,7 +356,6 @@ router.delete('/projects/:id', passport.authenticate(['local', 'anonymous'], { s
       });
   }
 });
-
 
 
 

@@ -10,6 +10,7 @@
 import { useProjectStore } from '../stores/ProjectStore';
 import { useEditingToolStore } from '../stores/EditingTool';
 import { storeToRefs } from 'pinia';
+import { useImageStore } from '../stores/ImageStore';
 
 const ws = import.meta.env.VITE_WS_GATEWAY;
 
@@ -18,6 +19,7 @@ export default {
   setup() {
     const projectStore = useProjectStore();
     const toolsStore = useEditingToolStore();
+    const imageStore = useImageStore();
     const { tools } = storeToRefs(toolsStore);
 
     let websocket = null; // WebSocket instance
@@ -42,6 +44,7 @@ export default {
         };
         websocket.send(JSON.stringify(payload));
         console.log("Message sent:", payload);
+        imageStore.enterProcessMode();
       };
 
       websocket.onmessage = (event) => {
@@ -51,22 +54,26 @@ export default {
 
         // Handle the message based on the `action` or content
         if (message.type === "progress") {
+          imageStore.updateList(message.images)
           console.log(`Update: ${message.progress}`);
         } else if (message.type === "result") {
           alert(`Processing complete: ${message.progress}`);
+          // imageStore.updateList(message.images)
+          websocket.close(); // Close the WebSocket connection
         }else if (message.type === "error") {
           alert(`Processing error: ${message.progress}`);
+          websocket.error(); // Close the WebSocket connection
         }
       };
 
       websocket.onerror = (error) => {
         console.error("WebSocket error:", error);
-        alert("WebSocket error occurred");
+        imageStore.leaveProvessMode(true)
       };
 
       websocket.onclose = () => {
         console.log("WebSocket connection closed");
-        alert("Processing completed");
+        imageStore.leaveProvessMode(false)
       };
     };
 
