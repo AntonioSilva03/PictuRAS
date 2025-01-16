@@ -22,6 +22,7 @@ export default {
     const imageStore = useImageStore();
     const { tools } = storeToRefs(toolsStore);
 
+    const ws = import.meta.env.VITE_WS_GATEWAY;
     let websocket = null; // WebSocket instance
 
     const saveProject = async () => {
@@ -32,15 +33,15 @@ export default {
     const process = () => {
       // Establish WebSocket connection
       // trocar com o ws
-      websocket = new WebSocket("ws://localhost:8080"); // Replace with your WebSocket server URL
+      websocket = new WebSocket(ws); // Replace with your WebSocket server URL
 
       websocket.onopen = () => {
         console.log("WebSocket connection established");
         
         // Send a JSON message to the server
         const payload = {
-          type: "process_project",
-          id_projeto: projectStore.getId()
+          type: "process",
+          project: projectStore.getId()
         };
         websocket.send(JSON.stringify(payload));
         console.log("Message sent:", payload);
@@ -53,12 +54,12 @@ export default {
         console.log("Message from server:", message);
 
         // Handle the message based on the `action` or content
-        if (message.type === "progress") {
+        if (message.type === "progress" && message.progress < 1.0) {
           imageStore.updateList(message.images)
           console.log(`Update: ${message.progress}`);
-        } else if (message.type === "result") {
-          alert(`Processing complete: ${message.progress}`);
-          // imageStore.updateList(message.images)
+        } else if (message.type === "progress" && message.progress === 1.0) {
+          alert(`Processing complete!`);
+          imageStore.fetchImages(message.project)
           websocket.close(); // Close the WebSocket connection
         }else if (message.type === "error") {
           alert(`Processing error: ${message.progress}`);

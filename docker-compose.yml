@@ -24,6 +24,9 @@ services:
     depends_on:
       - api-gateway
       - wsgateway
+    links:
+      - api-gateway
+      - wsgateway
 
   api-gateway:
     container_name: api-gateway

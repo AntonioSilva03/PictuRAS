@@ -130,7 +130,20 @@ export const useImageStore = defineStore('imageStore', {
     
             // Extract MIME type from response headers
             // Create a Blob using the ArrayBuffer and MIME type
-            const blob = new Blob([element.data], { type: 'image/png' });
+            const binaryString = atob(element.data);
+
+            // Create an ArrayBuffer of the same length as the binary string
+            const arrayBuffer = new ArrayBuffer(binaryString.length);
+          
+            // Create a Uint8Array view to manipulate the ArrayBuffer
+            const uint8Array = new Uint8Array(arrayBuffer);
+          
+            // Fill the Uint8Array with the binary string's char codes
+            for (let i = 0; i < binaryString.length; i++) {
+              uint8Array[i] = binaryString.charCodeAt(i);
+            }
+          
+            const blob = new Blob(arrayBuffer, { type: element.mimetype});
             // Generate an object URL for the image Blob
             const imageSrc = URL.createObjectURL(blob);
     
