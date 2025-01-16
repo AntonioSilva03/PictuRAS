@@ -8,7 +8,11 @@ export const useImageStore = defineStore('imageStore', {
   state: () => ({
     images: [], // depois vai ser vazia
     bytes:[],
+    old:[],
+    ids:[],
     selectedImage: null,
+    previewMode:false,
+    onProcess:false,
   }),
   actions: {
     selectImage(image) {
@@ -19,12 +23,13 @@ export const useImageStore = defineStore('imageStore', {
       this.error = null;
       try {
         this.image = [];
+        this.ids = [];
         this.selectedImage = null;
         const response = await axios.get(`${api}/api/projects/images`, {
           params: { projectId: projectId }, // Pass query params
           withCredentials: true // Include credentials if needed (cookies, headers)
         });
-    
+        this.ids = response.data.map((element) => element.id);
         let imageUrls = [];
         let imageBlobs = [];
         
@@ -100,10 +105,77 @@ export const useImageStore = defineStore('imageStore', {
     clear(){
       this.images = [];
       this.bytes= [];
+      this.ids=[];
       this.selectedImage = null;
+    },enterProcessMode(){
+      this.onProcess = true;
+      this.old = this.bytes;
+    },leaveProvessMode(cancel){
+        if (!cancel){
+          this.onProcess = false;
+        }else{
+          // todo
+          this.onProcess = false;
+        }
+        console.log(this.onProcess)
+    },async updateList(images){
+      console.log(images)
+      let imageUrls = [];
+      let imageBlobs = [];
+      let imagesIds = [];
+      try {
+
+        for (const element of images) {
+          try {
+    
+            // Extract MIME type from response headers
+            // Create a Blob using the ArrayBuffer and MIME type
+            const binaryString = atob(element.data);
+
+            // Create an ArrayBuffer of the same length as the binary string
+            const arrayBuffer = new ArrayBuffer(binaryString.length);
+          
+            // Create a Uint8Array view to manipulate the ArrayBuffer
+            const uint8Array = new Uint8Array(arrayBuffer);
+          
+            // Fill the Uint8Array with the binary string's char codes
+            for (let i = 0; i < binaryString.length; i++) {
+              uint8Array[i] = binaryString.charCodeAt(i);
+            }
+          
+            const blob = new Blob([arrayBuffer], { type: element.mimetype });
+            // Generate an object URL for the image Blob
+            const imageSrc = URL.createObjectURL(blob);
+    
+            // Store the image source URL and blob
+            imageUrls.push(imageSrc);
+            imageBlobs.push(blob);
+            imagesIds.push(element.id)
+          } catch (error) {
+            console.log("Error fetching image:", error);
+          }
+        }
+        this.images = imageUrls; // URLs for displaying images
+        this.bytes = imageBlobs; // Blobs for downloading images
+        this.ids = imagesIds;
+      } catch (error) {
+        console.log("Error fetching image:", error);
+      }
+
+    },async deleteImages(projectId,imageIds){
+          // Send delete request to the API
+          try{
+          console.log(`${api}/api/projects/images`);
+          const response = await axios.delete(`${api}/api/projects/images`, {
+            params: { projectId: projectId, images:imageIds }, // Pass query params
+            withCredentials: true // Include credentials if needed (cookies, headers)
+          });
+          
+          await this.fetchImages(projectId);
+          console.log("here")
+      }catch(e){
+        console.log(e)
+      }
     }
-    
-    
-  
   },
 });

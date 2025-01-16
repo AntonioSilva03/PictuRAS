@@ -1,0 +1,17 @@
+FROM python:3.12.3-slim
+
+COPY . /app/picturas/tools/autocrop
+
+WORKDIR /app/picturas/tools/autocrop
+
+RUN pip install -r requirements.txt
+
+ENV RABBITMQ_HOST=rabbitmq
+ENV RABBITMQ_PORT=5672
+
+ENV EXCHANGE=TOOLS_EXCHANGE
+ENV REQUEST_QUEUE=AUTOCROP_QUEUE
+
+ENV POOL_SIZE=5
+
+CMD ["python", "autocrop_worker.py"]
