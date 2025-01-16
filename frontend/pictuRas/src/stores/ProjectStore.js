@@ -74,8 +74,24 @@ export const useProjectStore = defineStore('projectStore', {
       try {
         // Filter and format tools
         const activeToolsInOrder = tools.filter(tool => tool.active);
-        const activeToolsInOrderWrapper = activeToolsInOrder.map(({ active, position, ...rest }) => rest);
-
+        let cleanTools = activeToolsInOrder.map((tool) => {
+          return {
+              ...tool,
+              parameters: tool.parameters.map((param) => {
+                  // Modify 'param' if needed
+                  if (param.type === "hex") {
+                      return {
+                          ...param,
+                          value: param.value.hex // Assuming param.value is an object with a 'hex' property
+                      };
+                  }
+                  return param; // Return param unmodified if type is not 'hex'
+              })
+          };
+      });
+      console.log(cleanTools);      
+        const activeToolsInOrderWrapper = cleanTools.map(({ active, position, ...rest }) => rest);
+        console.log(activeToolsInOrderWrapper);
         // Assign tools to the selected project
         this.selectedProject.tools = activeToolsInOrderWrapper;
 

@@ -143,7 +143,7 @@ export const useImageStore = defineStore('imageStore', {
               uint8Array[i] = binaryString.charCodeAt(i);
             }
           
-            const blob = new Blob(arrayBuffer, { type: element.mimetype});
+            const blob = new Blob([arrayBuffer], { type: element.mimetype });
             // Generate an object URL for the image Blob
             const imageSrc = URL.createObjectURL(blob);
     
