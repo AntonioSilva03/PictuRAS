@@ -4,6 +4,10 @@ COPY . /app/picturas/tools/autocrop
 
 WORKDIR /app/picturas/tools/autocrop
 
+RUN apt update
+
+RUN apt install libmagic1 libmagic-dev -y
+
 RUN pip install -r requirements.txt
 
 ENV RABBITMQ_HOST=rabbitmq

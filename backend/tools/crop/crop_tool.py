@@ -1,3 +1,4 @@
+import magic
 import base64
 import subprocess
 from crop_message_reply import CropMessageReply
@@ -10,6 +11,8 @@ class CropTool:
 
 
     def apply(self) -> CropMessageReply:
+
+        mime = magic.Magic(mime=True)
 
         width = self.request.getWidth()
         height = self.request.getHeight()
@@ -32,4 +35,7 @@ class CropTool:
             check=True
         )
 
-        return CropMessageReply(base64.b64encode(result.stdout).decode('utf-8'))
+        return CropMessageReply(
+            mimetype=mime.from_buffer(result.stdout),
+            data=base64.b64encode(result.stdout).decode('utf-8'),
+        )

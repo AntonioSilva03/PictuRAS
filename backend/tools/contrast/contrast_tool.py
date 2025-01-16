@@ -1,3 +1,4 @@
+import magic
 import base64
 import subprocess
 from contrast_message_reply import ContrastMessageReply
@@ -10,6 +11,8 @@ class ContrastTool:
 
 
     def apply(self) -> ContrastMessageReply:
+
+        mime = magic.Magic(mime=True)
 
         ffmpeg_command = [
             'ffmpeg',
@@ -26,5 +29,8 @@ class ContrastTool:
             stderr=subprocess.PIPE,
             check=True
         )
-
-        return ContrastMessageReply(base64.b64encode(result.stdout).decode('utf-8'))
+        
+        return ContrastMessageReply(
+            mimetype=mime.from_buffer(result.stdout),
+            data=base64.b64encode(result.stdout).decode('utf-8'),
+        )

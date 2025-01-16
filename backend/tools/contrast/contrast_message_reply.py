@@ -2,17 +2,23 @@ import json
 
 class ContrastMessageReply:
 
-    def __init__(self, image: str) -> None:
-        self.image = image
+    def __init__(self, mimetype: str, data: str) -> None:
+        self.mimetype = mimetype
+        self.data = data
 
 
-    def getImage(self) -> str:
-        return self.image
+    def getMimeType(self) -> str:
+        return self.mimetype
+
+
+    def getData(self) -> str:
+        return self.data
 
 
     def to_json(self) -> str:
         return json.dumps({
-            'image': self.image,
+            'mimetype': self.mimetype,
+            'data': self.data,
         })
 
 
@@ -20,5 +26,6 @@ class ContrastMessageReply:
     def from_json(data: str) -> 'ContrastMessageReply':
         data = json.loads(data)
         return ContrastMessageReply(
-            image=data['image'],
+            mimetype=data['mimetype'],
+            data=data['data'],
         )

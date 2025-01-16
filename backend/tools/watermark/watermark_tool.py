@@ -1,3 +1,4 @@
+import magic
 import base64
 import random
 import io
@@ -71,6 +72,10 @@ class WatermarkTool:
         final_image = blended_image.convert("RGB")
         output_buffer = io.BytesIO()
         final_image.save(output_buffer, format="JPEG")
-        encoded_image = base64.b64encode(output_buffer.getvalue()).decode('utf-8')
 
-        return WatermarkMessageReply(encoded_image)
+        mime = magic.Magic(mime=True)
+
+        return WatermarkMessageReply(
+            mimetype=mime.from_buffer(output_buffer.getvalue()),
+            data=base64.b64encode(output_buffer.getvalue()).decode('utf-8'),
+        )

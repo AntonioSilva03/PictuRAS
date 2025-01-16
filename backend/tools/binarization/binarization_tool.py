@@ -1,3 +1,4 @@
+import magic
 import base64
 import subprocess
 from binarization_message_reply import BinarizationMessageReply
@@ -10,6 +11,8 @@ class BinarizationTool:
 
 
     def apply(self) -> BinarizationMessageReply:
+
+        mime = magic.Magic(mime=True)
 
         ffmpeg_command = [
             'ffmpeg',
@@ -26,4 +29,7 @@ class BinarizationTool:
             check=True
         )
 
-        return BinarizationMessageReply(base64.b64encode(result.stdout).decode('utf-8'))
+        return BinarizationMessageReply(
+            mimetype=mime.from_buffer(result.stdout),
+            data=base64.b64encode(result.stdout).decode('utf-8'),
+        )

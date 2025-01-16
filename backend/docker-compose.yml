@@ -124,10 +124,87 @@ services:
 ###### TOOLS #######
 ####################
 
+  # autocrop-worker:
+  #   container_name: autocrop-worker
+  #   build:
+  #     context: ./tools/autocrop
+  #     dockerfile: Dockerfile
+  #   links:
+  #     - rabbitmq
+  #   depends_on:
+  #     rabbitmq:
+  #       condition: service_healthy
+
+  binarization-worker:
+    container_name: binarization-worker
+    build:
+      context: ./tools/binarization
+      dockerfile: Dockerfile
+    links:
+      - rabbitmq
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
   border-worker:
     container_name: border-worker
     build:
       context: ./tools/border
+      dockerfile: Dockerfile
+    links:
+      - rabbitmq
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  brightness-worker:
+    container_name: brightness-worker
+    build:
+      context: ./tools/brightness
+      dockerfile: Dockerfile
+    links:
+      - rabbitmq
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  contrast-worker:
+    container_name: contrast-worker
+    build:
+      context: ./tools/contrast
+      dockerfile: Dockerfile
+    links:
+      - rabbitmq
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  crop-worker:
+    container_name: crop-worker
+    build:
+      context: ./tools/crop
+      dockerfile: Dockerfile
+    links:
+      - rabbitmq
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  rotate-worker:
+    container_name: rotate-worker
+    build:
+      context: ./tools/rotate
+      dockerfile: Dockerfile
+    links:
+      - rabbitmq
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  scale-worker:
+    container_name: scale-worker
+    build:
+      context: ./tools/scale
       dockerfile: Dockerfile
     links:
       - rabbitmq
