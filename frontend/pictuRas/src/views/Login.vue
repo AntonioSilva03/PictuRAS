@@ -12,7 +12,7 @@
           <Inputs
             id="email"
             type="email"
-            placeholder="Username or email"
+            placeholder="Email"
             v-model="email"
             required
           />
@@ -32,7 +32,7 @@
           <a href="/register" class="link">Sign Up</a>
         </div>
 
-        <GoogleButton label="Continue with Google" />
+        <!-- <GoogleButton label="Continue with Google" /> -->
       </div>
     </div>
   </div>
