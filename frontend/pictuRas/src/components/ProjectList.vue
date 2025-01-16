@@ -7,8 +7,14 @@
                     <input type="text" v-model="searchQuery" placeholder="Search in all projects..." />
                 </div>
                 <div class="plan-projects">
-                    <p>You’re on the free plan! </p>
-                    <Button1 style="margin-top: 0; margin-left: 1em;" label="Upgrade"></Button1>
+                    <p v-if="userInfo.status === 'None'">You’re on the free plan!</p>
+                    <p v-else class="premium-plan">You’re on the premium plan!</p>
+                    <Button1 
+                        style="margin-top: 0; margin-left: 1em;" 
+                        label="Upgrade" 
+                        @click="redirectToUpgrade" 
+                        v-if="userInfo.status === 'None'" 
+                    />
                 </div>
             </div>
             <table>
@@ -101,6 +107,9 @@ export default {
             required: true,
             default: () => [], 
         },
+        userInfo: {
+        type: Object,
+        },
     },
     data() {
         return {
@@ -142,6 +151,10 @@ export default {
             this.editName = this.projects.find((project) => project.id === projectId).name;
         },
 
+        redirectToUpgrade() {
+            this.$router.push('/plans'); 
+        },
+
         async saveEdit(projectId) {
             const projectStore = useProjectStore();
 
@@ -163,7 +176,7 @@ export default {
                 this.editingProjectId = null;
             }
         },
-
+    
 
     },
 
@@ -183,6 +196,14 @@ export default {
             handleDeleteProject,
         }
     },
+
+    mounted() {
+        console.log("User Info received from props:", this.userInfo);
+    },
+
+
+    
+
 }
 
 
@@ -337,6 +358,20 @@ td.actions {
 
 .save-icon:hover {
   color: #218838;
+}
+
+.premium-plan {
+    font-weight: bold;
+    animation: premiumEffect 2s infinite alternate;
+}
+
+@keyframes premiumEffect {
+    0% {
+        color: black;
+    }
+    100% {
+        color: gold;
+    }
 }
 
 </style>
