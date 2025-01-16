@@ -139,7 +139,7 @@ services:
 ####### WS #########
 ####################
 
-  ws:
+  ws-app:
     container_name: ws-app
     build:
       context: ./ws
@@ -157,6 +157,23 @@ services:
         condition: service_started
       rabbitmq:
         condition: service_healthy
+
+####################
+#### WSGATEWAY #####
+####################
+
+  wsgateway:
+    container_name: wsgateway
+    build:
+      context: ./wsgateway
+      dockerfile: Dockerfile
+    ports:
+      - "8764:8764"
+    links:
+      - ws-app
+    depends_on:
+      ws-app:
+        condition: service_started
 
 ####################
 ####### BUS ########
