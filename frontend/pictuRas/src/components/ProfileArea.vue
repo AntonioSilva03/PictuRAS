@@ -16,10 +16,10 @@
                 <p>Satus: <b>{{ profileStore.profile.status }}</b></p>
                 <div class="profile-buttons">
                     <button>
-                        <RouterLink to="/profile">Edit profile</RouterLink>
+                        <RouterLink to="/editprofile">Edit profile</RouterLink>
                     </button>
                     <button>
-                        <RouterLink to="/plans">Change plan</RouterLink>
+                        <RouterLink to="/plan">Change plan</RouterLink>
                     </button>
                 </div>
             </div>

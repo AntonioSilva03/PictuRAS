@@ -8,6 +8,7 @@ import Profile from '../views/Profile.vue';
 import Payment from '../views/Payment.vue';
 import PaymentResult from '../views/PaymentResult.vue';
 import Plan from '../views/Plan.vue';
+import EditProfile from '../views/EditProfile.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -37,6 +38,11 @@ const router = createRouter({
       path: '/profile',
       name: 'profile',
       component: Profile,
+    },
+    {
+      path: '/editprofile',
+      name: 'editprofile',
+      component: EditProfile,
     },
     {
       path: '/plan',
