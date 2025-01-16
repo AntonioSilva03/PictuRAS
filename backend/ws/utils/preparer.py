@@ -4,21 +4,21 @@ from dotenv import load_dotenv # type: ignore
 
 load_dotenv()
 
-EXCHANGE = os.getenv('EXCHANGE', 'TOOL_EXCHANGE')
+EXCHANGE = os.getenv('EXCHANGE', 'TOOLS_EXCHANGE')
 
 REQUEST_QUEUES = {
-    'Binarization': os.getenv('BINARIZATION_REQUEST_QUEUE', 'BINARIZATION_REQUEST_QUEUE'),
-    'Border': os.getenv('BORDER_REQUEST_QUEUE', 'BORDER_REQUEST_QUEUE'),
-    'Brightness': os.getenv('BRIGHTNESS_REQUEST_QUEUE', 'BRIGHTNESS_REQUEST_QUEUE'),
-    'Contrast': os.getenv('CONTRAST_REQUEST_QUEUE', 'CONTRAST_REQUEST_QUEUE'),
-    'Crop': os.getenv('CROP_REQUEST_QUEUE', 'CROP_REQUEST_QUEUE'),
-    'Object Counter': os.getenv('OBJECT_COUNTER_REQUEST_QUEUE', 'OBJECT_COUNTER_REQUEST_QUEUE'),
-    'OCR': os.getenv('OCR_REQUEST_QUEUE', 'OCR_REQUEST_QUEUE'),
-    'People Counter': os.getenv('PEOPLECOUNTER_REQUEST_QUEUE', 'PEOPLECOUNTER_REQUEST_QUEUE'),
-    'Remove Background': os.getenv('AUTOCROP_REQUEST_QUEUE', 'AUTOCROP_REQUEST_QUEUE'),
-    'Rotate': os.getenv('ROTATE_REQUEST_QUEUE', 'ROTATE_REQUEST_QUEUE'),
-    'Scale': os.getenv('SCALE_REQUEST_QUEUE', 'SCALE_REQUEST_QUEUE'),
-    'Watemark': os.getenv('WATERMARK_REQUEST_QUEUE', 'WATERMARK_REQUEST_QUEUE'),
+    'Binarization': os.getenv('BINARIZATION_QUEUE', 'BINARIZATION_QUEUE'),
+    'Border': os.getenv('BORDER_QUEUE', 'BORDER_QUEUE'),
+    'Brightness': os.getenv('BRIGHTNESS_QUEUE', 'BRIGHTNESS_QUEUE'),
+    'Contrast': os.getenv('CONTRAST_QUEUE', 'CONTRAST_QUEUE'),
+    'Crop': os.getenv('CROP_QUEUE', 'CROP_QUEUE'),
+    'Object Counter': os.getenv('OBJECT_COUNTER_QUEUE', 'OBJECT_COUNTER_QUEUE'),
+    'OCR': os.getenv('OCR_QUEUE', 'OCR_QUEUE'),
+    'People Counter': os.getenv('PEOPLECOUNTER_QUEUE', 'PEOPLECOUNTER_QUEUE'),
+    'Remove Background': os.getenv('AUTOCROP_QUEUE', 'AUTOCROP_QUEUE'),
+    'Rotate': os.getenv('ROTATE_QUEUE', 'ROTATE_QUEUE'),
+    'Scale': os.getenv('SCALE_QUEUE', 'SCALE_QUEUE'),
+    'Watemark': os.getenv('WATERMARK_QUEUE', 'WATERMARK_QUEUE'),
 }
 
 handlers = {

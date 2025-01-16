@@ -1,4 +1,5 @@
 import base64
+import magic
 import subprocess
 from border_message_reply import BorderMessageReply 
 from border_message_request import BorderMessageRequest
@@ -11,6 +12,8 @@ class BorderTool:
 
     def apply(self) -> BorderMessageReply:
 
+        mime = magic.Magic(mime=True)
+
         border_width = self.request.getBorderWidth()
         border_height = self.request.getBorderHeight()
         color = self.request.getBorderColor()
@@ -18,7 +21,7 @@ class BorderTool:
         ffmpeg_command = [
             'ffmpeg',
             '-i', '-',
-            '-vf', f'pad=width=iw+{border_width * 2}:height=ih+{border_height * 2}:x={border_width}:y={border_height}:color={color}',
+            '-vf', f'pad=width=iw+{border_width*2}:height=ih+{border_height*2}:x={border_width}:y={border_height}:color={color}',
             '-preset', 'ultrafast',
             '-f', 'image2', '-'
         ]
@@ -31,4 +34,7 @@ class BorderTool:
             check=True
         )
 
-        return BorderMessageReply(base64.b64encode(result.stdout).decode('utf-8'))
+        return BorderMessageReply(
+            mimetype=mime.from_buffer(result.stdout),
+            data=base64.b64encode(result.stdout).decode('utf-8')
+        )

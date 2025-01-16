@@ -1,5 +1,9 @@
 services:
 
+####################
+####### APPS #######
+####################
+
   users-app:
     container_name: users-app
     build:
@@ -62,6 +66,10 @@ services:
     links:
       - tools-mongodb
 
+####################
+####### DBS ########
+####################
+
   users-mongodb:
     container_name: users-db
     image: mongo:latest
@@ -96,6 +104,10 @@ services:
     depends_on:
       - tools-mongo-seed
 
+####################
+###### SEEDS #######
+####################
+
   plans-mongo-seed:
     image: mongo:latest
     volumes:
@@ -107,3 +119,63 @@ services:
     volumes:
       - ./db/tools.json:/tools.json
     command: mongoimport --host tools-db --port 27017 -d picturas-tools -c tools --type json --file /tools.json --jsonArray
+
+####################
+###### TOOLS #######
+####################
+
+  border-worker:
+    container_name: border-worker
+    build:
+      context: ./tools/border
+      dockerfile: Dockerfile
+    links:
+      - rabbitmq
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+####################
+####### WS #########
+####################
+
+  ws:
+    container_name: ws-app
+    build:
+      context: ./ws
+      dockerfile: Dockerfile
+    ports:
+      - "8765:8765"
+    links:
+      - rabbitmq
+      - projects-app
+      - images-app
+    depends_on:
+      projects-app:
+        condition: service_started
+      images-app:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+
+####################
+####### BUS ########
+####################
+
+  rabbitmq:
+    container_name: picturas-rabbitmq
+    image: rabbitmq:management
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq/
+      - rabbitmq-logs:/var/log/rabbitmq/
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 5s
+      timeout: 30s
+
+volumes:
+  rabbitmq-data: 
+  rabbitmq-logs:

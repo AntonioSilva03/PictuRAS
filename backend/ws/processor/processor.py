@@ -21,8 +21,8 @@ class Processor:
         self.request = request
         self.websocket = websocket
         self.handlers = {
-            'process_project': lambda websocket, request : Processor.process_project(websocket, request),
-            'process_preview': lambda websocket, request : Processor.process_preview(websocket, request),
+            'process': lambda websocket, request : Processor.process_project(websocket, request),
+            'preview': lambda websocket, request : Processor.process_preview(websocket, request),
             'cancel': lambda websocket, request : Processor.process_cancel(websocket, request),
             'error': lambda websocket, request : Processor.process_error(websocket, request),
         }
@@ -37,17 +37,25 @@ class Processor:
         bus_requests = get_prepared_requets(project['tools'])
         print(json.dumps(bus_requests, indent=4))
 
-        processorWorker = ProcessorWorker(websocket,request['project'],bus_requests,images,'images')
+        processorWorker = ProcessorWorker(websocket, request['project'], bus_requests, images, True)
         await processorWorker.start()
 
 
     async def process_preview(websocket, request):
-        print(f'Not implemented')
-        await asyncio.sleep(0)
+
+        project = get_project(PROJECTS_HOST, PROJECTS_PORT, request['project'])
+        images = {request['image']: {'data': get_image_data(IMAGES_HOST, IMAGES_PORT, request['image'])}}
+
+        bus_requests = get_prepared_requets(project['tools'])
+        print(json.dumps(bus_requests, indent=4))
+
+        processorWorker = ProcessorWorker(websocket, request['project'], bus_requests, images, False) 
+        await processorWorker.start()
 
 
     async def process_cancel(websocket, request):
         project = request['project']
+        print('Not implemented')
         print(f'Canceling project: {project}')
         await asyncio.sleep(0)
 

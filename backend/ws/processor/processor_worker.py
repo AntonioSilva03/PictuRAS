@@ -19,12 +19,12 @@ IMAGES_PORT = int(os.getenv('IMAGES_PORT', 3002))
 
 class ProcessorWorker:
 
-    def __init__(self, websocket, project, requests, images, save_place):
+    def __init__(self, websocket, project, requests, images, save):
         self.websocket = websocket
         self.project = project
         self.requests = requests
         self.images = images
-        self.save_place = save_place
+        self.save = save
         self.ids = dict()
         self.exclusive_queue = str(uuid.uuid4())
         self.channel = None
@@ -70,11 +70,14 @@ class ProcessorWorker:
 
             if properties.correlation_id in self.ids:
 
+                response = json.loads(message.body.decode())
                 correlation_id = properties.correlation_id
                 image_id = self.ids[correlation_id]
 
                 self.images[image_id]['iterations'] += 1
-                self.images[image_id]['data'] = json.loads(message.body.decode())['image']
+                self.images[image_id]['data'] = response['data']
+                self.images[image_id]['mimetype'] = response['mimetype']
+
                 await self.update_progress()
 
                 current_iteration = self.images[image_id]['iterations']
@@ -99,25 +102,38 @@ class ProcessorWorker:
                     results_queue = await self.channel.get_queue(self.exclusive_queue)
                     await results_queue.cancel(self.consumer_tag)
                     await results_queue.delete(if_unused=False, if_empty=False)
-                    await self.save_results()
+
+                    if self.save:
+                        await self.save_results()
 
 
     async def update_progress(self):
 
+        images = list()
         tasks_completed = 0
         tasks_total = len(self.requests) * len(self.images)
 
         for image_id in self.images:
             tasks_completed += self.images[image_id]['iterations']
+            if self.images[image_id]['iterations'] == len(self.requests):
+                images.append({
+                    "mimetype": self.images[image_id]['mimetype'],
+                    "data": self.images[image_id]['data'],
+                })
 
-        content = {"type": "progress", "progress": tasks_completed/tasks_total}
-        await self.websocket.send(json.dumps(content))
+        await self.websocket.send(json.dumps({
+            "type": "progress",
+            "progress": tasks_completed/tasks_total,
+            "project": self.project,
+            "images": images,
+        }))
 
 
     async def save_results(self):
         for image_id in self.images:
-            image_data = base64.b64decode(self.images[image_id]['data'])
-            update_project_image(IMAGES_HOST, IMAGES_PORT, self.project, image_id, image_data)
+            if 'image' in self.images[image_id]['mimetype']: 
+                image_bytes = base64.b64decode(self.images[image_id]['data'])
+                update_project_image(IMAGES_HOST, IMAGES_PORT, self.project, image_id, image_bytes)
         await asyncio.sleep(0)
 
 
@@ -132,6 +148,7 @@ class ProcessorWorker:
                 correlation_id = str(uuid.uuid4())
                 self.ids[correlation_id] = image_id
                 self.images[image_id]['iterations'] = 0
+                self.images[image_id]['mimetype'] = None
                 self.images[image_id]['data'] = base64.b64encode(self.images[image_id]['data']).decode('utf-8')
 
                 current_request = self.requests[0]

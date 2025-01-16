@@ -6,15 +6,15 @@ WORKDIR /app/picturas/tools/border
 
 RUN apt update
 
-RUN apt install ffmpeg -y
+RUN apt install ffmpeg libmagic1 libmagic-dev -y
 
 RUN pip install -r requirements.txt
 
 ENV RABBITMQ_HOST=rabbitmq
 ENV RABBITMQ_PORT=5672
 
-ENV EXCHANGE=TOOL_EXCHANGE
-ENV REQUEST_QUEUE=BORDER_REQUEST_QUEUE
+ENV EXCHANGE=TOOLS_EXCHANGE
+ENV REQUEST_QUEUE=BORDER_QUEUE
 
 ENV POOL_SIZE=5
 
