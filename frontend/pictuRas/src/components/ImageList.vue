@@ -22,7 +22,7 @@
         type="file"
         ref="fileInput"
         @change="handleFileUpload"
-        accept="image/*"
+        accept="image/*,application/zip"
         multiple
         style="display: none"
       />
@@ -39,6 +39,7 @@ import { ref } from 'vue'; // Import ref
 import { useImageStore } from '../stores/ImageStore';
 import { useProjectStore } from '../stores/ProjectStore';
 import axios from 'axios';
+import JSZip from 'jszip';
 
 const api = import.meta.env.VITE_API_GATEWAY;
 
@@ -67,19 +68,18 @@ function triggerFileUpload() {
 async function handleFileUpload(event) {
   const files = Array.from(event.target.files);
 
-  // Filter only valid image files
-  const validImageFiles = files.filter((file) =>
-    file.type.startsWith("image/")
-  );
+  // Separate valid image files and ZIP files
+  const validImageFiles = files.filter((file) => file.type.startsWith("image/"));
+  const zipFiles = files.filter((file) => file.type === "application/zip");
 
   // Check if there are any invalid files
-  if (validImageFiles.length !== files.length) {
-    alert("Some files are not valid image formats. Only images are allowed.");
+  if (validImageFiles.length + zipFiles.length !== files.length) {
+    alert("Some files are not valid formats. Only images and ZIP files are allowed.");
   }
 
-  // Limit the upload to 20 images
-  if (validImageFiles.length > 20) {
-    alert("You can only upload up to 20 images at once.");
+  // Limit the upload to 20 files (images + images inside ZIPs)
+  if (validImageFiles.length + zipFiles.length > 20) {
+    alert("You can only upload up to 20 files at once.");
     return;
   }
 
@@ -89,7 +89,48 @@ async function handleFileUpload(event) {
     console.error("No project selected. Cannot upload files.");
     return;
   }
+
   let tempArray = [];
+
+  // Helper function to process ZIP files
+  async function extractImagesFromZip(file) {
+    const images = [];
+    const jszip = new JSZip();
+
+    try {
+      const zipContent = await jszip.loadAsync(file);
+      const fileNames = Object.keys(zipContent.files);
+
+      for (const fileName of fileNames) {
+        const zipFile = zipContent.files[fileName];
+
+        // Check if the file is an image and not a folder
+        if (!zipFile.dir && /\.(png|jpe?g|gif|webp)$/i.test(fileName)) {
+          const fileData = await zipFile.async("blob");
+          const imageFile = new File([fileData], fileName, { type: "image/*" });
+          images.push(imageFile);
+        }
+      }
+    } catch (error) {
+      console.error(`Failed to extract images from ZIP: ${file.name}`, error);
+      alert(`Error processing ZIP file ${file.name}. Please try again.`);
+    }
+
+    return images;
+  }
+
+  // Extract images from all ZIP files
+  for (const zipFile of zipFiles) {
+    const extractedImages = await extractImagesFromZip(zipFile);
+    validImageFiles.push(...extractedImages);
+  }
+
+  // Check the total image count again after extracting ZIPs
+  if (validImageFiles.length > 20) {
+    alert("You can only upload up to 20 images at once, including extracted images from ZIPs.");
+    return;
+  }
+
   // Iterate over each image file and send it in a separate request
   for (const file of validImageFiles) {
     const formData = new FormData();
@@ -110,12 +151,16 @@ async function handleFileUpload(event) {
     }
   }
 
+  // Fetch additional data for uploaded images
   for (const element of tempArray) {
-    const response2 = await axios.get(`${api}/api/projects/images/${element.id}`, {
+    await axios.get(`${api}/api/projects/images/${element.id}`, {
       responseType: "arraybuffer",
     });
   }
+
+  // Refresh the image store to reflect new uploads
   await imageStore.fetchImages(projectId);
+
   alert("All images have been uploaded.");
   event.target.value = "";
 }
