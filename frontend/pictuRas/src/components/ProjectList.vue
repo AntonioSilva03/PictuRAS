@@ -7,8 +7,18 @@
                     <input type="text" v-model="searchQuery" placeholder="Search in all projects..." />
                 </div>
                 <div class="plan-projects">
-                    <p v-if="userInfo.plan === 'free'">You’re on the free plan!</p>
-                    <p v-else class="premium-plan">You’re on the premium plan!</p>
+                    <p v-if="userInfo.plan === 'free'" class="free-plan">
+                        You’re on the free plan!
+                    </p>
+                    <p v-else-if="userInfo.plan === 'premium'" class="premium-plan">
+                        You’re on the premium plan!
+                    </p>
+                    <p v-else-if="userInfo.plan === 'basic'" class="basic-plan">
+                        You’re on the basic plan!
+                    </p>
+                    <p v-else-if="userInfo.plan === 'enterprise'" class="enterprise-plan">
+                        You’re on the enterprise plan!
+                    </p>
                     <Button1 
                         style="margin-top: 0; margin-left: 1em;" 
                         label="Upgrade" 
@@ -371,6 +381,34 @@ td.actions {
     }
     100% {
         color: gold;
+    }
+}
+
+.basic-plan {
+    font-weight: bold;
+    animation: basicEffect 2s infinite alternate;
+}
+
+@keyframes basicEffect {
+    0% {
+        color: black;
+    }
+    100% {
+        color: rgb(255, 0, 200);
+    }
+}
+
+.enterprise-plan {
+    font-weight: bold;
+    animation: enterpriseEffect 2s infinite alternate;
+}
+
+@keyframes enterpriseEffect {
+    0% {
+        color: black;
+    }
+    100% {
+        color: rgb(87, 72, 72);
     }
 }
 

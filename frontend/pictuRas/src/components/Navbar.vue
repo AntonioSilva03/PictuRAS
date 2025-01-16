@@ -3,13 +3,13 @@
     <div class="navbar-container">
       <!-- Logo -->
       <div class="navbar-logo">
-        <RouterLink to="/">PictuRAS</RouterLink>
+        <RouterLink :to="isLoggedIn ? '/landing/projects' : '/'">PictuRAS</RouterLink>
       </div>
 
       <!-- Navigation Links -->
       <ul class="navbar-links">
-        <li><RouterLink to="/profile">Profile</RouterLink></li>
-        <li><RouterLink to="/projects">My Projects</RouterLink></li>
+        <li v-if="isLoggedIn"><RouterLink to="/profile">Profile</RouterLink></li>
+        <li v-if="isLoggedIn"><RouterLink to="/projects">My Projects</RouterLink></li>
         <li v-if="isLoggedIn">
           <button @click="signOut">Sign Out</button>
         </li>
