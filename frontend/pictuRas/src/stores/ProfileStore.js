@@ -7,7 +7,8 @@ export const useProfileStore = defineStore('profileStore', {
     state: () => ({
         profile: {},
         loading: false,
-        error: null
+        error: null,
+        userPlanName: null,
     }),
 
     actions: {
@@ -18,6 +19,12 @@ export const useProfileStore = defineStore('profileStore', {
             try {
                 const response = await axios.get(`${api}/api/profile`,{ withCredentials: true } );
                 this.profile = response.data;
+                const planId = this.profile.plan;
+                const responsePlan = await axios.get(`${api}/api/plan/${planId}`, {
+                    withCredentials: true  
+                });
+                this.userPlanName = responsePlan.data.name;
+                this.profile.plan = this.userPlanName;
             }
             catch (error) {
                 this.error = `Failed to fetch profile for user ID: ${this.profile.email}`;

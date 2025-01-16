@@ -5,6 +5,9 @@ import Login from '../views/Login.vue';
 import Project from '../views/Project.vue';
 import Register from '../views/Register.vue'
 import Profile from '../views/Profile.vue';
+import Payment from '../views/Payment.vue';
+import PaymentResult from '../views/PaymentResult.vue';
+import Plan from '../views/Plan.vue';
 import Projects from '../views/Projects.vue'
 
 const router = createRouter({
@@ -41,6 +44,21 @@ const router = createRouter({
       path: '/profile',
       name: 'profile',
       component: Profile,
+    },
+    {
+      path: '/plan',
+      name: 'plan',
+      component: Plan,
+    },
+    {
+      path: '/payment',
+      name: 'payment',
+      component: Payment,
+    },
+    {
+      path: '/payment/result',
+      name: 'payment-result',
+      component: PaymentResult, 
     },
     {
       path: '/:pathMatch(.*)*', // Catch-all route for 404

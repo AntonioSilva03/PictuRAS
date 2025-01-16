@@ -13,13 +13,13 @@
                 <img src="/logo-no-text.png" alt="Logo" class="logo1" />
                 <h1>Name: {{ profileStore.profile.name }}</h1>
                 <p>Email: {{ profileStore.profile.email }}</p>
-                <p>Satus: <b>{{ profileStore.profile.status }}</b></p>
+                <p>Satus: <b>{{ profileStore.profile.plan }}</b></p>
                 <div class="profile-buttons">
                     <button>
                         <RouterLink to="/profile">Edit profile</RouterLink>
                     </button>
                     <button>
-                        <RouterLink to="/plans">Change plan</RouterLink>
+                        <RouterLink to="/plan">Change plan</RouterLink>
                     </button>
                 </div>
             </div>

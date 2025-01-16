@@ -8,6 +8,7 @@ var LocalStrategy = require('passport-local').Strategy;
 var AnonymousStrategy = require('passport-anonymous').Strategy;
 var cors = require('cors')
 require ('dotenv/config');
+var stripeRoutes = require('./routes/stripe');
 
 var apiRouter = require('./routes/index');
 
@@ -60,10 +61,14 @@ db.once('open', () => {
 });
 
 app.use('/api', apiRouter);
+app.use('/api', stripeRoutes);
 
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
+// Use the Stripe routes
+
 
 app.use(function (err, req, res, next) {
   res.locals.message = err.message;
