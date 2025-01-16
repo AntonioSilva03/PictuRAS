@@ -18,7 +18,7 @@
           creative potential with PictuRAS for only €9.99/month (VAT included). Let your imagination
           lead the way. Terms apply.
         </p>
-        <Button1 label="Start Now" />
+        <Button1 @click="goProject" label="Start Now" />
       </div>
     </div>
 
@@ -87,6 +87,9 @@ export default {
       const isVisible = rect.bottom > 0;
       this.$emit('content1Visible', isVisible);
     },
+    goProject(){
+      this.$router.push('/project'); // Navigate to the project page
+    }
   },
 };
 </script>

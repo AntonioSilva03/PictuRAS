@@ -7,13 +7,13 @@
         <div v-else-if="profileStore.error" class="text-red-500">
             {{ profileStore.error }}
         </div>
-
+        
         <div v-else class="profile-Container">
             <div class="left-side">
                 <img src="/logo-no-text.png" alt="Logo" class="logo1" />
-                <h1>Username: {{ profileStore.profile.username }}</h1>
+                <h1>Name: {{ profileStore.profile.name }}</h1>
                 <p>Email: {{ profileStore.profile.email }}</p>
-                <p>Satus: <b>{{ profileStore.profile.status }}</b></p>
+                <p>Satus: <b>{{ profileStore.profile.plan }}</b></p>
                 <div class="profile-buttons">
                     <button>
                         <RouterLink to="/editprofile">Edit profile</RouterLink>
@@ -37,21 +37,45 @@
                 </div>
             </div>
         </div>
-
+        <button @click="logout">Logout</button>
     </div>
 </template>
 
 <script setup>
 import { onMounted } from 'vue';
 import { useProfileStore } from '../stores/ProfileStore';
-import { RouterLink } from 'vue-router';
+import { useRouter, RouterLink } from 'vue-router';
+import axios from 'axios';
 
 const profileStore = useProfileStore();
-
+const api = import.meta.env.VITE_API_GATEWAY;
+const router = useRouter()
 
 onMounted(async () => {
     await profileStore.fetchProfile();
 });
+
+const logout = async () => {
+    try {
+        const response = await axios.post(`${api}/api/logout`, {}, {
+            withCredentials: true  // Important for cookie handling
+        });
+        
+        if (response.status === 200) {
+            // Clear any client-side storage
+            localStorage.clear();
+            sessionStorage.clear();
+            
+            // Clear store state
+
+            
+            // Redirect to login
+            router.push('/login');
+        }
+    } catch (error) {
+        console.error('Logout failed:', error);
+    }
+};
 </script>
 
 <style scoped>

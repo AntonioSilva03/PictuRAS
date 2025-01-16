@@ -10,7 +10,6 @@ import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons';
 
 library.add(faPlay, faPause);
 
-
 const pinia = createPinia();
 
 const app = createApp(App);

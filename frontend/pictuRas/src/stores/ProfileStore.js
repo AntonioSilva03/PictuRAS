@@ -1,41 +1,33 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 
+const api = import.meta.env.VITE_API_GATEWAY;
+
 export const useProfileStore = defineStore('profileStore', {
     state: () => ({
-        profile: {
-            id: '1',
-            fullName: 'João Miguel Lobo Fernandes',
-            username: 'jmf',
-            email: 'jmf@example.com',
-            password: '*******', // Isto deve ser o hash da senha real
-            status: 'premium',
-        },
+        profile: {},
         loading: false,
-        error: null
+        error: null,
+        userPlanName: null,
     }),
 
     actions: {
-        async fetchProfile(userId) {
+        async fetchProfile() {
             this.loading = true;
             this.error = null;
             
             try {
-                // Simular um pedido de API para buscar o perfil
-                console.log(`Fetching profile for user ID: ${userId}`);
-                // Exemplo de dados recebidos:
-                this.profile = { 
-                    id: '1',
-                    fullName: 'João Miguel Lobo Fernandes',
-                    username: 'jmf',
-                    email: 'jmf@example.com',
-                    password: '*******', 
-                    status: 'premium',
-                };
+                const response = await axios.get(`${api}/api/profile`,{ withCredentials: true } );
+                this.profile = response.data;
+                const planId = this.profile.plan;
+                const responsePlan = await axios.get(`${api}/api/plan/${planId}`, {
+                    withCredentials: true  
+                });
+                this.userPlanName = responsePlan.data.name;
+                this.profile.plan = this.userPlanName;
             }
             catch (error) {
-                this.error = `Failed to fetch profile for user ID: ${userId}`;
-                console.error(error);
+                this.error = `Failed to fetch profile for user ID: ${this.profile.email}`;
             }
             finally {
                 this.loading = false;

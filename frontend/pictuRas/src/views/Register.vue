@@ -47,9 +47,9 @@
             </div>
 
 
-            <Button1 type="submit" @click="handleRegister" label="Register" />
+            <Button1 type="submit" @submit="handleRegister" label="Register" />
           </form>
-          <GoogleButton label="Sign Up with google" />
+          <!--  <GoogleButton label="Sign Up with google" /> --> 
         </div>
       </div>
     </div>
@@ -67,6 +67,9 @@
     import PasswordValidationModal from "../components/PasswordValidationModal.vue"
     import Toastify from "toastify-js";
     import "toastify-js/src/toastify.css";
+    import axios from 'axios';
+    const api = import.meta.env.VITE_API_GATEWAY;
+    import { useProfileStore } from '../stores/ProfileStore';
 
   
     export default {
@@ -84,14 +87,33 @@
         name:"",
         password: "",
         showPasswordModal: false,
+        plan: "free",
       };
     },
     methods: {
-        handleRegister() {
+      async sendRegister(){
+          try{
+            const newUser = {
+            username:this.email,
+            name: this.name,
+            email: this.email,
+            password: this.password
+          };
+            const response = await axios.post(`${api}/api/register`,newUser, {
+                  withCredentials: true, // Ensure credentials are sent with the request
+                });
+
+                this.$router.push('/login'); // Navigate to the login page
+          }catch(e){
+            alert("Utilizador com o mesmo username já existe")
+          }
+
+        },
+        async handleRegister() {
 
             console.log("Chamando o handleRegister...");
 
-            if (!this.email || !this.username || !this.password) {
+            if (!this.email || !this.name || !this.password) {
                 Toastify({
                     text: '⚠️ Please fill in all required fields!',
                     duration: 3000, 
@@ -108,10 +130,7 @@
                 }).showToast();
                 return;
             }
-
-            console.log("Email:", this.email);
-            console.log("Username:", this.username);
-            console.log("Password:", this.password);
+            await this.sendRegister();
             
         },
 

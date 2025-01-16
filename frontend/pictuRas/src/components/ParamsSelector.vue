@@ -51,8 +51,8 @@
       </ul>
       <div class="btn-flex">
         
-        <button @click="activeTool.active = true">Apply</button>
-        <button @click="activeTool.active = false">Remove</button>
+        <button @click="handleActivate">Apply</button>
+        <button @click="handleDeactivate">Remove</button>
       </div>
       
     </form>
@@ -64,7 +64,6 @@ import { storeToRefs } from 'pinia';
 import ToolSlider from './ToolSlider.vue';
 import { Sketch } from '@ckpack/vue-color';
 
-
 export default {
   name: 'ParamsSelector',
   components: {
@@ -73,26 +72,26 @@ export default {
   },
   setup() {
     const store = useEditingToolStore();
-    const { activeTool } = storeToRefs(store);
+    const { activeTool, tools } = storeToRefs(store);
 
     const clampValue = (value, min, max, isInt = false) => {
       let numValue = Number(value);
-      
+
       // Handle NaN case
       if (isNaN(numValue)) {
         return min;
       }
-      
+
       // Clamp value between min and max
       numValue = Math.min(Math.max(numValue, min), max);
-      
+
       // Round if integer
       return isInt ? Math.round(numValue) : numValue;
     };
 
     const handleInput = (param, event) => {
       const value = event.target.value;
-      
+
       // Allow empty input while typing
       if (value === '') {
         param.value = value;
@@ -100,7 +99,7 @@ export default {
       }
 
       const numValue = Number(value);
-      
+
       // If the value is not a valid number, don't update
       if (isNaN(numValue)) {
         event.target.value = param.value;
@@ -116,17 +115,93 @@ export default {
       if (param.value === '' || typeof param.value !== 'number') {
         param.value = param.min_value;
       } else {
-        param.value = clampValue(param.value, param.min_value_value, param.max_value, param.type === 'int');
+        param.value = clampValue(param.value, param.min_value, param.max_value, param.type === 'int');
       }
     };
 
+    const validateList = (tools) => {
+       // Filter the list to only include active tools
+      const activeTools = tools.filter((tool) => tool.active)
+
+      if (activeTools.length === 0) {
+        return true // If no tools are active, the configuration is valid
+      }
+
+      // Validate the first active tool
+      if (activeTools[0].input_type !== 'image') {
+        return false // First active tool must have input_type 'image'
+      }
+
+      // Validate subsequent active tools
+      for (let i = 1; i < activeTools.length; i++) {
+        const prevTool = activeTools[i - 1]
+        const currentTool = activeTools[i]
+
+        // Check if the current tool's input_type matches the previous tool's output_type
+        if (currentTool.input_type !== prevTool.output_type) {
+          return false // Input type does not match previous output type
+        }
+      }
+
+      return true // All active tools are valid
+    }
+
+    const handleActivate = () => {
+      const newList = [...tools.value]; // Clone the updated list
+
+      // Find the index of the active tool in the list
+      const activeIndex = newList.findIndex((tool) => tool.name === activeTool.value.name);
+
+      if (activeIndex !== -1) {
+        // Set the active tool as active in the cloned list
+        newList[activeIndex].active = true;
+
+        // Validate the updated list
+        if (!validateList(newList)) {
+          alert('Invalid tool configuration: output type does not match the required type.');
+          newList[activeIndex].active = false;
+          return;
+        }
+
+        // Apply changes if the list is valid
+        activeTool.value.active = true;
+      }
+    };
+
+    const handleDeactivate = () => {
+      const newList = [...tools.value]; // Clone the updated list
+
+      // Find the index of the active tool in the list
+      const activeIndex = newList.findIndex((tool) => tool.name === activeTool.value.name);
+
+      if (activeIndex !== -1) {
+        // Set the active tool as inactive in the cloned list
+        newList[activeIndex].active = false;
+
+        // Validate the updated list
+        if (!validateList(newList)) {
+          alert('Invalid tool configuration: input type does not match the required type.');
+          newList[activeIndex].active = true;
+          return;
+        }
+
+        // Apply changes if the list is valid
+        activeTool.value.active = false;
+      }
+    };
+
+
     return {
       activeTool,
+      tools,
       handleInput,
-      handleBlur
+      handleBlur,
+      handleActivate,
+      handleDeactivate
     };
   }
 };
+
 </script>
 
 <style scoped>

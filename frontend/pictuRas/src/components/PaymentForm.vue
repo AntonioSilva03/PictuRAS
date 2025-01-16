@@ -10,7 +10,7 @@
                 </div>
                 <div class="total-amount">
                     <span class="label">Total Amount:</span>
-                    <span class="value">${{ amount.toFixed(2) }}</span>
+                    <span class="value">{{ amount.toFixed(2) }}€</span>
                 </div>
             </div>
         </div>
@@ -22,7 +22,7 @@
             <form @submit.prevent="handleSubmit">
                 <div ref="paymentElement" class="payment-element"></div>
                 <LoadingButton :loading="processing" :disabled="!stripe || processing" class="pay-button">
-                    Pay ${{ amount.toFixed(2) }}
+                    Pay {{ amount.toFixed(2) }}€
                 </LoadingButton>
                 <div v-if="errorMessage" class="error-message">
                     {{ errorMessage }}
@@ -35,6 +35,7 @@
 <script>
 import { loadStripe } from '@stripe/stripe-js';
 import LoadingButton from './LoadingButton.vue';
+import { useStripeStore } from '../stores/StripeStore';
 
 export default {
     name: 'PaymentForm',
@@ -49,6 +50,10 @@ export default {
         planName: {
             type: String,
             required: true
+        },
+        planId: {
+            type: String,
+            required: true
         }
     },
     data() {
@@ -57,101 +62,79 @@ export default {
             elements: null,
             loading: true,
             processing: false,
-            errorMessage: ''
+            errorMessage: '',
         };
     },
     async mounted() {
+        const stripeStore = useStripeStore();
         try {
-            // Initialize Stripe
             this.stripe = await loadStripe('pk_test_51QgoxwFpyquVPMmLaU6S8izTAjKmlZNmlKaP1zoU4u3P1dcZwiHkc2ENEGyAJR8FrasD28ACG9lR53wdtMMLVHwn00e13yJ07b');
-            await this.createPaymentIntent();
+            const clientSecret = await stripeStore.createPaymentIntent(this.amount);
+
+            this.elements = this.stripe.elements({
+                clientSecret,
+                appearance: {
+                    theme: 'stripe',
+                    variables: { colorPrimary: '#0066cc' },
+                },
+            });
+
+            const paymentElement = this.elements.create('payment');
+            paymentElement.mount(this.$refs.paymentElement);
+            this.loading = false;
         } catch (error) {
-            this.errorMessage = 'Failed to load payment form';
-            console.error('Stripe initialization error:', error);
+            this.errorMessage = stripeStore.errorMessage;
+            this.loading = false;
         }
     },
     methods: {
-        async createPaymentIntent() {
-            try {
-                const requestData = {
-                    amount: Math.round(this.amount * 100), // Convert to cents
-                };
-                console.log('Sending payment intent request:', requestData);
-
-                const response = await fetch('http://localhost:3000/api/create-payment-intent', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(requestData)
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.text();
-                    console.error('Error response:', errorData);
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const { clientSecret } = await response.json();
-
-                if (!this.stripe) {
-                    throw new Error('Stripe not initialized');
-                }
-
-                this.elements = this.stripe.elements({
-                    clientSecret,
-                    appearance: {
-                        theme: 'stripe',
-                        variables: {
-                            colorPrimary: '#0066cc',
-                        }
-                    }
-                });
-
-                const paymentElement = this.elements.create('payment');
-                console.log(this.$refs.paymentElement);
-                paymentElement.mount(this.$refs.paymentElement);
-                this.loading = false;
-            } catch (error) {
-                this.errorMessage = `Failed to initialize payment: ${error.message}`;
-                console.error('Payment intent creation error:', error);
-                this.loading = false;
-            }
-        },
         async handleSubmit() {
             if (!this.stripe || !this.elements) {
+                console.error('Stripe or elements not initialized');
                 return;
             }
 
             this.processing = true;
             this.errorMessage = '';
+            const stripeStore = useStripeStore();
 
             try {
-                const { error, paymentIntent } = await this.stripe.confirmPayment({
+                // First attempt the payment confirmation
+                const { error } = await this.stripe.confirmPayment({
                     elements: this.elements,
+                    redirect: 'if_required',
                     confirmParams: {
-                        return_url: `${window.location.origin}/payment/result?status=success`, // Success URL
+                        return_url: `${window.location.origin}/payment/result?planId=${this.planId}`,
                     },
                 });
 
                 if (error) {
+                    console.error('Payment error:', error);
                     this.errorMessage = error.message;
-                    // Redirect to failure page if payment fails
                     this.$router.push('/payment/result?status=failure');
-                } else if (paymentIntent && paymentIntent.status === 'succeeded') {
-                    // Redirect to success page if payment is successful
+                    return;
+                }
+
+                // If we get here, payment was successful without redirect
+                try {
+                    console.log('Payment successful, updating plan:', this.planId);
+                    stripeStore.setPlanID(this.planId);
+                    await stripeStore.updateUserPlan();
                     this.$router.push('/payment/result?status=success');
+                } catch (planError) {
+                    console.error('Plan update error:', planError);
+                    this.errorMessage = 'Payment succeeded, but plan update failed. Please contact support.';
+                    this.$router.push('/payment/result?status=failure');
                 }
             } catch (error) {
+                console.error('Payment processing error:', error);
                 this.errorMessage = 'Payment failed. Please try again.';
-                console.error('Payment confirmation error:', error);
-                // Redirect to failure page if there was an error
                 this.$router.push('/payment/result?status=failure');
             } finally {
                 this.processing = false;
             }
-        }
-    }
+        },
+    },
 };
 </script>
 
