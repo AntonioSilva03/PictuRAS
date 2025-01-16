@@ -30,16 +30,7 @@ app.register_blueprint(projects_blueprint, url_prefix='/projects')
 
 if __name__ == '__main__':
 
-    # serverSocket = ServerSocket(
-    #     host=os.getenv('SERVER_SOCKET_HOST', 'localhost'),
-    #     port=int(os.getenv('SERVER_SOCKET_PORT', 8765)))
-
-    # serverSocketWorker = Thread(target=lambda: asyncio.run(serverSocket.start()))
-    # serverSocketWorker.start()
-
     app.run(
         host=os.getenv('PROJECTS_HOST', '0.0.0.0'),
         port=int(os.getenv('PROJECTS_PORT', 3003)),
         debug=True)
-
-#    serverSocketWorker.join()

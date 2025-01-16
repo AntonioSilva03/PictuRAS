@@ -1,6 +1,6 @@
 [
     {
-        "name": "Remove Background",
+        "name": "Binarization",
         "input_type": "image",
         "output_type": "image",
         "parameters": []
@@ -112,6 +112,12 @@
         "name": "People Counter",
         "input_type": "image",
         "output_type": "text",
+        "parameters": []
+    },
+    {
+        "name": "Remove Background",
+        "input_type": "image",
+        "output_type": "image",
         "parameters": []
     },
     {
