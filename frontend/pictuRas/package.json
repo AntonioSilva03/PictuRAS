@@ -22,6 +22,7 @@
     "bootstrap-icons": "^1.11.3",
     "bootstrap-vue-next": "^0.26.19",
     "jszip": "^3.10.1",
+    "picturas": "file:",
     "pinia": "^2.3.0",
     "primeicons": "^7.0.0",
     "primevue": "^4.2.5",

@@ -10,6 +10,11 @@ services:
     depends_on:
       - web-client
       - api-gateway
+      - wsgateway
+    links:
+      - web-client
+      - api-gateway
+      - wsgateway
 
   web-client:
     container_name: web-client

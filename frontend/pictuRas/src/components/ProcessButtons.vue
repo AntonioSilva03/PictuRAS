@@ -79,7 +79,52 @@ export default {
     };
 
     const preview = () => {
-      alert("Preview functionality not implemented yet.");
+      // Establish WebSocket connection
+      // trocar com o ws
+      websocket = new WebSocket(ws); // Replace with your WebSocket server URL
+
+      websocket.onopen = () => {
+        console.log("WebSocket connection established");
+        
+        // Send a JSON message to the server
+        const payload = {
+          type: "preview",
+          project: projectStore.getId(),
+          image: imageStore.getSelectedImageId()
+        };
+        websocket.send(JSON.stringify(payload));
+        console.log("Message sent:", payload);
+        imageStore.enterPreviewMode();
+      };
+
+      websocket.onmessage = (event) => {
+        // Parse the JSON message received from the server
+        const message = JSON.parse(event.data);
+        console.log("Message from server:", message);
+
+        // Handle the message based on the `action` or content
+        if (message.type === "progress" && message.progress < 1.0) {
+         //  imageStore.updateList(message.images)
+          console.log(`Update: ${message.progress}`);
+        } else if (message.type === "progress" && message.progress === 1.0) {
+          imageStore.updateSelectedImage(message.images);
+          alert(`Preview complete!`);
+          websocket.close(); // Close the WebSocket connection
+        }else if (message.type === "error") {
+          alert(`Preview error: ${message.progress}`);
+          websocket.error(); // Close the WebSocket connection
+        }
+      };
+
+      websocket.onerror = (error) => {
+        console.error("WebSocket error:", error);
+        imageStore.leavePreviewMode(true)
+      };
+
+      websocket.onclose = () => {
+        console.log("WebSocket connection closed");
+        imageStore.leavePreviewMode(false)
+      };
     };
 
     return {

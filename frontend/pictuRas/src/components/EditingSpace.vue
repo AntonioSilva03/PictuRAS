@@ -1,5 +1,10 @@
 <template>
   <div class="editing-space">
+    <!-- Non-blocking Loading Spinner -->
+    <div v-if="imageStore.previewMode" class="non-blocking-spinner">
+      <div class="spinner"></div>
+    </div>
+
     <div class="relative" id="first-relative">
       <div v-if="imageStore.selectedImage" class="image-preview" id="prev">
         <img :src="imageStore.selectedImage" alt="Selected Image" />
@@ -15,6 +20,7 @@
     </div>
   </div>
 </template>
+
 
 <script setup>
 import { useImageStore } from '../stores/ImageStore';
@@ -107,6 +113,34 @@ const imageStore = useImageStore();
   width: 15%;
   position: absolute;
   right: 3%;
+}
+
+.non-blocking-spinner {
+  position: fixed;
+  bottom: 20px; /* Position at the bottom-right corner */
+  right: 20px;
+  z-index: 9999; /* Keep it above other content */
+  pointer-events: none; /* Allow clicks to pass through */
+}
+
+/* Spinner */
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+/* Animation */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 </style>
