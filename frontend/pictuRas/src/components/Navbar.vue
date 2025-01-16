@@ -1,39 +1,77 @@
 <template>
-    <nav class="navbar">
-      <div class="navbar-container">
-        <!-- Logo -->
-        <div class="navbar-logo">
-          <RouterLink to="/">PictuRAS</RouterLink>
-        </div>
-  
-        <!-- Navigation Links -->
-        <ul class="navbar-links">
-          <li><RouterLink to="/profile">Profile</RouterLink></li>
-          <li><RouterLink to="/projects">My Projects</RouterLink></li>
-          <li v-if="isLoggedIn">
-            <button @click="signOut">Sign Out</button>
-          </li>
-          <li v-else>
-            <RouterLink to="/login">Login</RouterLink>
-          </li>
-        </ul>
+  <nav class="navbar">
+    <div class="navbar-container">
+      <!-- Logo -->
+      <div class="navbar-logo">
+        <RouterLink to="/">PictuRAS</RouterLink>
       </div>
-    </nav>
-  </template>
-  
-  <script setup>
-  import { ref } from 'vue';
-  import { RouterLink } from 'vue-router';
-  
-  // Mock logged-in state
-  const isLoggedIn = ref(false);
-  
-  function signOut() {
-    // Handle sign-out logic here
-    alert('You have been signed out.');
-    isLoggedIn.value = false;
+
+      <!-- Navigation Links -->
+      <ul class="navbar-links">
+        <li><RouterLink to="/profile">Profile</RouterLink></li>
+        <li><RouterLink to="/projects">My Projects</RouterLink></li>
+        <li v-if="isLoggedIn">
+          <button @click="signOut">Sign Out</button>
+        </li>
+        <li v-else>
+          <RouterLink to="/login">Login</RouterLink>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+import { useRouter, RouterLink } from 'vue-router';
+
+const api = import.meta.env.VITE_API_GATEWAY; // Certifique-se de que essa variável está configurada no .env
+
+const isLoggedIn = ref(false);
+const router = useRouter()
+
+const getUserStatus = async () => {
+  try {
+    const response = await axios.get(`${api}/api/user/status`, { withCredentials: true });
+    if (response.data.status && response.data.status !== 'anonymous') {
+      isLoggedIn.value = true;
+    } else {
+      isLoggedIn.value = false;
+    }
+  } catch (error) {
+    console.error('Error fetching user status:', error);
+    isLoggedIn.value = false; // Considera o usuário como deslogado em caso de erro
   }
-  </script>
+};
+
+const signOut = async () => {
+  try {
+        const response = await axios.post(`${api}/api/logout`, {}, {
+            withCredentials: true  // Important for cookie handling
+        });
+        
+        if (response.status === 200) {
+            // Clear any client-side storage
+            localStorage.clear();
+            sessionStorage.clear();
+            
+            // Clear store state
+
+            
+            // Redirect to login
+            router.push('/login');
+        }
+    } catch (error) {
+        console.error('Logout failed:', error);
+    }
+};
+
+// Chamar a função quando o componente é montado
+onMounted(async () => {
+  await getUserStatus();
+});
+</script>
   
   <style scoped>
   /* Navbar styles */

@@ -21,6 +21,7 @@ import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { useProjectStore } from '../stores/ProjectStore.js';
 import { ref, onMounted, computed } from 'vue';
+import { useProfileStore } from '../stores/ProfileStore.js';
 
 const api = import.meta.env.VITE_API_GATEWAY;
 
@@ -34,6 +35,7 @@ export default {
     setup() {
         const router = useRouter();
         const projectStore = useProjectStore();
+        const ProfileStore =useProfileStore();
         const userInfo = ref({ name: '', email: '', status: 'None' }); // Torna userInfo reativo
         const isUserInfoLoaded = ref(false);
 
@@ -48,9 +50,8 @@ export default {
 
         const getUserInfo = async () => {
             try {
-                const response = await projectStore.getUserInfo();
-                console.log("Projects response:", JSON.stringify(response, null, 2));
-                userInfo.value = response; // Atualiza o valor do ref
+                await ProfileStore.fetchProfile();
+                userInfo.value = ProfileStore.profile;
                 console.log("Updated userInfo:", userInfo.value);
                 isUserInfoLoaded.value = true;
             } catch (error) {

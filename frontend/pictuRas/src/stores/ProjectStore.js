@@ -184,17 +184,6 @@ export const useProjectStore = defineStore('projectStore', {
         throw error;
     }
   },
-  async getUserInfo() {
-    try {
-      const response = await axios.get(`${api}/api/profile`, { withCredentials: true });
-      console.log("Data store:" , response.data)
-      return response.data; 
-    } catch (error) {
-      console.error('Error fetching user profile:', error);
-      return null; 
-    }
-  },
-
 
     
     

@@ -7,13 +7,13 @@
                     <input type="text" v-model="searchQuery" placeholder="Search in all projects..." />
                 </div>
                 <div class="plan-projects">
-                    <p v-if="userInfo.status === 'None'">You’re on the free plan!</p>
+                    <p v-if="userInfo.plan === 'free'">You’re on the free plan!</p>
                     <p v-else class="premium-plan">You’re on the premium plan!</p>
                     <Button1 
                         style="margin-top: 0; margin-left: 1em;" 
                         label="Upgrade" 
                         @click="redirectToUpgrade" 
-                        v-if="userInfo.status === 'None'" 
+                        v-if="userInfo.plan === 'free'" 
                     />
                 </div>
             </div>
@@ -152,7 +152,7 @@ export default {
         },
 
         redirectToUpgrade() {
-            this.$router.push('/plans'); 
+            this.$router.push('/plan'); 
         },
 
         async saveEdit(projectId) {
