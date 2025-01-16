@@ -386,6 +386,14 @@ router.delete('/projects/:id', passport.authenticate(['local', 'anonymous'], { s
   }
 });
 
+
+
+
+
+
+
+
+
 router.put(
   '/user/plan',
   passport.authenticate(['local', 'anonymous'], { session: false }), async (req, res) => {

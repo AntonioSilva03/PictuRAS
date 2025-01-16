@@ -6,7 +6,7 @@
           <h3>PictuRAS</h3>
           <p>
             Create incredible images, detailed drawings and spectacular art.
-            Plans start at €9.99/month including VAT. Annual plan, charges
+            Plans start at €15.00/month including VAT. Annual plan, charges
             months.
           </p>
         </div>

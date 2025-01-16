@@ -16,7 +16,7 @@
                 <tr>
                     <th style="width: 5%;"><input type="checkbox" /></th>
                     <th style="width: 55%;">Title</th>
-                    <th style="width: 30%;">Last modified at</th>
+                    <th style="width: 30%;">Created at</th>
                     <th style="width: 10%;">Actions</th>
                 </tr>
             </thead>
@@ -141,13 +141,29 @@ export default {
             this.editingProjectId = projectId;
             this.editName = this.projects.find((project) => project.id === projectId).name;
         },
-        saveEdit(projectId) {
-            const project = this.projects.find((project) => project.id === projectId);
-            if (project) {
-                project.name = this.editName;
+
+        async saveEdit(projectId) {
+            const projectStore = useProjectStore();
+
+            if (!this.editName.trim()) {
+                console.error('Project name cannot be empty.');
+                return;
             }
-            this.editingProjectId = null;
+
+            try {
+                await projectStore.updateProjectName(projectId, this.editName);
+                const project = this.projects.find((project) => project.id === projectId);
+                if (project) {
+                    project.name = this.editName; 
+                }
+                console.log(`Project ${projectId} updated successfully.`);
+            } catch (error) {
+                console.error(`Failed to update project ${projectId}:`, error);
+            } finally {
+                this.editingProjectId = null;
+            }
         },
+
 
     },
 
@@ -161,6 +177,8 @@ export default {
                 console.error('Failed to delete project:', error);
             }
         }
+
+        
         return {
             handleDeleteProject,
         }
