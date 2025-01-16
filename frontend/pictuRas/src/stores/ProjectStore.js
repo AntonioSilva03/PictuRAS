@@ -167,7 +167,17 @@ export const useProjectStore = defineStore('projectStore', {
         console.error('Error updating project in the back-end:', error);
         throw error;
     }
-}
+  },
+  async getUserInfo() {
+    try {
+      const response = await axios.get(`${api}/api/profile`, { withCredentials: true });
+      console.log('User profile:', response.data);
+      return response.data; 
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+      return null; 
+    }
+  },
 
 
     

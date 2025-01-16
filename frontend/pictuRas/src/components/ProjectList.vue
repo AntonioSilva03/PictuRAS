@@ -16,7 +16,7 @@
                 <tr>
                     <th style="width: 5%;"><input type="checkbox" /></th>
                     <th style="width: 55%;">Title</th>
-                    <th style="width: 30%;">Last modified at</th>
+                    <th style="width: 30%;">Created at</th>
                     <th style="width: 10%;">Actions</th>
                 </tr>
             </thead>

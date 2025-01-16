@@ -50,8 +50,13 @@ export default {
 
         // Fetch projects on component mount
         onMounted(async () => {
-            await quickCheck();
-            await projectStore.fetchProjects();
+            try {
+                await quickCheck(); 
+                await projectStore.fetchProjects(); 
+                await projectStore.getUserInfo(); 
+            } catch (error) {
+                console.error('Error during initialization:', error);
+            }
         });
 
         // Access projects from the store as a computed property
