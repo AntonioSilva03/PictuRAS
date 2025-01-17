@@ -1,6 +1,6 @@
 import datetime
 from enum import Enum
-from mongoengine import Document, StringField, DateTimeField, ListField, EmbeddedDocument, EmbeddedDocumentField, EnumField, DynamicField # type: ignore
+from mongoengine import Document, StringField, DateTimeField, ListField, EmbeddedDocument, EmbeddedDocumentField, EnumField, DynamicField, BooleanField # type: ignore
 
 
 class InputOutputType(Enum):
@@ -36,6 +36,7 @@ class Tool(EmbeddedDocument):
     name = StringField(required=True) 
     input_type = EnumField(InputOutputType, required=True)
     output_type = EnumField(InputOutputType, required=True)
+    premium = BooleanField(required=False)
     parameters = ListField(EmbeddedDocumentField(Parameter), default=[])
 
     def to_json(self) -> dict:

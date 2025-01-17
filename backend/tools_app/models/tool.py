@@ -1,6 +1,6 @@
 from enum import Enum
 from mongoengine import Document # type: ignore
-from mongoengine.fields import StringField, ListField, EmbeddedDocument, EmbeddedDocumentField, DynamicField, EnumField # type: ignore
+from mongoengine.fields import StringField, ListField, EmbeddedDocument, EmbeddedDocumentField, DynamicField, EnumField, BooleanField # type: ignore
 
 
 class InputOutputType(Enum):
@@ -39,6 +39,7 @@ class Tool(Document):
     name = StringField(required=True, unique=True) 
     input_type = EnumField(InputOutputType, required=True)
     output_type = EnumField(InputOutputType, required=True)
+    premium = BooleanField(required=True, default=False)
     parameters = ListField(EmbeddedDocumentField(Parameter), default=[])
 
     def to_json(self) -> dict:
@@ -47,5 +48,6 @@ class Tool(Document):
             'name': self.name,
             'input_type': self.input_type.value,
             'output_type': self.output_type.value,
+            'premium': self.premium,
             'parameters': [parameter.to_json() for parameter in self.parameters],
         }

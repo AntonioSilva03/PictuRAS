@@ -4,6 +4,10 @@ COPY . /app/picturas/tools/watermark
 
 WORKDIR /app/picturas/tools/watermark
 
+RUN apt update
+
+RUN apt install libmagic1 libmagic-dev -y
+
 RUN pip install -r requirements.txt
 
 ENV RABBITMQ_HOST=rabbitmq

@@ -1,5 +1,5 @@
-import base64
 import magic
+import base64
 import subprocess
 from border_message_reply import BorderMessageReply 
 from border_message_request import BorderMessageRequest
@@ -36,5 +36,5 @@ class BorderTool:
 
         return BorderMessageReply(
             mimetype=mime.from_buffer(result.stdout),
-            data=base64.b64encode(result.stdout).decode('utf-8')
+            data=base64.b64encode(result.stdout).decode('utf-8'),
         )

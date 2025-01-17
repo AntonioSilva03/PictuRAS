@@ -1,4 +1,5 @@
 import math
+import magic
 import base64
 import subprocess
 from rotate_message_reply import RotateMessageReply
@@ -11,6 +12,8 @@ class RotateTool:
 
 
     def apply(self) -> RotateMessageReply:
+
+        mime = magic.Magic(mime=True)
 
         angle = - self.request.getAngle() * math.pi / 180
 
@@ -30,4 +33,7 @@ class RotateTool:
             check=True
         )
 
-        return RotateMessageReply(base64.b64encode(result.stdout).decode('utf-8'))
+        return RotateMessageReply(
+            mimetype=mime.from_buffer(result.stdout),
+            data=base64.b64encode(result.stdout).decode('utf-8'),
+        )

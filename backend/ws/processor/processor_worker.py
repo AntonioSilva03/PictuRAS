@@ -115,7 +115,8 @@ class ProcessorWorker:
 
         for image_id in self.images:
             tasks_completed += self.images[image_id]['iterations']
-            if self.images[image_id]['iterations'] == len(self.requests):
+            if self.images[image_id]['iterations'] == len(self.requests) and not self.images[image_id]['sent']:
+                self.images[image_id]['sent'] = True
                 images.append({
                     "mimetype": self.images[image_id]['mimetype'],
                     "data": self.images[image_id]['data'],
@@ -149,6 +150,7 @@ class ProcessorWorker:
                 self.ids[correlation_id] = image_id
                 self.images[image_id]['iterations'] = 0
                 self.images[image_id]['mimetype'] = None
+                self.images[image_id]['sent'] = False
                 self.images[image_id]['data'] = base64.b64encode(self.images[image_id]['data']).decode('utf-8')
 
                 current_request = self.requests[0]

@@ -9,9 +9,9 @@ from autocrop_message_request import AutoCropMessageRequest
 RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'localhost')
 RABBITMQ_PORT = os.getenv('RABBITMQ_PORT', '5672')
 
-EXCHANGE=os.getenv('EXCHANGE', 'tools-exchange')
-REQUEST_QUEUE = os.getenv('REQUEST_QUEUE', 'autocrop-queue')
-POOL_SIZE = int(os.getenv('POOL_SIZE', 5))
+EXCHANGE=os.getenv('EXCHANGE', 'TOOLS_EXCHANGE')
+REQUEST_QUEUE = os.getenv('REQUEST_QUEUE', 'AUTOCROP_QUEUE')
+POOL_SIZE = int(os.getenv('POOL_SIZE', 1))
 
 
 class AutoCropWorker:

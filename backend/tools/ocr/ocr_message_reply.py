@@ -2,17 +2,23 @@ import json
 
 class OCRMessageReply:
 
-    def __init__(self, text: str) -> None:
-        self.text = text
+    def __init__(self, mimetype: str, data: str) -> None:
+        self.mimetype = mimetype
+        self.data = data
 
 
-    def getText(self) -> str:
-        return self.text
+    def getMimeType(self) -> str:
+        return self.mimetype
+
+
+    def getData(self) -> str:
+        return self.data
 
 
     def to_json(self) -> str:
         return json.dumps({
-            'text': self.text,
+            'mimetype': self.mimetype,
+            'data': self.data,
         })
 
 
@@ -20,5 +26,6 @@ class OCRMessageReply:
     def from_json(data: str) -> 'OCRMessageReply':
         data = json.loads(data)
         return OCRMessageReply(
-            text=data['text'],
+            mimetype=data['mimetype'],
+            data=data['data'],
         )

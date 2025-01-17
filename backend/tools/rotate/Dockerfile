@@ -6,7 +6,7 @@ WORKDIR /app/picturas/tools/rotate
 
 RUN apt update
 
-RUN apt install ffmpeg -y
+RUN apt install ffmpeg libmagic1 libmagic-dev -y
 
 RUN pip install -r requirements.txt
 

@@ -55,7 +55,7 @@ class BorderWorker:
         response = tool.apply().to_json()
 
         print(f'Before sleep: {properties.correlation_id}')
-        time.sleep(10)
+        time.sleep(5)
         print(f'After sleep: {properties.correlation_id}')
 
         ch.connection.add_callback_threadsafe(

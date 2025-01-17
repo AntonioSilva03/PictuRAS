@@ -1,3 +1,4 @@
+import magic
 import base64
 import subprocess
 from brightness_message_reply import BrightnessMessageReply
@@ -10,6 +11,8 @@ class BrightnessTool:
 
 
     def apply(self) -> BrightnessMessageReply:
+
+        mime = magic.Magic(mime=True)
 
         ffmpeg_command = [
             'ffmpeg',
@@ -27,4 +30,7 @@ class BrightnessTool:
             check=True
         )
 
-        return BrightnessMessageReply(base64.b64encode(result.stdout).decode('utf-8'))
+        return BrightnessMessageReply(
+            mimetype=mime.from_buffer(result.stdout),
+            data=base64.b64encode(result.stdout).decode('utf-8'),
+        )

@@ -1,3 +1,4 @@
+import magic
 import base64
 import subprocess
 from scale_message_reply import ScaleMessageReply
@@ -10,6 +11,8 @@ class ScaleTool:
 
 
     def apply(self) -> ScaleMessageReply:
+
+        mime = magic.Magic(mime=True)
 
         ffmpeg_command = [
             'ffmpeg',
@@ -27,4 +30,7 @@ class ScaleTool:
             check=True
         )
 
-        return ScaleMessageReply(base64.b64encode(result.stdout).decode('utf-8'))
+        return ScaleMessageReply(
+            mimetype=mime.from_buffer(result.stdout),
+            data=base64.b64encode(result.stdout).decode('utf-8'),
+        )
