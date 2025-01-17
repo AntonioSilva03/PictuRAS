@@ -35,7 +35,7 @@ class Processor:
         self.websocket = websocket
         self.handlers = {
             'process': lambda tracer, websocket, request : Processor.process_project(tracer, websocket, request, True),
-            'preview': lambda tracer, websocket, request : Processor.process_preview(tracer, websocket, request, False),
+            'preview': lambda tracer, websocket, request : Processor.process_project(tracer, websocket, request, False),
             'cancel': lambda tracer, websocket, request : Processor.process_cancel(tracer, websocket, request),
             'error': lambda tracer, websocket, request : Processor.process_error(tracer, websocket, request),
         }
@@ -43,10 +43,17 @@ class Processor:
 
     async def process_project(tracer, websocket, request, save):
 
+        images = {}
         premium_user = False
+
         project = fetch_project(PROJECTS_HOST, PROJECTS_PORT, request['project'])
-        images = fetch_project_images(IMAGES_HOST, IMAGES_PORT, request['project'])
-        images = {image['id']: {'data': fetch_image_data(IMAGES_HOST, IMAGES_PORT, image['id'])} for image in images}
+
+        if save:
+            images = fetch_project_images(IMAGES_HOST, IMAGES_PORT, request['project'])
+            images = {image['id']: {'data': fetch_image_data(IMAGES_HOST, IMAGES_PORT, image['id'])} for image in images}
+
+        else:
+            images = {request['image']: {'data': fetch_image_data(IMAGES_HOST, IMAGES_PORT, request['image'])}}
 
         if EMAIL_REGEX.match(project['owner']):
             user = fetch_user(USERS_HOST, USERS_PORT, project['owner'])
