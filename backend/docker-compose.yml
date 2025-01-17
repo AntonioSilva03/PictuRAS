@@ -238,41 +238,41 @@ services:
 ####### WS #########
 ####################
 
-  ws-app:
-    container_name: ws-app
-    build:
-      context: ./ws
-      dockerfile: Dockerfile
-    ports:
-      - "8765:8765"
-    links:
-      - rabbitmq
-      - projects-app
-      - images-app
-    depends_on:
-      projects-app:
-        condition: service_started
-      images-app:
-        condition: service_started
-      rabbitmq:
-        condition: service_healthy
+  # ws-app:
+  #   container_name: ws-app
+  #   build:
+  #     context: ./ws
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8765:8765"
+  #   links:
+  #     - rabbitmq
+  #     - projects-app
+  #     - images-app
+  #   depends_on:
+  #     projects-app:
+  #       condition: service_started
+  #     images-app:
+  #       condition: service_started
+  #     rabbitmq:
+  #       condition: service_healthy
 
 ####################
 #### WSGATEWAY #####
 ####################
 
-  wsgateway:
-    container_name: wsgateway
-    build:
-      context: ./wsgateway
-      dockerfile: Dockerfile
-    ports:
-      - "8764:8764"
-    links:
-      - ws-app
-    depends_on:
-      ws-app:
-        condition: service_started
+  # wsgateway:
+  #   container_name: wsgateway
+  #   build:
+  #     context: ./wsgateway
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8764:8764"
+  #   links:
+  #     - ws-app
+  #   depends_on:
+  #     ws-app:
+  #       condition: service_started
 
 ####################
 ####### BUS ########

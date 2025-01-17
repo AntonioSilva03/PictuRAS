@@ -5,6 +5,9 @@ import traceback
 from dotenv import load_dotenv # type: ignore
 from websockets.asyncio.server import serve # type: ignore
 from processor.processor import Processor
+from processor.tracer import Tracer
+
+tracer = Tracer()
 
 
 class ServerSocket:
@@ -27,7 +30,7 @@ class ServerSocket:
                 try:
                     request = json.loads(message)
                     print(json.dumps(request, indent=4))
-                    processor = Processor(websocket,request)
+                    processor = Processor(tracer,websocket,request)
                     await asyncio.create_task(processor.start())
 
                 except json.JSONDecodeError:

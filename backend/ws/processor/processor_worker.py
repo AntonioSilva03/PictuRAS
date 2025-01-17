@@ -19,20 +19,23 @@ IMAGES_PORT = int(os.getenv('IMAGES_PORT', 3002))
 
 class ProcessorWorker:
 
-    def __init__(self, websocket, project, requests, images, save):
+    def __init__(self, tracer, websocket, project, requests, images, save):
+        self.tracer = tracer
         self.websocket = websocket
         self.project = project
         self.requests = requests
         self.images = images
         self.save = save
         self.ids = dict()
-        self.exclusive_queue = str(uuid.uuid4())
         self.channel = None
         self.connection = None
         self.consumer_tag = None
+        self.exclusive_queue = str(uuid.uuid4())
 
 
     async def setup(self):
+
+        await self.tracer.register(self.project)
 
         self.connection = await aio_pika.connect_robust(
             host=RABBITMQ_HOST,
@@ -77,13 +80,15 @@ class ProcessorWorker:
                 self.images[image_id]['iterations'] += 1
                 self.images[image_id]['data'] = response['data']
                 self.images[image_id]['mimetype'] = response['mimetype']
+                self.images[image_id]['active'] = await self.tracer.getState(self.project)
 
-                await self.update_progress()
+                if await self.tracer.getState(self.project):
+                    await self.update_progress()
 
                 current_iteration = self.images[image_id]['iterations']
                 print(f'Iteration {current_iteration}/{len(self.requests)}: {image_id}')
 
-                if current_iteration < len(self.requests):
+                if current_iteration < len(self.requests) and self.images[image_id]['active']:
 
                     current_request = self.requests[current_iteration]
                     current_request['request']['image'] = self.images[image_id]['data']
@@ -95,7 +100,10 @@ class ProcessorWorker:
                             correlation_id=correlation_id),
                         routing_key=current_request['request_queue'])
 
-                if all(image['iterations'] == len(self.requests) for image in self.images.values()):
+                all_done = all(image['iterations'] == len(self.requests) for image in self.images.values())
+                all_canceled = all(not image['active'] for image in self.images.values())
+
+                if all_done or all_canceled:
 
                     print(f'All project images processed: {self.project} -> {json.dumps(self.ids, indent=0)}')
 
@@ -103,8 +111,10 @@ class ProcessorWorker:
                     await results_queue.cancel(self.consumer_tag)
                     await results_queue.delete(if_unused=False, if_empty=False)
 
-                    if self.save:
+                    if self.save and await self.tracer.getState(self.project):
                         await self.save_results()
+
+                    await self.tracer.deregister(self.project)
 
 
     async def update_progress(self):
@@ -135,7 +145,7 @@ class ProcessorWorker:
             if 'image' in self.images[image_id]['mimetype']: 
                 image_bytes = base64.b64decode(self.images[image_id]['data'])
                 update_project_image(IMAGES_HOST, IMAGES_PORT, self.project, image_id, image_bytes)
-        await asyncio.sleep(0)
+        await asyncio.sleep(0.001)
 
 
     async def start(self):
@@ -151,6 +161,7 @@ class ProcessorWorker:
                 self.images[image_id]['iterations'] = 0
                 self.images[image_id]['mimetype'] = None
                 self.images[image_id]['sent'] = False
+                self.images[image_id]['active'] = True
                 self.images[image_id]['data'] = base64.b64encode(self.images[image_id]['data']).decode('utf-8')
 
                 current_request = self.requests[0]
