@@ -9,8 +9,10 @@ from watermark_message_request import WatermarkMessageRequest
 RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'localhost')
 RABBITMQ_PORT = os.getenv('RABBITMQ_PORT', '5672')
 
-EXCHANGE=os.getenv('EXCHANGE', 'tools-exchange')
-REQUEST_QUEUE = os.getenv('REQUEST_QUEUE', 'watermark-queue')
+EXCHANGE=os.getenv('EXCHANGE', 'TOOLS_EXCHANGE')
+REQUEST_QUEUE = os.getenv('REQUEST_QUEUE', 'WATERMARK_QUEUE')
+WATERMARK_IMAGE_PATH = os.getenv('WATERMARK_IMAGE_PATH', 'watermark.png')
+
 POOL_SIZE = int(os.getenv('POOL_SIZE', 5))
 
 
@@ -50,7 +52,7 @@ class WatermarkWorker:
 
         print(f'WatermarkWorker received image: {properties.correlation_id}')
         request = WatermarkMessageRequest.from_json(body.decode())
-        tool = WatermarkTool(request)
+        tool = WatermarkTool(request=request,watermark_image_path=WATERMARK_IMAGE_PATH)
         response = tool.apply().to_json()
 
         ch.connection.add_callback_threadsafe(
