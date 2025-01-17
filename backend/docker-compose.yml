@@ -124,16 +124,16 @@ services:
 ###### TOOLS #######
 ####################
 
-  # autocrop-worker:
-  #   container_name: autocrop-worker
-  #   build:
-  #     context: ./tools/autocrop
-  #     dockerfile: Dockerfile
-  #   links:
-  #     - rabbitmq
-  #   depends_on:
-  #     rabbitmq:
-  #       condition: service_healthy
+  autocrop-worker:
+    container_name: autocrop-worker
+    build:
+      context: ./tools/autocrop
+      dockerfile: Dockerfile
+    links:
+      - rabbitmq
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
 
   # binarization-worker:
   #   container_name: binarization-worker
