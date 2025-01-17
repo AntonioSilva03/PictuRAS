@@ -267,20 +267,20 @@ services:
 ####### BUS ########
 ####################
 
-#   rabbitmq:
-#     container_name: picturas-rabbitmq
-#     image: rabbitmq:management
-#     ports:
-#       - 5672:5672
-#       - 15672:15672
-#     volumes:
-#       - rabbitmq-data:/var/lib/rabbitmq/
-#       - rabbitmq-logs:/var/log/rabbitmq/
-#     healthcheck:
-#       test: rabbitmq-diagnostics check_port_connectivity
-#       interval: 5s
-#       timeout: 30s
+  rabbitmq:
+    container_name: picturas-rabbitmq
+    image: rabbitmq:management
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq/
+      - rabbitmq-logs:/var/log/rabbitmq/
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 5s
+      timeout: 30s
 
-# volumes:
-#   rabbitmq-data: 
-#   rabbitmq-logs:
+volumes:
+  rabbitmq-data: 
+  rabbitmq-logs:
