@@ -9,7 +9,7 @@
     >
       <template #item="{ element: tool }">
         <li
-          :class="{ active: tool.active === true }"
+          :class="{ active: tool.active === true, premium: tool.premium === true }"
           @click="selectTool(tool.name)"
         >
           {{ tool.name }}
@@ -18,6 +18,7 @@
     </draggable>
   </div>
 </template>
+
 
 <script>
 import { useEditingToolStore } from '../stores/EditingTool'
@@ -138,5 +139,10 @@ li:hover {
 
 li.active {
   font-weight: bold;
+}
+
+li.premium {
+  color: gold; /* Yellow text for premium tools */
+
 }
 </style>

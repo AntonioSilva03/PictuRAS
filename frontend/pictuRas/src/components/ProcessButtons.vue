@@ -26,9 +26,19 @@ export default {
     let websocket = null; // WebSocket instance
 
     const saveProject = async () => {
-      await projectStore.saveProject(tools.value);
-      alert("Project Saved!");
+  // Parse tools to remove the " copy x" suffix from each tool name
+  const parsedTools = tools.value.map(tool => {
+    const baseName = tool.name.split(" copy")[0].trim(); // Extract the base name
+    return {
+      ...tool,
+      name: baseName, // Set the name to the base name only
     };
+  });
+
+  // Save the parsed tools
+  await projectStore.saveProject(parsedTools);
+  alert("Project Saved!");
+};
 
     const process = () => {
       // Establish WebSocket connection

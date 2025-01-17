@@ -53,6 +53,7 @@
         
         <button @click="handleActivate">Apply</button>
         <button @click="handleDeactivate">Remove</button>
+        <button @click="handleDup">Duplicate</button>
       </div>
       
     </form>
@@ -60,6 +61,7 @@
 
 <script>
 import { useEditingToolStore } from '../stores/EditingTool';
+import { useProfileStore } from '../stores/ProfileStore'
 import { storeToRefs } from 'pinia';
 import ToolSlider from './ToolSlider.vue';
 import { Sketch } from '@ckpack/vue-color';
@@ -72,6 +74,7 @@ export default {
   },
   setup() {
     const store = useEditingToolStore();
+    const profileStore = useProfileStore();
     const { activeTool, tools } = storeToRefs(store);
 
     const clampValue = (value, min, max, isInt = false) => {
@@ -162,7 +165,24 @@ export default {
           newList[activeIndex].active = false;
           return;
         }
+        if (newList[activeIndex].premium === true && ( profileStore.userPlanName ==="free" || profileStore.userPlanName ==="basic" )){
 
+          alert('Invalid tool configuration: Basic and free plan does not permit the usage of premium tools.');
+          newList[activeIndex].active = false;
+          return;
+
+        }
+        let counterPremium = 0;
+        for (let i = 0; i < newList.length; i++){
+          if (newList[i].premium === true && newList[i].aciteve ){
+            counterPremium = counterPremium + 1;
+          }
+        }
+        if (counterPremium > 1){
+          alert('Invalid tool configuration: output type does not match the required type.');
+          newList[activeIndex].active = false;
+          return;
+        }
         // Apply changes if the list is valid
         activeTool.value.active = true;
       }
@@ -190,6 +210,13 @@ export default {
       }
     };
 
+    const handleDup = () => {
+  if (activeTool.value.name.includes("copy")) {
+    alert("You can't duplicate copies!");
+  } else {
+    store.addTool();
+  }
+};
 
     return {
       activeTool,
@@ -197,7 +224,8 @@ export default {
       handleInput,
       handleBlur,
       handleActivate,
-      handleDeactivate
+      handleDeactivate,
+      handleDup
     };
   }
 };
