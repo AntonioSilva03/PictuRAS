@@ -14,7 +14,10 @@
 <script>
 
 import Button1 from './Button-style1.vue';
+import { useRouter } from 'vue-router';
 
+
+const router = useRouter();
 export default {
     name: "PlanCard",
     components:{
@@ -25,8 +28,13 @@ export default {
         features: { type: Array, required: true },
         price: { type: String, required: true },
         planType: { type: String, required: true },
-        onChoosePlan: { type: Function, required: true },
     },
+    methods:{
+        onChoosePlan() {
+            
+            this.$router.push(`/plan`);
+        },
+    }
 };
 </script>
 
@@ -80,12 +88,16 @@ export default {
     border: 2px solid #007bff;
 }
 
-.monthly-plan {
+.Monthly-plan {
     border: 2px solid #8a2be2;
 }
 
-.annual-plan {
+.Annual-plan {
     border: 2px solid #d415cb;
+}
+
+.Diary-plan {
+    border: 2px solid #ffb107;
 }
 
 

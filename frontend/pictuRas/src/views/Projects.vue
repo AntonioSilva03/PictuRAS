@@ -3,7 +3,12 @@
         <SidebarProjects />
         <div class="content-layout">
             <Navbar id="nav"></Navbar>
-            <ProjectList :projects="projects" />
+            <ProjectList 
+                v-if="isUserInfoLoaded" 
+                :projects="projects" 
+                :userInfo="userInfo" 
+            />
+
         </div>
     </div>
 </template>
@@ -12,10 +17,11 @@
 import Navbar from '../components/Navbar.vue';
 import SidebarProjects from '../components/Sidebar-Projects.vue';
 import ProjectList from '../components/ProjectList.vue';
-import axios from 'axios'
+import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { useProjectStore } from '../stores/ProjectStore.js';
-import { onMounted, computed } from 'vue';
+import { ref, onMounted, computed } from 'vue';
+import { useProfileStore } from '../stores/ProfileStore.js';
 
 const api = import.meta.env.VITE_API_GATEWAY;
 
@@ -27,47 +33,61 @@ export default {
         ProjectList,
     },
     setup() {
-        const router = useRouter();  // Move the router here
+        const router = useRouter();
         const projectStore = useProjectStore();
-        
-        // Fetch user status and check for anonymity
+        const ProfileStore =useProfileStore();
+        const userInfo = ref({ name: '', email: '', status: 'None' }); // Torna userInfo reativo
+        const isUserInfoLoaded = ref(false);
+
         const getUserStatus = async () => {
             try {
-                const response = await axios.get(api + '/api/user/status', { withCredentials: true });
+                const response = await axios.get(`${api}/api/user/status`, { withCredentials: true });
                 return response.data.status;
             } catch (error) {
                 console.error('Error fetching user status:', error);
             }
         };
 
-        // Quick check for anonymous users
-        const quickCheck = async () => {
-            const userStatus = await getUserStatus();
-            if (userStatus === 'anonymous') {
-                router.push('/project/undefined');  // Navigate to /project using router
+        const getUserInfo = async () => {
+            try {
+                await ProfileStore.fetchProfile();
+                userInfo.value = ProfileStore.profile;
+                console.log("Updated userInfo:", userInfo.value);
+                isUserInfoLoaded.value = true;
+            } catch (error) {
+                console.error('Error fetching user info:', error);
             }
         };
 
-        // Fetch projects on component mount
+        const quickCheck = async () => {
+            const userStatus = await getUserStatus();
+            if (userStatus === 'anonymous') {
+                router.push('/project/undefined');
+            }
+        };
+
         onMounted(async () => {
             try {
-                await quickCheck(); 
-                await projectStore.fetchProjects(); 
-                await projectStore.getUserInfo(); 
+                await quickCheck();
+                await projectStore.fetchProjects();
+                await getUserInfo();
             } catch (error) {
                 console.error('Error during initialization:', error);
             }
         });
 
-        // Access projects from the store as a computed property
         const projects = computed(() => projectStore.projects);
 
         return {
             projects,
+            userInfo,
+            isUserInfoLoaded,
         };
     },
 };
 </script>
+
+
 
 <style scoped>
 .main-layout {

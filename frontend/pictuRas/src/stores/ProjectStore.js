@@ -146,7 +146,7 @@ export const useProjectStore = defineStore('projectStore', {
       const api = import.meta.env.VITE_API_GATEWAY;
 
       try {
-        // Faz uma requisição DELETE para o API Gateway
+       
         await axios.delete(`${api}/api/projects/${projectId}`, {
           withCredentials: true, // Inclui credenciais de autenticação
         });
@@ -184,17 +184,6 @@ export const useProjectStore = defineStore('projectStore', {
         throw error;
     }
   },
-  async getUserInfo() {
-    try {
-      const response = await axios.get(`${api}/api/profile`, { withCredentials: true });
-      console.log('User profile:', response.data);
-      return response.data; 
-    } catch (error) {
-      console.error('Error fetching user profile:', error);
-      return null; 
-    }
-  },
-
 
     
     

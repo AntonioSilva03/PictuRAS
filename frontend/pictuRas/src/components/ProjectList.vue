@@ -6,10 +6,26 @@
                 <div class="search-bar">
                     <input type="text" v-model="searchQuery" placeholder="Search in all projects..." />
                 </div>
-                <!-- <div class="plan-projects">
-                    <p>You’re on the free plan! </p>
-                    <Button1 style="margin-top: 0; margin-left: 1em;" label="Upgrade"></Button1>
-                </div> -->
+                <div class="plan-projects">
+                    <p v-if="userInfo.plan === 'free'" class="free-plan">
+                        You’re on the free plan!
+                    </p>
+                    <p v-else-if="userInfo.plan === 'premium'" class="premium-plan">
+                        You’re on the premium plan!
+                    </p>
+                    <p v-else-if="userInfo.plan === 'basic'" class="basic-plan">
+                        You’re on the basic plan!
+                    </p>
+                    <p v-else-if="userInfo.plan === 'enterprise'" class="enterprise-plan">
+                        You’re on the enterprise plan!
+                    </p>
+                    <Button1 
+                        style="margin-top: 0; margin-left: 1em;" 
+                        label="Upgrade" 
+                        @click="redirectToUpgrade" 
+                        v-if="userInfo.plan === 'free'" 
+                    />
+                </div>
             </div>
             <table>
             <thead>
@@ -101,6 +117,9 @@ export default {
             required: true,
             default: () => [], 
         },
+        userInfo: {
+        type: Object,
+        },
     },
     data() {
         return {
@@ -142,6 +161,10 @@ export default {
             this.editName = this.projects.find((project) => project.id === projectId).name;
         },
 
+        redirectToUpgrade() {
+            this.$router.push('/plan'); 
+        },
+
         async saveEdit(projectId) {
             const projectStore = useProjectStore();
 
@@ -163,7 +186,7 @@ export default {
                 this.editingProjectId = null;
             }
         },
-
+    
 
     },
 
@@ -183,6 +206,14 @@ export default {
             handleDeleteProject,
         }
     },
+
+    mounted() {
+        console.log("User Info received from props:", this.userInfo);
+    },
+
+
+    
+
 }
 
 
@@ -337,6 +368,48 @@ td.actions {
 
 .save-icon:hover {
   color: #218838;
+}
+
+.premium-plan {
+    font-weight: bold;
+    animation: premiumEffect 2s infinite alternate;
+}
+
+@keyframes premiumEffect {
+    0% {
+        color: black;
+    }
+    100% {
+        color: gold;
+    }
+}
+
+.basic-plan {
+    font-weight: bold;
+    animation: basicEffect 2s infinite alternate;
+}
+
+@keyframes basicEffect {
+    0% {
+        color: black;
+    }
+    100% {
+        color: rgb(255, 0, 200);
+    }
+}
+
+.enterprise-plan {
+    font-weight: bold;
+    animation: enterpriseEffect 2s infinite alternate;
+}
+
+@keyframes enterpriseEffect {
+    0% {
+        color: black;
+    }
+    100% {
+        color: rgb(87, 72, 72);
+    }
 }
 
 </style>

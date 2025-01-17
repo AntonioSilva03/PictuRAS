@@ -11,7 +11,7 @@
         title="Free"
         :features="[
             '5 Operations per day',
-            'Images of all sizes',
+            'Images of limited sizes',
             '3 Downloads per day',
             'Low-resolution downloads up to 1GB limit',
             'Tool limitations'
@@ -19,24 +19,24 @@
         price="Free"
         planType="free-plan"
         :isActive="currentPlan === 'free'"
-        :onChoosePlan="() => choosePlan()"
+       
     />
     <PlanCard
-        title="Monthly"
+        title="Basic"
         :features="[
             'Unlimited operations per day',
             'Images of all sizes',
-            'Unlimited downloads per day',
+            'Limited downloads per day',
             'Unlimited HD downloads',
-            'Access to all tools'
+            'Tool limitations'
         ]"
-        price="€15.00 per month"
-        planType="monthly-plan"
+        price="€15.00"
+        planType="Annual-plan"
         :isActive="currentPlan === 'monthly'"
-        :onChoosePlan="() => choosePlan()"
+        
     />
     <PlanCard
-        title="Annual"
+        title="Premium"
         :features="[
             'Unlimited operations per day',
             'Images of all sizes',
@@ -44,10 +44,24 @@
             'Unlimited HD downloads',
             'Access to all tools'
         ]"
-        price="€100.00 per year"
-        planType="annual-plan"
+        price="€10.99"
+        planType="Monthly-plan"
         :isActive="currentPlan === 'annual'"
-        :onChoosePlan="() => choosePlan()"
+        
+    />
+    <PlanCard
+        title="Enterprise"
+        :features="[
+            'Unlimited operations per day',
+            'Images of all sizes',
+            'Unlimited downloads per day',
+            'Unlimited HD downloads',
+            'Access to all tools'
+        ]"
+        price="€20.99"
+        planType="Diary-plan"
+        :isActive="currentPlan === 'annual'"
+       
     />
 </div>
     </div>
@@ -56,7 +70,7 @@
 
 <script>
 import PlanCard from '../components/Plans-Landing.vue';
-import { useRouter } from 'vue-router';
+
 
 export default {
   name: 'Content4',
@@ -65,12 +79,6 @@ export default {
     return {
       currentPlan: 'free',
     };
-  },
-  methods: {
-    choosePlan() {
-      const router = useRouter();
-      router.push(`/plan`);
-    },
   },
 };
 </script>
@@ -133,10 +141,10 @@ export default {
 
 .plan-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1500px;
 }
 
 
