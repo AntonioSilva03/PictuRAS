@@ -111,6 +111,7 @@ export const useImageStore = defineStore('imageStore', {
         },
         enterProcessMode() {
             this.onProcess = true;
+            this.images = [];
             this.old = this.bytes;
         },
         leaveProvessMode(cancel) {
@@ -123,10 +124,6 @@ export const useImageStore = defineStore('imageStore', {
             console.log(this.onProcess)
         },
         async updateList(images) {
-            console.log(images)
-            let imageUrls = [];
-            let imageBlobs = [];
-            let imagesIds = [];
             try {
 
                 for (const element of images) {
@@ -152,16 +149,14 @@ export const useImageStore = defineStore('imageStore', {
                         const imageSrc = URL.createObjectURL(blob);
 
                         // Store the image source URL and blob
-                        imageUrls.push(imageSrc);
-                        imageBlobs.push(blob);
-                        imagesIds.push(element.id)
+                        this.images.push(imageSrc);
+                        this.bytes.push(blob);
+                        this.ids.push(element.id)
                     } catch (error) {
                         console.log("Error fetching image:", error);
                     }
                 }
-                this.images = imageUrls; // URLs for displaying images
-                this.bytes = imageBlobs; // Blobs for downloading images
-                this.ids = imagesIds;
+
             } catch (error) {
                 console.log("Error fetching image:", error);
             }
@@ -202,7 +197,6 @@ export const useImageStore = defineStore('imageStore', {
             return null; // Return null if no image is selected or if the image is not found
         },
         async updateSelectedImage(images) {
-            console.log("here!")
             try {
                 try {
                     // Extract MIME type from response headers
