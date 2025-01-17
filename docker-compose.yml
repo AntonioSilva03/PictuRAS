@@ -244,7 +244,7 @@ services:
   ocr-worker:
     container_name: ocr-worker
     build:
-      context: ./tools/ocr
+      context: ./backend/tools/ocr
       dockerfile: Dockerfile
     links:
       - rabbitmq
@@ -277,7 +277,7 @@ services:
   watermark-worker:
     container_name: watermark-worker
     build:
-      context: ./tools/watermark
+      context: ./backend/tools/watermark
       dockerfile: Dockerfile
     links:
       - rabbitmq
@@ -304,6 +304,12 @@ services:
       - images-app
       - tools-app
     depends_on:
+      users-app:
+        condition: service_started
+      plans-app:
+        condition: service_started
+      tools-app:
+        condition: service_started
       projects-app:
         condition: service_started
       images-app:

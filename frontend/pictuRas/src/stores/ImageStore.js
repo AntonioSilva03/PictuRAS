@@ -143,7 +143,7 @@ export const useImageStore = defineStore('imageStore', {
                         for (let i = 0; i < binaryString.length; i++) {
                             uint8Array[i] = binaryString.charCodeAt(i);
                         }
-
+                        // if texto, download
                         const blob = new Blob([arrayBuffer], { type: element.mimetype });
                         // Generate an object URL for the image Blob
                         const imageSrc = URL.createObjectURL(blob);
