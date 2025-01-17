@@ -241,6 +241,17 @@ services:
       rabbitmq:
         condition: service_healthy
 
+  ocr-worker:
+    container_name: ocr-worker
+    build:
+      context: ./tools/ocr
+      dockerfile: Dockerfile
+    links:
+      - rabbitmq
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
   rotate-worker:
     container_name: rotate-worker
     build:
@@ -263,16 +274,16 @@ services:
       rabbitmq:
         condition: service_healthy
 
-  # watermark-worker:
-  #   container_name: watermark-worker
-  #   build:
-  #     context: ./tools/watermark
-  #     dockerfile: Dockerfile
-  #   links:
-  #     - rabbitmq
-  #   depends_on:
-  #     rabbitmq:
-  #       condition: service_healthy
+  watermark-worker:
+    container_name: watermark-worker
+    build:
+      context: ./tools/watermark
+      dockerfile: Dockerfile
+    links:
+      - rabbitmq
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
 
 ####################
 ####### WS #########
@@ -288,7 +299,10 @@ services:
     links:
       - rabbitmq
       - projects-app
+      - users-app
+      - plans-app
       - images-app
+      - tools-app
     depends_on:
       projects-app:
         condition: service_started

@@ -1,4 +1,3 @@
-import magic
 import base64
 import subprocess
 from ocr_message_reply import OCRMessageReply
@@ -11,8 +10,6 @@ class OCRTool:
 
 
     def apply(self) -> OCRMessageReply:
-
-        mime = magic.Magic(mime=True)
 
         tesseract_command = [
             'tesseract',
@@ -29,6 +26,6 @@ class OCRTool:
         )
 
         return OCRMessageReply(
-            mimetype=mime.from_buffer(result.stdout),
+            mimetype='plain/text',
             data=base64.b64encode(result.stdout).decode('utf-8'),
         )

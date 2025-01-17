@@ -18,7 +18,7 @@ REQUEST_QUEUES = {
     'Remove Background': os.getenv('AUTOCROP_QUEUE', 'AUTOCROP_QUEUE'),
     'Rotate': os.getenv('ROTATE_QUEUE', 'ROTATE_QUEUE'),
     'Scale': os.getenv('SCALE_QUEUE', 'SCALE_QUEUE'),
-    'Watemark': os.getenv('WATERMARK_QUEUE', 'WATERMARK_QUEUE'),
+    'Watermark': os.getenv('WATERMARK_QUEUE', 'WATERMARK_QUEUE'),
 }
 
 handlers = {
@@ -33,7 +33,7 @@ handlers = {
     'Remove Background': lambda tool : {},
     'Rotate': lambda tool : handle_rotate(tool),
     'Scale': lambda tool : handle_scale(tool),
-    'Watemark': lambda tool : {},
+    'Watermark': lambda tool : {},
 }
 
 

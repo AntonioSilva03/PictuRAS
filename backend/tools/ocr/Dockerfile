@@ -6,7 +6,7 @@ WORKDIR /app/picturas/tools/ocr
 
 RUN apt update
 
-RUN apt install tesseract-ocr libmagic1 libmagic-dev -y
+RUN apt install tesseract-ocr -y
 
 RUN pip install -r requirements.txt
 
