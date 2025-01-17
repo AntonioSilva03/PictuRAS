@@ -144,6 +144,29 @@ export const useImageStore = defineStore('imageStore', {
                             uint8Array[i] = binaryString.charCodeAt(i);
                         }
                         // if texto, download
+                        if (element.mimetype === 'plain/text') {
+                            // Create a Blob from the ArrayBuffer
+                            const blob = new Blob([arrayBuffer], { type: 'text/plain' });
+
+                            // Create a URL for the Blob
+                            const url = URL.createObjectURL(blob);
+
+                            // Create an anchor element and set attributes for download
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = 'downloaded_text.txt'; // Default file name
+
+                            // Append the anchor to the body, click it, and remove it
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+
+                            // Release the Blob URL to free memory
+                            URL.revokeObjectURL(url);
+
+                            return; // Return if necessary
+                        }
+
                         const blob = new Blob([arrayBuffer], { type: element.mimetype });
                         // Generate an object URL for the image Blob
                         const imageSrc = URL.createObjectURL(blob);
@@ -214,6 +237,29 @@ export const useImageStore = defineStore('imageStore', {
                     for (let i = 0; i < binaryString.length; i++) {
                         uint8Array[i] = binaryString.charCodeAt(i);
                     }
+                    if (element.mimetype === 'plain/text') {
+                        // Create a Blob from the ArrayBuffer
+                        const blob = new Blob([arrayBuffer], { type: 'text/plain' });
+
+                        // Create a URL for the Blob
+                        const url = URL.createObjectURL(blob);
+
+                        // Create an anchor element and set attributes for download
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'downloaded_text.txt'; // Default file name
+
+                        // Append the anchor to the body, click it, and remove it
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+
+                        // Release the Blob URL to free memory
+                        URL.revokeObjectURL(url);
+
+                        return; // Return if necessary
+                    }
+
 
                     const blob = new Blob([arrayBuffer], { type: element.mimetype });
                     // Generate an object URL for the image Blob

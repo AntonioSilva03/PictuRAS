@@ -1,5 +1,4 @@
-[
-    {
+[{
         "name": "Binarization",
         "input_type": "image",
         "output_type": "image",
@@ -11,8 +10,7 @@
         "input_type": "image",
         "output_type": "image",
         "premium": false,
-        "parameters": [
-            {
+        "parameters": [{
                 "name": "border_width",
                 "type": "int",
                 "value": 0,
@@ -40,38 +38,33 @@
         "input_type": "image",
         "output_type": "image",
         "premium": false,
-        "parameters": [
-            {
-                "name": "brightness",
-                "type": "float",
-                "value": 0,
-                "min_value": -1,
-                "max_value": 1
-            }
-        ]
+        "parameters": [{
+            "name": "brightness",
+            "type": "float",
+            "value": 0,
+            "min_value": -1,
+            "max_value": 1
+        }]
     },
     {
         "name": "Contrast",
         "input_type": "image",
         "output_type": "image",
         "premium": false,
-        "parameters": [
-            {
-                "name": "contrast",
-                "type": "float",
-                "value": 1,
-                "min_value": -100,
-                "max_value": 100
-            }
-        ]
+        "parameters": [{
+            "name": "contrast",
+            "type": "float",
+            "value": 1,
+            "min_value": -100,
+            "max_value": 100
+        }]
     },
     {
         "name": "Crop",
         "input_type": "image",
         "output_type": "image",
         "premium": false,
-        "parameters": [
-            {
+        "parameters": [{
                 "name": "width",
                 "type": "int",
                 "value": 0,
@@ -134,23 +127,20 @@
         "input_type": "image",
         "output_type": "image",
         "premium": false,
-        "parameters": [
-            {
-                "name": "angle",
-                "type": "int",
-                "value": 0,
-                "min_value": 0,
-                "max_value": 360
-            }
-        ]
+        "parameters": [{
+            "name": "angle",
+            "type": "int",
+            "value": 0,
+            "min_value": 0,
+            "max_value": 360
+        }]
     },
     {
         "name": "Scale",
         "input_type": "image",
         "output_type": "image",
         "premium": false,
-        "parameters": [
-            {
+        "parameters": [{
                 "name": "width",
                 "type": "int",
                 "value": 0,
@@ -167,7 +157,7 @@
         ]
     },
     {
-        "name": "Watemark",
+        "name": "Watermark",
         "input_type": "image",
         "output_type": "image",
         "premium": false,
