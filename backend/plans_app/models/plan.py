@@ -5,7 +5,7 @@ from mongoengine.fields import EnumField, StringField, DecimalField, DateTimeFie
 
 
 class PlanType(Enum):
-    DIARY = 'diary'
+    DAILY = 'daily'
     MONTHLY = 'monthly'
     ANNUAL = 'annual'
 

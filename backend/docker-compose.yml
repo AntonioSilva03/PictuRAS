@@ -135,141 +135,152 @@ services:
   #     rabbitmq:
   #       condition: service_healthy
 
-  binarization-worker:
-    container_name: binarization-worker
-    build:
-      context: ./tools/binarization
-      dockerfile: Dockerfile
-    links:
-      - rabbitmq
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
+  # binarization-worker:
+  #   container_name: binarization-worker
+  #   build:
+  #     context: ./tools/binarization
+  #     dockerfile: Dockerfile
+  #   links:
+  #     - rabbitmq
+  #   depends_on:
+  #     rabbitmq:
+  #       condition: service_healthy
 
-  border-worker:
-    container_name: border-worker
-    build:
-      context: ./tools/border
-      dockerfile: Dockerfile
-    links:
-      - rabbitmq
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
+  # border-worker:
+  #   container_name: border-worker
+  #   build:
+  #     context: ./tools/border
+  #     dockerfile: Dockerfile
+  #   links:
+  #     - rabbitmq
+  #   depends_on:
+  #     rabbitmq:
+  #       condition: service_healthy
 
-  brightness-worker:
-    container_name: brightness-worker
-    build:
-      context: ./tools/brightness
-      dockerfile: Dockerfile
-    links:
-      - rabbitmq
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
+  # brightness-worker:
+  #   container_name: brightness-worker
+  #   build:
+  #     context: ./tools/brightness
+  #     dockerfile: Dockerfile
+  #   links:
+  #     - rabbitmq
+  #   depends_on:
+  #     rabbitmq:
+  #       condition: service_healthy
 
-  contrast-worker:
-    container_name: contrast-worker
-    build:
-      context: ./tools/contrast
-      dockerfile: Dockerfile
-    links:
-      - rabbitmq
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
+  # contrast-worker:
+  #   container_name: contrast-worker
+  #   build:
+  #     context: ./tools/contrast
+  #     dockerfile: Dockerfile
+  #   links:
+  #     - rabbitmq
+  #   depends_on:
+  #     rabbitmq:
+  #       condition: service_healthy
 
-  crop-worker:
-    container_name: crop-worker
-    build:
-      context: ./tools/crop
-      dockerfile: Dockerfile
-    links:
-      - rabbitmq
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
+  # crop-worker:
+  #   container_name: crop-worker
+  #   build:
+  #     context: ./tools/crop
+  #     dockerfile: Dockerfile
+  #   links:
+  #     - rabbitmq
+  #   depends_on:
+  #     rabbitmq:
+  #       condition: service_healthy
 
-  rotate-worker:
-    container_name: rotate-worker
-    build:
-      context: ./tools/rotate
-      dockerfile: Dockerfile
-    links:
-      - rabbitmq
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
+  # rotate-worker:
+  #   container_name: rotate-worker
+  #   build:
+  #     context: ./tools/rotate
+  #     dockerfile: Dockerfile
+  #   links:
+  #     - rabbitmq
+  #   depends_on:
+  #     rabbitmq:
+  #       condition: service_healthy
 
-  scale-worker:
-    container_name: scale-worker
-    build:
-      context: ./tools/scale
-      dockerfile: Dockerfile
-    links:
-      - rabbitmq
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
+  # scale-worker:
+  #   container_name: scale-worker
+  #   build:
+  #     context: ./tools/scale
+  #     dockerfile: Dockerfile
+  #   links:
+  #     - rabbitmq
+  #   depends_on:
+  #     rabbitmq:
+  #       condition: service_healthy
+
+  # watermark-worker:
+  #   container_name: watermark-worker
+  #   build:
+  #     context: ./tools/watermark
+  #     dockerfile: Dockerfile
+  #   links:
+  #     - rabbitmq
+  #   depends_on:
+  #     rabbitmq:
+  #       condition: service_healthy
 
 ####################
 ####### WS #########
 ####################
 
-  ws-app:
-    container_name: ws-app
-    build:
-      context: ./ws
-      dockerfile: Dockerfile
-    ports:
-      - "8765:8765"
-    links:
-      - rabbitmq
-      - projects-app
-      - images-app
-    depends_on:
-      projects-app:
-        condition: service_started
-      images-app:
-        condition: service_started
-      rabbitmq:
-        condition: service_healthy
+  # ws-app:
+  #   container_name: ws-app
+  #   build:
+  #     context: ./ws
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8765:8765"
+  #   links:
+  #     - rabbitmq
+  #     - projects-app
+  #     - images-app
+  #   depends_on:
+  #     projects-app:
+  #       condition: service_started
+  #     images-app:
+  #       condition: service_started
+  #     rabbitmq:
+  #       condition: service_healthy
 
 ####################
 #### WSGATEWAY #####
 ####################
 
-  wsgateway:
-    container_name: wsgateway
-    build:
-      context: ./wsgateway
-      dockerfile: Dockerfile
-    ports:
-      - "8764:8764"
-    links:
-      - ws-app
-    depends_on:
-      ws-app:
-        condition: service_started
+  # wsgateway:
+  #   container_name: wsgateway
+  #   build:
+  #     context: ./wsgateway
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8764:8764"
+  #   links:
+  #     - ws-app
+  #   depends_on:
+  #     ws-app:
+  #       condition: service_started
 
 ####################
 ####### BUS ########
 ####################
 
-  rabbitmq:
-    container_name: picturas-rabbitmq
-    image: rabbitmq:management
-    ports:
-      - 5672:5672
-      - 15672:15672
-    volumes:
-      - rabbitmq-data:/var/lib/rabbitmq/
-      - rabbitmq-logs:/var/log/rabbitmq/
-    healthcheck:
-      test: rabbitmq-diagnostics check_port_connectivity
-      interval: 5s
-      timeout: 30s
+#   rabbitmq:
+#     container_name: picturas-rabbitmq
+#     image: rabbitmq:management
+#     ports:
+#       - 5672:5672
+#       - 15672:15672
+#     volumes:
+#       - rabbitmq-data:/var/lib/rabbitmq/
+#       - rabbitmq-logs:/var/log/rabbitmq/
+#     healthcheck:
+#       test: rabbitmq-diagnostics check_port_connectivity
+#       interval: 5s
+#       timeout: 30s
 
-volumes:
-  rabbitmq-data: 
-  rabbitmq-logs:
+# volumes:
+#   rabbitmq-data: 
+#   rabbitmq-logs:
