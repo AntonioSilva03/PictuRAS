@@ -150,7 +150,7 @@ class ProcessorWorker:
 
     async def start(self):
 
-        if len(self.requests) > 0 and len(self.images):
+        if len(self.requests) > 0 and len(self.images) > 0:
 
             await self.setup()
 
