@@ -139,9 +139,9 @@ export default {
     /* Pink */
 }
 
-.diary-plan h2,
-.diary-plan h3,
-.diary-plan button {
+.daily-plan h2,
+.daily-plan h3,
+.daily-plan button {
     color: #451e43;
     /* Pink */
 }
@@ -185,7 +185,7 @@ export default {
     /* Pink for annual plan */
 }
 
-.diary-plan-btn {
+.daily-plan-btn {
     background-color: #451e43;
     /* Pink for annual plan */
 }
@@ -220,7 +220,7 @@ export default {
     /* Light pink */
 }
 
-.diary-plan.active {
+.daily-plan.active {
     background-color: #b88fa5;
     /* Light pink */
 }
