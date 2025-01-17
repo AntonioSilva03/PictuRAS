@@ -126,6 +126,7 @@ router.post('/logout', function (req, res) {
 
 // done
 router.get('/profile', passport.authenticate(['local', 'anonymous'], { session: false }), async (req, res) => {
+  try{
   if (req.isAuthenticated()) {
     // request ao micro serviço a info do user
     const apiBaseUrl = process.env.USERS_MICRO_SERVICE // Ensure this is set in your .env file
@@ -134,6 +135,9 @@ router.get('/profile', passport.authenticate(['local', 'anonymous'], { session: 
     res.status(200).jsonp({ email: response.data.email, name: response.data.name, plan: response.data.plan });
   } else {
     res.status(401).jsonp({ error: "Not authenticated" });
+  }
+  }catch(e){
+    console.error(e);
   }
 });
 
@@ -200,6 +204,7 @@ router.get('/projects', passport.authenticate(['local', 'anonymous'], { session:
 // done (testar para registados)
 router.post('/projects', passport.authenticate(['local', 'anonymous'], { session: false }), async (req, res) => {
   if (req.isAuthenticated()) {
+    try{
     const { name, owner } = req.body;
     // Create a new project
     const newProjectWrapper = {
@@ -211,6 +216,9 @@ router.post('/projects', passport.authenticate(['local', 'anonymous'], { session
     const response = await axios.post(`${apiBaseUrl}/projects`, newProjectWrapper);
     const newProject = response.data;
     res.json(newProject);
+  } catch(e){
+    console.error(e)
+  }
   } else {
     try {
       const { name, owner } = req.body;
@@ -324,9 +332,13 @@ router.get('/projects/images/:id', passport.authenticate(['local', 'anonymous'],
 // done (testar para autenticado)
 router.put('/projects', passport.authenticate(['local', 'anonymous'], { session: false }), async (req, res) => {
   if (req.isAuthenticated()) {
+    try{
     const apiBaseUrl = process.env.PROJECTS_MICRO_SERVICE
     const response = await axios.put(`${apiBaseUrl}/projects/${req.body.id}`, req.body)
     res.status(200).json(`Sucess on saving ${req.body.id}`);
+    } catch(e){
+      console.error(e)
+    }
   } else {
     try {
       const apiBaseUrl = process.env.PROJECTS_MICRO_SERVICE

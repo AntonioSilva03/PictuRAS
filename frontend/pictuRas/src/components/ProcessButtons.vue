@@ -33,6 +33,10 @@ export default {
     const process = () => {
       // Establish WebSocket connection
       // trocar com o ws
+      if(projectStore.selectedProject.tools.length ===0){
+        alert("Select at least one tool before processing!")
+        return
+      }
       websocket = new WebSocket(ws); // Replace with your WebSocket server URL
 
       websocket.onopen = () => {

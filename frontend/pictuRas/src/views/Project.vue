@@ -12,6 +12,7 @@
 import { useProjectStore } from '../stores/ProjectStore.js';
 import { useEditingToolStore } from '../stores/EditingTool';
 import { useImageStore } from '../stores/ImageStore';
+import { useProfileStore } from '../stores/ProfileStore.js';
 import { useRouter } from 'vue-router';
 import Navbar from '../components/Navbar.vue';
 import ImageList from '../components/ImageList.vue';
@@ -36,6 +37,7 @@ export default {
     const projectStore = useProjectStore();
     const editingToolsStore = useEditingToolStore();
     const imageStore = useImageStore();
+    const profileStore = useProfileStore();
     const router = useRouter();
     // Check for selected project and user status
     const receivedProjectId = props.projectUrlId || router.params.projectUrlId; // Check prop or route param
@@ -77,9 +79,14 @@ export default {
       const projectId = projectStore.getId()
       await editingToolsStore.fetchTools();
       await imageStore.fetchImages(projectId);
+      await profileStore.fetchProfile();
       const tools = projectStore.getTools()
       editingToolsStore.mergeTools(tools)
+      if (!profileStore.userPlanName){
+        profileStore.userPlanName="free";
+      }
       // update toolsStore tendo em conta o que recebemos do projeto.
+      console.log(profileStore.userPlanName);
     }
     // Call the check function when the component mounts
      checkProjectAndUserStatus();
