@@ -190,16 +190,16 @@ services:
   #     rabbitmq:
   #       condition: service_healthy
 
-  ocr-worker:
-    container_name: ocr-worker
-    build:
-      context: ./tools/ocr
-      dockerfile: Dockerfile
-    links:
-      - rabbitmq
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
+  # ocr-worker:
+  #   container_name: ocr-worker
+  #   build:
+  #     context: ./tools/ocr
+  #     dockerfile: Dockerfile
+  #   links:
+  #     - rabbitmq
+  #   depends_on:
+  #     rabbitmq:
+  #       condition: service_healthy
 
   # rotate-worker:
   #   container_name: rotate-worker
