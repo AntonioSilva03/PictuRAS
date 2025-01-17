@@ -178,7 +178,7 @@ services:
   autocrop-worker:
     container_name: autocrop-worker
     build:
-      context: ./tools/autocrop
+      context:  ./backend/tools/autocrop
       dockerfile: Dockerfile
     links:
       - rabbitmq
@@ -189,7 +189,7 @@ services:
   binarization-worker:
     container_name: binarization-worker
     build:
-      context: ./tools/binarization
+      context:  ./backend/tools/binarization
       dockerfile: Dockerfile
     links:
       - rabbitmq
@@ -211,7 +211,7 @@ services:
   brightness-worker:
     container_name: brightness-worker
     build:
-      context: ./tools/brightness
+      context:  ./backend/tools/brightness
       dockerfile: Dockerfile
     links:
       - rabbitmq
@@ -222,7 +222,7 @@ services:
   contrast-worker:
     container_name: contrast-worker
     build:
-      context: ./tools/contrast
+      context:  ./backend/tools/contrast
       dockerfile: Dockerfile
     links:
       - rabbitmq
@@ -233,7 +233,7 @@ services:
   crop-worker:
     container_name: crop-worker
     build:
-      context: ./tools/crop
+      context:  ./backend/tools/crop
       dockerfile: Dockerfile
     links:
       - rabbitmq
@@ -244,7 +244,7 @@ services:
   rotate-worker:
     container_name: rotate-worker
     build:
-      context: ./tools/rotate
+      context:  ./backend/tools/rotate
       dockerfile: Dockerfile
     links:
       - rabbitmq
@@ -255,7 +255,7 @@ services:
   scale-worker:
     container_name: scale-worker
     build:
-      context: ./tools/scale
+      context:  ./backend/tools/scale
       dockerfile: Dockerfile
     links:
       - rabbitmq
