@@ -55,17 +55,17 @@ class Processor:
         else:
             images = {request['image']: {'data': fetch_image_data(IMAGES_HOST, IMAGES_PORT, request['image'])}}
 
-        if EMAIL_REGEX.match(project['owner']):
-            user = fetch_user(USERS_HOST, USERS_PORT, project['owner'])
-            plan = fetch_plan(PLANS_HOST, PLANS_PORT, user['plan'])
-            print(plan['name'])
-            premium_user = (plan['name'] == 'premium' or plan['name'] == 'enterprise')
+        # if EMAIL_REGEX.match(project['owner']):
+        #     user = fetch_user(USERS_HOST, USERS_PORT, project['owner'])
+        #     plan = fetch_plan(PLANS_HOST, PLANS_PORT, user['plan'])
+        #     print(plan['name'])
+        #     premium_user = (plan['name'] == 'premium' or plan['name'] == 'enterprise')
 
-        print(premium_user)
-        if not premium_user:
-            for tool in project['tools']:
-                if fetch_tool(TOOLS_HOST, TOOLS_PORT, tool['id'])['premium']:
-                    raise Exception(f'User {project['owner']} can not use premium tools')
+        # print(premium_user)
+        # if not premium_user:
+        #     for tool in project['tools']:
+        #         if fetch_tool(TOOLS_HOST, TOOLS_PORT, tool['id'])['premium']:
+        #             raise Exception(f'User {project['owner']} can not use premium tools')
 
         bus_requests = get_prepared_requets(project['tools'])
         print(json.dumps(bus_requests, indent=4))

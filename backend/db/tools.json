@@ -167,7 +167,7 @@
         ]
     },
     {
-        "name": "Watemark",
+        "name": "Watermark",
         "input_type": "image",
         "output_type": "image",
         "premium": false,
