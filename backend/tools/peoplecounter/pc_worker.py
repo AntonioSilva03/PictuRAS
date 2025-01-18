@@ -1,6 +1,8 @@
 import os
 import functools
 import pika # type: ignore
+from detectron2.config import get_cfg # type: ignore
+from detectron2 import model_zoo # type: ignore
 from pika.exchange_type import ExchangeType # type: ignore
 from multiprocessing.pool import ThreadPool
 from pc_tool import PeopleCountingTool
@@ -12,6 +14,12 @@ RABBITMQ_PORT = os.getenv('RABBITMQ_PORT', '5672')
 EXCHANGE=os.getenv('EXCHANGE', 'tools-exchange')
 REQUEST_QUEUE = os.getenv('REQUEST_QUEUE', 'people-count-queue')
 POOL_SIZE = int(os.getenv('POOL_SIZE', 5))
+
+cfg = get_cfg()
+cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml"))
+cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml")
+cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5
+cfg.MODEL.ROI_HEADS.NUM_CLASSES = 80
 
 
 class PeopleCountingWorker:
@@ -50,7 +58,7 @@ class PeopleCountingWorker:
 
         print(f'PeopleCountingWorker received image: {properties.correlation_id}')
         request = PeopleCountingMessageRequest.from_json(body.decode())
-        tool = PeopleCountingTool(request)
+        tool = PeopleCountingTool(request,cfg)
         response = tool.apply().to_json()
 
         ch.connection.add_callback_threadsafe(
