@@ -14,7 +14,7 @@ REQUEST_QUEUES = {
     'Crop': os.getenv('CROP_QUEUE', 'CROP_QUEUE'),
     'Object Counter': os.getenv('OBJECT_COUNTER_QUEUE', 'OBJECT_COUNTER_QUEUE'),
     'OCR': os.getenv('OCR_QUEUE', 'OCR_QUEUE'),
-    'People Counter': os.getenv('PEOPLECOUNTER_QUEUE', 'PEOPLECOUNTER_QUEUE'),
+    'People Counter': os.getenv('PEOPLE_COUNTER_QUEUE', 'PEOPLE_COUNTER_QUEUE'),
     'Remove Background': os.getenv('AUTOCROP_QUEUE', 'AUTOCROP_QUEUE'),
     'Rotate': os.getenv('ROTATE_QUEUE', 'ROTATE_QUEUE'),
     'Scale': os.getenv('SCALE_QUEUE', 'SCALE_QUEUE'),

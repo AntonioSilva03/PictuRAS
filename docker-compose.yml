@@ -241,10 +241,32 @@ services:
       rabbitmq:
         condition: service_healthy
 
+  objectcounter-worker:
+    container_name: objectcounter-worker
+    build:
+      context: ./tools/objectcounter
+      dockerfile: Dockerfile
+    links:
+      - rabbitmq
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
   ocr-worker:
     container_name: ocr-worker
     build:
       context: ./backend/tools/ocr
+      dockerfile: Dockerfile
+    links:
+      - rabbitmq
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  peoplecounter-worker:
+    container_name: peoplecounter-worker
+    build:
+      context: ./tools/peoplecounter
       dockerfile: Dockerfile
     links:
       - rabbitmq

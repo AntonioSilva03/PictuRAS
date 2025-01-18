@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     make \
     libgl1-mesa-glx \
     libglib2.0-0 \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 COPY . /app/picturas/tools/objectcounter
@@ -23,12 +24,14 @@ RUN python -m pip install 'git+https://github.com/facebookresearch/detectron2.gi
 # Install other Python dependencies
 RUN pip install -r requirements.txt
 
+ENV PYTHONUNBUFFERED=1
+
 ENV RABBITMQ_HOST=rabbitmq
 ENV RABBITMQ_PORT=5672
 
 ENV EXCHANGE=TOOLS_EXCHANGE
 ENV REQUEST_QUEUE=OBJECT_COUNTER_QUEUE
 
-ENV POOL_SIZE=5
+ENV POOL_SIZE=1
 
 CMD ["python", "oc_worker.py"]

@@ -2,20 +2,30 @@ import json
 
 class ObjectCountingMessageReply:
 
-    def __init__(self, object_counts: dict) -> None:
-        self.object_counts = object_counts
+    def __init__(self, mimetype: str, data: str) -> None:
+        self.mimetype = mimetype
+        self.data = data
 
-    def getObjectCounts(self) -> dict:
-        return self.object_counts
+
+    def getMimeType(self) -> str:
+        return self.mimetype
+
+
+    def getData(self) -> str:
+        return self.data
+
 
     def to_json(self) -> str:
         return json.dumps({
-            'object_counts': self.object_counts,
+            'mimetype': self.mimetype,
+            'data': self.data,
         })
+
 
     @staticmethod
     def from_json(data: str) -> 'ObjectCountingMessageReply':
         data = json.loads(data)
         return ObjectCountingMessageReply(
-            object_counts=data['object_counts'],
+            mimetype=data['mimetype'],
+            data=data['data'],
         )

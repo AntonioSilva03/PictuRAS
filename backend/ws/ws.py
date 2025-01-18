@@ -36,11 +36,17 @@ class ServerSocket:
                 except json.JSONDecodeError:
                     traceback.print_exc()
                     print('Received invalid JSON')
-                    await websocket.send(json.dumps({'error': 'Invalid JSON'}))
+                    await websocket.send(json.dumps({
+                        'type': 'error',
+                        'error': 'Invalid JSON'
+                    }))
 
                 except Exception as e:
                     traceback.print_exc()
-                    await websocket.send(json.dumps({'error': f'{e}'}))
+                    await websocket.send(json.dumps({
+                        'type': 'error',
+                        'error': f'{e}'
+                    }))
 
         finally:
             await websocket.close() 

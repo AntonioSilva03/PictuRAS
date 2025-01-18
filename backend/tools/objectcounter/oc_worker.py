@@ -1,7 +1,10 @@
 import os
 import functools
 import pika # type: ignore
+import cv2 # type: ignore
 from pika.exchange_type import ExchangeType # type: ignore
+from detectron2.config import get_cfg # type: ignore
+from detectron2.model_zoo import get_config_file, get_checkpoint_url # type: ignore
 from multiprocessing.pool import ThreadPool
 from oc_tool import ObjectCountingTool
 from oc_message_request import ObjectCountingMessageRequest
@@ -12,6 +15,12 @@ RABBITMQ_PORT = os.getenv('RABBITMQ_PORT', '5672')
 EXCHANGE=os.getenv('EXCHANGE', 'tools-exchange')
 REQUEST_QUEUE = os.getenv('REQUEST_QUEUE', 'object-count-queue')
 POOL_SIZE = int(os.getenv('POOL_SIZE', 5))
+
+cfg = get_cfg()
+cfg.merge_from_file(get_config_file("COCO-Detection/faster_rcnn_R_50_FPN_3x.yaml"))
+cfg.MODEL.WEIGHTS = get_checkpoint_url("COCO-Detection/faster_rcnn_R_50_FPN_3x.yaml")
+cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5
+cfg.MODEL.DEVICE = "cuda" if cv2.cuda.getCudaEnabledDeviceCount() > 0 else "cpu"
 
 
 class ObjectCountingWorker:
@@ -50,7 +59,7 @@ class ObjectCountingWorker:
 
         print(f'ObjectCountingWorker received image: {properties.correlation_id}')
         request = ObjectCountingMessageRequest.from_json(body.decode())
-        tool = ObjectCountingTool(request)
+        tool = ObjectCountingTool(request,cfg)
         response = tool.apply().to_json()
 
         ch.connection.add_callback_threadsafe(
