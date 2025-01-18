@@ -44,8 +44,12 @@ export default {
       // Establish WebSocket connection
       // trocar com o ws
       if(projectStore.selectedProject.tools.length ===0){
-        alert("Select at least one tool before processing!")
-        return
+        alert("Select at least one tool before processing!");
+        return;
+      }
+      if(imageStore.images.length ===0){
+        alert("Upload at least one image before processing!");
+        return;
       }
       websocket = new WebSocket(ws); // Replace with your WebSocket server URL
 
@@ -95,6 +99,10 @@ export default {
     const preview = () => {
       // Establish WebSocket connection
       // trocar com o ws
+      if (!imageStore.canPreview()){
+        alert("Cant select a Preview Image for another Preview!")
+        return;
+      }
       websocket = new WebSocket(ws); // Replace with your WebSocket server URL
 
       websocket.onopen = () => {

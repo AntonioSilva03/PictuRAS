@@ -278,5 +278,11 @@ export const useImageStore = defineStore('imageStore', {
             }
 
         },
+        canPreview() {
+            if (this.selectedImage)
+                return this.images.includes(this.selectedImage)
+            else
+                return false;
+        }
     },
 });
