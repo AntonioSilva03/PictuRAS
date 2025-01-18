@@ -3,6 +3,7 @@
     <button @click="preview">Preview</button>
     <button @click="process">Process</button>
     <button @click="saveProject">Save</button>
+    <button v-if="previewMode || onProcess" @click="cancel">Cancel</button>
   </div>
 </template>
 
@@ -10,6 +11,7 @@
 import { useProjectStore } from '../stores/ProjectStore';
 import { useEditingToolStore } from '../stores/EditingTool';
 import { storeToRefs } from 'pinia';
+import { computed } from "vue";
 import { useImageStore } from '../stores/ImageStore';
 
 const ws = import.meta.env.VITE_WS_GATEWAY;
@@ -22,8 +24,12 @@ export default {
     const imageStore = useImageStore();
     const { tools } = storeToRefs(toolsStore);
 
+
     const ws = import.meta.env.VITE_WS_GATEWAY;
     let websocket = null; // WebSocket instance
+
+    const previewMode = computed(() => imageStore.previewMode);
+    const onProcess = computed(() => imageStore.onProcess);
 
     const saveProject = async () => {
   // Parse tools to remove the " copy x" suffix from each tool name
@@ -87,12 +93,12 @@ export default {
 
       websocket.onerror = (error) => {
         console.error("WebSocket error:", error);
-        imageStore.leaveProvessMode(true)
+        imageStore.leaveProcessMode(true)
       };
 
       websocket.onclose = () => {
         console.log("WebSocket connection closed");
-        imageStore.leaveProvessMode(false)
+        imageStore.leaveProcessMode(false)
       };
     };
 
@@ -132,8 +138,9 @@ export default {
           imageStore.updateSelectedImage(message.images);
           alert(`Preview complete!`);
           websocket.close(); // Close the WebSocket connection
-        }else if (message.type === "error") {
-          alert(`Preview error: ${message.progress}`);
+        }else if (message.error) {
+          alert(`Preview error: ${message.error}`);
+          imageStore.leavePreviewMode(true)
           websocket.error(); // Close the WebSocket connection
         }
       };
@@ -148,11 +155,33 @@ export default {
         imageStore.leavePreviewMode(false)
       };
     };
+    const cancel = () => {
+  if (websocket && websocket.readyState === WebSocket.OPEN) {
+    // If the WebSocket connection is already open
+    const payload = {
+      type: "cancel",
+      project: projectStore.getId(),
+    };
+    websocket.send(JSON.stringify(payload));
+    console.log("Cancel message sent:", payload);
 
+    websocket.close(); // Close the WebSocket connection after sending cancel
+  } else {
+    console.warn("WebSocket is not open or doesn't exist.");
+  }
+
+  // Ensure we leave any active modes in the store
+  imageStore.leavePreviewMode(false);
+  imageStore.leaveProcessMode(true);
+  imageStore.fetchImages(projectStore.getId());
+};
     return {
       saveProject,
       process,
       preview,
+      cancel,
+      previewMode,
+      onProcess
     };
   },
 };

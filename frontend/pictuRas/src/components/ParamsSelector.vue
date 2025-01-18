@@ -172,17 +172,6 @@ export default {
           return;
 
         }
-        let counterPremium = 0;
-        for (let i = 0; i < newList.length; i++){
-          if (newList[i].premium === true && newList[i].aciteve ){
-            counterPremium = counterPremium + 1;
-          }
-        }
-        if (counterPremium > 1){
-          alert('Invalid tool configuration: output type does not match the required type.');
-          newList[activeIndex].active = false;
-          return;
-        }
         // Apply changes if the list is valid
         activeTool.value.active = true;
       }
@@ -213,9 +202,12 @@ export default {
     const handleDup = () => {
   if (activeTool.value.name.includes("copy")) {
     alert("You can't duplicate copies!");
-  } else {
-    store.addTool();
+    return;
+  } if(activeTool.value.output_type !=='image'  ){
+    alert("You can't duplicate tools that do not output images");
+    return;
   }
+    store.addTool();
 };
 
     return {

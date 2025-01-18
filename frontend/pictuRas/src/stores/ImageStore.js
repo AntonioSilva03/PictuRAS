@@ -114,11 +114,11 @@ export const useImageStore = defineStore('imageStore', {
             this.images = [];
             this.old = this.bytes;
         },
-        leaveProvessMode(cancel) {
+        leaveProcessMode(cancel) {
             if (!cancel) {
                 this.onProcess = false;
             } else {
-                // todo
+
                 this.onProcess = false;
             }
             console.log(this.onProcess)
@@ -279,7 +279,7 @@ export const useImageStore = defineStore('imageStore', {
 
         },
         canPreview() {
-            if (this.selectedImage)
+            if (this.selectedImage && !this.previewMode)
                 return this.images.includes(this.selectedImage)
             else
                 return false;
