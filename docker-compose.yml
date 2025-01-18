@@ -244,7 +244,7 @@ services:
   objectcounter-worker:
     container_name: objectcounter-worker
     build:
-      context: ./tools/objectcounter
+      context: ./backend/tools/objectcounter
       dockerfile: Dockerfile
     links:
       - rabbitmq
@@ -263,16 +263,16 @@ services:
       rabbitmq:
         condition: service_healthy
 
-  peoplecounter-worker:
-    container_name: peoplecounter-worker
-    build:
-      context: ./tools/peoplecounter
-      dockerfile: Dockerfile
-    links:
-      - rabbitmq
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
+  # peoplecounter-worker:
+  #   container_name: peoplecounter-worker
+  #   build:
+  #     context: ./backend/tools/peoplecounter
+  #     dockerfile: Dockerfile
+  #   links:
+  #     - rabbitmq
+  #   depends_on:
+  #     rabbitmq:
+  #       condition: service_healthy
 
   rotate-worker:
     container_name: rotate-worker

@@ -109,13 +109,6 @@
         "parameters": []
     },
     {
-        "name": "People Counter",
-        "input_type": "image",
-        "output_type": "text",
-        "premium": true,
-        "parameters": []
-    },
-    {
         "name": "Remove Background",
         "input_type": "image",
         "output_type": "image",
