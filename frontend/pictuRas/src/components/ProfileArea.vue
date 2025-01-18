@@ -16,7 +16,7 @@
                 <p>Satus: <b>{{ profileStore.profile.plan }}</b></p>
                 <div class="profile-buttons">
                     <button>
-                        <RouterLink to="/profile">Edit profile</RouterLink>
+                        <RouterLink to="/editprofile">Edit profile</RouterLink>
                     </button>
                     <button>
                         <RouterLink to="/plan">Change plan</RouterLink>
