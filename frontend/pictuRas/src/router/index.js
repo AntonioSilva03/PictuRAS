@@ -5,6 +5,7 @@ import Login from '../views/Login.vue';
 import Project from '../views/Project.vue';
 import Register from '../views/Register.vue'
 import Profile from '../views/Profile.vue';
+import EditProfile from '../views/EditProfile.vue';
 import Payment from '../views/Payment.vue';
 import PaymentResult from '../views/PaymentResult.vue';
 import Plan from '../views/Plan.vue';
@@ -46,6 +47,11 @@ const router = createRouter({
       component: Profile,
     },
     {
+      path: '/editprofile',
+      name: 'editprofile',
+      component: EditProfile,
+    },
+    {
       path: '/plan',
       name: 'plan',
       component: Plan,
@@ -60,6 +66,11 @@ const router = createRouter({
       name: 'payment-result',
       component: PaymentResult, 
     },
+    {
+        path: '/plan',
+        name: 'plan',
+        component: Plan,
+       },
     {
       path: '/:pathMatch(.*)*', // Catch-all route for 404
       name: 'NotFound',

@@ -32,7 +32,7 @@ export default {
     methods:{
         onChoosePlan() {
             
-            this.$router.push(`/plan`);
+            this.$router.push(`/login`);
         },
     }
 };

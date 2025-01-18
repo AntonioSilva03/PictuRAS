@@ -472,7 +472,95 @@ router.get('/plan/:planId', passport.authenticate(['local', 'anonymous'], { sess
   }
 });
 
+router.get('/users/:email', passport.authenticate(['local', 'anonymous'], { session: false }), async (req, res) => {
+  console.log('GET EMAIL');
+  const email = req.params.email; // Email passado como parâmetro na URL
+  console.log('GET EMAIL:', email);
 
+  const apiBaseUrl = process.env.USERS_MICRO_SERVICE;
 
+  try {
+      console.log('Fetching user data from:', `${apiBaseUrl}/users/${email}`);
+      const response = await axios.get(`${apiBaseUrl}/users/${email}`);
+
+      // Enviar resposta com os dados do usuário
+      res.status(200).json({
+          message: 'User data fetched successfully',
+          data: response.data,
+      });
+  } catch (error) {
+      console.error('Error fetching user data:', error.message);
+      res.status(error.response?.status || 500).json({
+          error: 'Failed to fetch user data',
+          details: error.response?.data || error.message,
+      });
+  }
+});
+
+router.delete('/users/:email', passport.authenticate(['local', 'anonymous'], { session: false }), async (req, res) => {
+  const email = req.params.email; // Email passado como parâmetro na URL
+  const apiBaseUrl = process.env.USERS_MICRO_SERVICE;
+
+  try {
+    console.log(`Attempting to delete user with email: ${email}`);
+
+    // Enviar a requisição DELETE ao microserviço de usuários
+    const response = await axios.delete(`${apiBaseUrl}/users/${email}`, {
+      withCredentials: true, // Certifique-se de que está enviando cookies/certificados necessários
+    });
+
+    // Enviar resposta de sucesso
+    res.status(response.status).json({
+      message: 'User deleted successfully',
+      data: response.data,
+    });
+
+  } catch (error) {
+    console.error('Error deleting user:', error.message);
+    res.status(error.response?.status || 500).json({
+      error: 'Failed to delete user',
+      details: error.response?.data || error.message,
+    });
+  }
+});
+
+router.put(
+  '/users/:email',
+  passport.authenticate(['local', 'anonymous'], { session: false }), async (req, res) => {
+    console.log('PUT EMAIL');
+    const email = req.params.email; // Email passado como parâmetro na URL
+    console.log('PUT EMAIL:', email);
+    
+    const apiBaseUrl = process.env.USERS_MICRO_SERVICE;
+
+    // O corpo da requisição será ignorado e o nome será sempre "qqq5"
+    // const newProfile = { name: "qqq5" };
+    const newProfile = { name: req.body.name }; // Só o campo 'name' será enviado
+
+    console.log('Sending PUT request to:', `${apiBaseUrl}/users/${email}`);
+    console.log('New profile being sent:', newProfile);
+
+    try {    
+      console.log('AQUI'); 
+      console.log('RESPONSE:', `${apiBaseUrl}/users/${email}`); 
+      const response = await axios.put(
+        `${apiBaseUrl}/users/${email}`,
+        newProfile 
+      );
+
+      // Enviar resposta de sucesso
+      res.status(200).json({
+        message: 'newProfile updated successfully',
+        data: response.data,
+      });
+    } catch (error) {
+      console.error('Error updating user newProfile:', error.message);
+      res.status(error.response?.status || 500).json({
+        error: 'Failed to update user newProfile',
+        details: error.response?.data || error.message,
+      });
+    }
+  }
+);
 
 module.exports = router;
