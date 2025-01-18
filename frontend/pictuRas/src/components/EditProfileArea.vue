@@ -30,14 +30,14 @@
                         readonly
                     />
 
-                    <label for="registerdate">Registered at:</label>
+                    <!-- <label for="registerdate">Registered at:</label>
                     <input
                         type="date"
                         id="registerdate"
                         :value="formattedRegisteredAt"
                         class="form-input"
                         readonly
-                    />
+                    /> -->
 
                     <!-- Overlay to change password -->
                     <div v-if="isPasswordEditOverlayVisible" class="overlay">
@@ -129,7 +129,7 @@ const isPasswordEditOverlayVisible = ref(false);
 
 onMounted(async () => {
     await profileStore.fetchProfile();
-    await profileStore.getCompleteProfile();
+    // await profileStore.getCompleteProfile();
     editableProfile.value = { ...profileStore.profile }; // Sincroniza o estado local com o store
 });
 
@@ -168,7 +168,6 @@ const savePasswordChanges = async () => {
 const saveChanges = async () => {
     try {
         // Certifique-se de que o username é igual ao email
-        editableProfile.value.username = editableProfile.value.email;
         console.log("Saving changes: ", editableProfile.value);
 
         const response = await profileStore.updateProfile(editableProfile.value);

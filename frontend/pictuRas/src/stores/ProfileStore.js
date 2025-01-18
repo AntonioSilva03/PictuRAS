@@ -41,7 +41,6 @@ export const useProfileStore = defineStore('profileStore', {
         
             try {
                 console.log('Updated profile before modification:', updatedProfile);
-                const username = updatedProfile.username;
 
                 // Atualiza o `username` com base no `email` antes de enviar ao servidor
                 updatedProfile.username = updatedProfile.email;
@@ -67,44 +66,44 @@ export const useProfileStore = defineStore('profileStore', {
             }
         },
         
-        async getCompleteProfile() {
-            this.loading = true;
-            this.error = null;
+        // async getCompleteProfile() {
+        //     this.loading = true;
+        //     this.error = null;
         
-            try {
+        //     try {
 
-                if (!this.profile.email) {
-                    this.error = 'Profile email is missing.';
-                    return;
-                }
+        //         if (!this.profile.email) {
+        //             this.error = 'Profile email is missing.';
+        //             return;
+        //         }
                 
-                // Faz a requisição GET para obter as informações do perfil completo
-                 const response = await axios.get(`http://localhost:3005/users/${this.profile.email}`);
-                // const response = await axios.get(`${api}/api/users/${this.profile.email}`);
+        //         // Faz a requisição GET para obter as informações do perfil completo
+        //         const response = await axios.get(`http://localhost:3005/users/${this.profile.email}`);
+        //         // const response = await axios.get(`${api}/api/users/${this.profile.email}`);
 
-                // const response = await axios.get(
-                //     `${api}/api/users/${this.profile.email}`,
-                //     {
-                //     withCredentials: true,
-                // });
+        //         // const response = await axios.get(
+        //         //     `${api}/api/users/${this.profile.email}`,
+        //         //     {
+        //         //     withCredentials: true,
+        //         // });
         
-                // Atualiza o estado com os dados recebidos
-                const completeProfile = response.data;
+        //         // Atualiza o estado com os dados recebidos
+        //         const completeProfile = response.data;
         
-                console.log('Complete profile fetched:', completeProfile);
+        //         console.log('Complete profile fetched:', completeProfile);
         
-                // Atualizar o perfil no estado (ajuste conforme necessário)
-                this.profile = {
-                    ...this.profile, // Retém as informações atuais
-                    ...completeProfile // Substitui pelos dados completos
-                };
-            } catch (error) {
-                this.error = 'Failed to fetch complete profile.';
-                console.error(error);
-            } finally {
-                this.loading = false;
-            }
-        },
+        //         // Atualizar o perfil no estado (ajuste conforme necessário)
+        //         this.profile = {
+        //             ...this.profile, // Retém as informações atuais
+        //             ...completeProfile // Substitui pelos dados completos
+        //         };
+        //     } catch (error) {
+        //         this.error = 'Failed to fetch complete profile.';
+        //         console.error(error);
+        //     } finally {
+        //         this.loading = false;
+        //     }
+        // },
 
 
         async updatePassword(currentPassword, newPassword) {

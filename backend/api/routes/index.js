@@ -505,7 +505,7 @@ router.put(
 
     // O corpo da requisição será ignorado e o nome será sempre "qqq5"
     // const newProfile = { name: "qqq5" };
-    const newProfile = req.body;
+    const newProfile = { name: req.body.name }; // Só o campo 'name' será enviado
 
     console.log('Sending PUT request to:', `${apiBaseUrl}/users/${email}`);
     console.log('New profile being sent:', newProfile);
