@@ -5,6 +5,7 @@ import Login from '../views/Login.vue';
 import Project from '../views/Project.vue';
 import Register from '../views/Register.vue'
 import Profile from '../views/Profile.vue';
+import EditProfile from '../views/EditProfile.vue';
 import Payment from '../views/Payment.vue';
 import PaymentResult from '../views/PaymentResult.vue';
 import Plan from '../views/Plan.vue';

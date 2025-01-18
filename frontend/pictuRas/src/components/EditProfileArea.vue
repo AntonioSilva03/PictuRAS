@@ -17,15 +17,7 @@
                     <input
                         type="text"
                         id="fullName"
-                        v-model="editableProfile.fullName"
-                        class="form-input"
-                    />
-
-                    <label for="username">Username:</label>
-                    <input
-                        type="text"
-                        id="username"
-                        v-model="editableProfile.username"
+                        v-model="editableProfile.name"
                         class="form-input"
                     />
 
@@ -35,13 +27,14 @@
                         id="email"
                         v-model="editableProfile.email"
                         class="form-input"
+                        readonly
                     />
 
-                    <label for="password">Current Password:</label>
+                    <label for="registerdate">Registered at:</label>
                     <input
-                        type="text"
-                        id="password"
-                        :value="editableProfile.password"
+                        type="date"
+                        id="registerdate"
+                        :value="formattedRegisteredAt"
                         class="form-input"
                         readonly
                     />
@@ -97,6 +90,13 @@
                                 Cancel
                             </button>
                         </RouterLink>
+                        <div class="deleteaccount-button">
+                            <RouterLink to="/">
+                                <button type="button" @click="deleteAccount">
+                                        Delete Account
+                                    </button>
+                            </RouterLink>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -108,25 +108,41 @@
 import { ref, onMounted, computed } from 'vue';
 import { useProfileStore } from '../stores/ProfileStore';
 import { useRouter } from 'vue-router';
+import axios from 'axios';
 
 const profileStore = useProfileStore();
 const router = useRouter();
 
 const editableProfile = ref({
-    fullName: '',
-    username: '',
     email: '',
-    newPassword: '',
-    confirmPassword: ''
+    name: '',
+    password_hash: '',
+    plan: '',
+    registered_at: '',
+    type: '',
+    username: ''
 });
 
 const currentPassword = ref('');
 const showPassword = ref(false);
 const isPasswordEditOverlayVisible = ref(false);
 
-onMounted(() => {
-    profileStore.fetchProfile(1); // Passar o ID do usuário
-    editableProfile.value = { ...profileStore.profile };
+onMounted(async () => {
+    await profileStore.fetchProfile();
+    await profileStore.getCompleteProfile();
+    editableProfile.value = { ...profileStore.profile }; // Sincroniza o estado local com o store
+});
+
+// Computed property para formatar a data corretamente para o campo 'date'
+const formattedRegisteredAt = computed(() => {
+    // Extrai a parte da data (YYYY-MM-DD) da string completa
+    const date = new Date(editableProfile.value.registered_at);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');  // Adiciona o zero à esquerda, se necessário
+    const day = String(date.getDate()).padStart(2, '0');  // Adiciona o zero à esquerda, se necessário
+
+    // Retorna no formato YYYY-MM-DD
+    return `${year}-${month}-${day}`;
 });
 
 const togglePasswordVisibility = () => {
@@ -149,30 +165,34 @@ const savePasswordChanges = async () => {
     togglePasswordEditOverlay(); // Fechar a overlay
 };
 
-const maskedPassword = computed(() => {
-    return '*'.repeat(currentPassword.value.length);
-});
-
 const saveChanges = async () => {
     try {
-        // Verificar a senha atual antes de fazer qualquer alteração no perfil
-        if (currentPassword.value !== '') {
-            // Se a senha atual foi preenchida, atualize a senha também
-            if (editableProfile.value.newPassword !== editableProfile.value.confirmPassword) {
-                alert('New passwords do not match.');
-                return;
-            }
+        // Certifique-se de que o username é igual ao email
+        editableProfile.value.username = editableProfile.value.email;
+        console.log("Saving changes: ", editableProfile.value);
 
-            await profileStore.updatePassword(currentPassword.value, editableProfile.value.newPassword);
-        }
-
-        // Atualizar o resto do perfil
-        await profileStore.updateProfile(editableProfile.value);
+        const response = await profileStore.updateProfile(editableProfile.value);
         alert('Profile updated successfully!');
         router.push('/profile');
     } catch (error) {
         console.error('Failed to update profile:', error);
         alert('Failed to update profile.');
+    }
+};
+
+const deleteAccount = async () => {
+    try {
+        const email = editableProfile.value.email; // Obtém o username do perfil
+        if (!confirm('Are you sure you want to delete your account? This action is irreversible.')) {
+            return;
+        }
+        const api = import.meta.env.VITE_API_GATEWAY;
+        const response = await axios.delete(`${api}/api/users/${email}`);
+        alert('Your account has been deleted successfully.');
+        router.push('/'); // Redireciona para a página inicial após a exclusão
+    } catch (error) {
+        console.error('Failed to delete account:', error);
+        alert('Failed to delete your account. Please try again.');
     }
 };
 </script>
@@ -243,6 +263,16 @@ const saveChanges = async () => {
     transition: 0.25s;
 }
 
+.deleteaccount-button button {
+    padding: 10px 30px;
+    border-radius: 20px;
+    background: #fa0202;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
 .profile-buttons button:nth-child(2) {
     background: #000000;
     color: #ffffff;
@@ -251,6 +281,11 @@ const saveChanges = async () => {
 .profile-buttons button:hover {
     background-color: #000000;
     box-shadow: 0 0 6px #000000;
+}
+
+.deleteaccount-button button:hover {
+    background-color: #ff0000;
+    box-shadow: 0 0 6px #ff0000;
 }
 
 .profile-buttons button>a {

@@ -6,6 +6,7 @@ const api = import.meta.env.VITE_API_GATEWAY;
 export const useProfileStore = defineStore('profileStore', {
     state: () => ({
         profile: {},
+        completeProfile: {},
         loading: false,
         error: null,
         userPlanName: null,
@@ -37,16 +38,27 @@ export const useProfileStore = defineStore('profileStore', {
         async updateProfile(updatedProfile) {
             this.loading = true;
             this.error = null;
-
+        
             try {
-                // Aqui você faria uma chamada real para atualizar o perfil no backend
-                // Exemplo de requisição com axios
-                const response = await axios.put(`/api/users/${this.profile.id}`, updatedProfile);
+                console.log('Updated profile before modification:', updatedProfile);
+                const username = updatedProfile.username;
 
+                // Atualiza o `username` com base no `email` antes de enviar ao servidor
+                updatedProfile.username = updatedProfile.email;
+                console.log('Updated profile after modification:', updatedProfile);
+                console.log('EndPoint:', `${api}/api/users/${this.profile.email}`);
+                console.log('Request body being sent:', updatedProfile);
+
+                const response = await axios.put(
+                    `${api}/api/users/${this.profile.email}`,
+                    updatedProfile, 
+                    {
+                    withCredentials: true,
+                });
+        
                 // Atualizar os dados locais
-                this.profile = response.data;
-                console.log('Profile updated:', this.profile);
-
+                this.completeProfile = response.data;
+                console.log('Profile updated:', this.completeProfile);
             } catch (error) {
                 this.error = 'Failed to update profile.';
                 console.error(error);
@@ -54,6 +66,46 @@ export const useProfileStore = defineStore('profileStore', {
                 this.loading = false;
             }
         },
+        
+        async getCompleteProfile() {
+            this.loading = true;
+            this.error = null;
+        
+            try {
+
+                if (!this.profile.email) {
+                    this.error = 'Profile email is missing.';
+                    return;
+                }
+                
+                // Faz a requisição GET para obter as informações do perfil completo
+                 const response = await axios.get(`http://localhost:3005/users/${this.profile.email}`);
+                // const response = await axios.get(`${api}/api/users/${this.profile.email}`);
+
+                // const response = await axios.get(
+                //     `${api}/api/users/${this.profile.email}`,
+                //     {
+                //     withCredentials: true,
+                // });
+        
+                // Atualiza o estado com os dados recebidos
+                const completeProfile = response.data;
+        
+                console.log('Complete profile fetched:', completeProfile);
+        
+                // Atualizar o perfil no estado (ajuste conforme necessário)
+                this.profile = {
+                    ...this.profile, // Retém as informações atuais
+                    ...completeProfile // Substitui pelos dados completos
+                };
+            } catch (error) {
+                this.error = 'Failed to fetch complete profile.';
+                console.error(error);
+            } finally {
+                this.loading = false;
+            }
+        },
+
 
         async updatePassword(currentPassword, newPassword) {
             this.loading = true;
