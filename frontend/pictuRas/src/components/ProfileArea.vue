@@ -13,7 +13,7 @@
                 <img src="/logo-no-text.png" alt="Logo" class="logo1" />
                 <h1>Name: {{ profileStore.profile.name }}</h1>
                 <p>Email: {{ profileStore.profile.email }}</p>
-                <p>Satus: <b>{{ profileStore.profile.plan }}</b></p>
+                <p>Status: <b>{{ profileStore.profile.plan }}</b></p>
                 <div class="profile-buttons">
                     <button>
                         <RouterLink to="/editprofile">Edit profile</RouterLink>
@@ -21,61 +21,30 @@
                     <button>
                         <RouterLink to="/plan">Change plan</RouterLink>
                     </button>
-                </div>
-            </div>
-            <div class="right-side">
-                <button>
-                    <RouterLink to="/projects">My projects</RouterLink>
-                </button>
-                <div v-if="profileStore.profile.projects && profileStore.profile.projects.length > 0"
-                    class="projects-list">
-                    <ul>
-                        <li v-for="(project, index) in profileStore.profile.projects.slice(0, 4)" :key="index">
-                            {{ project.name }}
-                        </li>
-                    </ul>
+                    <button>
+                        <RouterLink to="/projects">My projects</RouterLink>
+                    </button>
                 </div>
             </div>
         </div>
-        <button @click="logout">Logout</button>
+        
     </div>
 </template>
 
 <script setup>
 import { onMounted } from 'vue';
 import { useProfileStore } from '../stores/ProfileStore';
-import { useRouter, RouterLink } from 'vue-router';
-import axios from 'axios';
+import { RouterLink } from 'vue-router';
+
 
 const profileStore = useProfileStore();
-const api = import.meta.env.VITE_API_GATEWAY;
-const router = useRouter()
+
 
 onMounted(async () => {
     await profileStore.fetchProfile();
 });
 
-const logout = async () => {
-    try {
-        const response = await axios.post(`${api}/api/logout`, {}, {
-            withCredentials: true  // Important for cookie handling
-        });
-        
-        if (response.status === 200) {
-            // Clear any client-side storage
-            localStorage.clear();
-            sessionStorage.clear();
-            
-            // Clear store state
 
-            
-            // Redirect to login
-            router.push('/login');
-        }
-    } catch (error) {
-        console.error('Logout failed:', error);
-    }
-};
 </script>
 
 <style scoped>
@@ -90,7 +59,8 @@ const logout = async () => {
     width: 60%;
     height: auto;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
+    align-items: center;
     margin-top: 10vh;
     padding: 70px;
     border-radius: 40px;
@@ -107,7 +77,7 @@ const logout = async () => {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 30%;
+    width: 50%;
 }
 
 .logo1 {
@@ -124,11 +94,11 @@ const logout = async () => {
     width: 100%;
     margin-top: 10%;
     display: flex;
-    position: relative;
+    flex-direction: row;
+    justify-content: space-around;
 }
 
 .profile-buttons button {
-    position: absolute;
     padding: 10px 30px;
     border-radius: 20px;
     background: #000000;
@@ -140,9 +110,7 @@ const logout = async () => {
     transition: 0.25s;
 }
 
-.profile-buttons button:nth-child(2) {
-    right: 0;
-}
+
 
 .profile-buttons button:hover {
     background-color: #ffffff;

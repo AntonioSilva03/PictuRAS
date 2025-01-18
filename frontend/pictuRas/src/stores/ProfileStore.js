@@ -44,9 +44,6 @@ export const useProfileStore = defineStore('profileStore', {
 
                 // Atualiza o `username` com base no `email` antes de enviar ao servidor
                 updatedProfile.username = updatedProfile.email;
-                console.log('Updated profile after modification:', updatedProfile);
-                console.log('EndPoint:', `${api}/api/users/${this.profile.email}`);
-                console.log('Request body being sent:', updatedProfile);
 
                 const response = await axios.put(
                     `${api}/api/users/${this.profile.email}`,

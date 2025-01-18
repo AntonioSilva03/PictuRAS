@@ -11,7 +11,7 @@
           </p>
         </div>
         <div class="footer-buttons">
-            <Button1 label="Start Now" />
+            <Button1 @click="goProject" label="Start Now" />
         </div>
       </div>
     </footer>
@@ -31,6 +31,12 @@
         required: true,
       },
     },
+
+    method:{
+      goProject() {
+        this.$router.push(`/projects`);
+      }
+    }
   };
   </script>
   
